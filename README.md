@@ -1,6 +1,6 @@
 # LEAPWare Status
 
-Concise checklist progress reporting that keeps the full agreed plan visible: complete, in progress, next, remaining, blocked and unverified work.
+Concise checklist progress reporting that keeps the full agreed plan visible, with subtasks, verified completion percentages and compact progress bars: complete, active, next, remaining, blocked and unverified work.
 
 Use `lw-status` in a task or select the LEAPWare-status skill. The phrase is not a shell command. The skill also supports ordinary status requests, progress updates and handoffs through automatic skill selection.
 
@@ -13,5 +13,7 @@ Register this repository with `codex plugin marketplace add <repository-root>`, 
 ## Reporting contract
 
 Keep the entire committed plan in milestone order, including completed work. Check a box only when its stated outcome has evidence. Keep partial, blocked, failed or unverified work unchecked. Preserve owner corrections, material gates and the exact next action. Separate optional proposals from approved work. Prefer a brief checklist over a narrative activity log.
+
+Each milestone shows its acceptance criteria as nested checkbox subtasks. Percentages count verified criteria against the explicit complete checklist, not effort or time; show the fraction beside a ten-cell progress bar. Unknown denominators are not yet measurable. Explain changes to the counting basis, and reserve 100% for verified completion of every required criterion.
 
 Source: `plugins/LEAPWare-status/skills/LEAPWare-status/SKILL.md`.

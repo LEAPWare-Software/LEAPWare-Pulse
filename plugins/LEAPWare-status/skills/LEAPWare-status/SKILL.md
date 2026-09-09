@@ -1,6 +1,6 @@
 ---
 name: LEAPWare-status
-description: Report project status and progress as a concise checklist of the full agreed plan, completed work and remaining steps. Use for lw-status, status requests, progress updates and project handoffs.
+description: Report project status as a full-plan checklist with subtasks, evidence-based completion percentages and compact progress bars. Use for lw-status, status requests, progress updates and project handoffs.
 ---
 
 # LEAPWare status
@@ -11,12 +11,12 @@ Request phrase: `lw-status`. This is a skill routing phrase, not an installed sh
 
 Read the current objective, accepted plan, material owner corrections and latest evidence. Use an existing task record or continuity checkpoint when available; check material drift before presenting old information as current. If context is missing, label it unknown and retrieve the plan where possible. Never silently reconstruct a smaller plan from only the latest message.
 
-Lead with one short line naming the objective and overall state. Show the complete agreed plan in execution order, with one line per milestone. Keep completed milestones visible alongside remaining ones. Group small tasks beneath a meaningful milestone to stay concise; do not hide unresolved acceptance criteria, branches of work or blockers in a completed group. Preserve stable milestone names across updates. A mid-task request is an update, not a new plan.
+Lead with one short line naming the objective and overall state, followed by a single full-plan checklist in execution order. Each milestone row contains its name, state, percentage, verified/total criterion count and compact progress bar. Nest concise checkbox subtasks beneath each milestone to show its acceptance criteria, including completed and outstanding work. Keep all agreed milestones visible; preserve stable names and criteria across updates. A mid-task request is an update, not a new plan.
 
 Use ordinary Markdown checkboxes, with explicit state labels on unfinished items:
 
 - `[x]` Complete: the stated outcome is established by evidence.
-- `[ ]` **In progress:** work has actually started and remains unfinished.
+- `[ ]` **Active:** work has actually started and remains unfinished.
 - `[ ]` **Next:** the next actionable step, not yet started.
 - `[ ]` **Remaining:** agreed work that follows.
 - `[ ]` **Blocked:** identify the missing prerequisite and how it can be resolved.
@@ -24,7 +24,15 @@ Use ordinary Markdown checkboxes, with explicit state labels on unfinished items
 
 Use **Deferred** or **Cancelled** explicitly when the owner changes scope; do not mark either complete. Label optional proposals **Optional—not approved** and keep them separate from committed work. A failed attempt leaves its outcome unchecked. Partial completion stays unchecked; state the completed portion briefly if useful.
 
-Keep each row to an outcome and, when needed, one short evidence or blocker phrase. Prefer roughly 5–10 milestone rows and 100–200 words, but preserve the complete plan when it needs more. Avoid a tool-call diary, repeated summaries and large evidence dumps. Link decisive evidence once. Do not invent percentages or ETAs; a milestone count, if requested, is a count rather than a measure of effort.
+Keep each row to an outcome and, when needed, one short evidence or blocker phrase. Prefer 5–10 milestones with short subtasks; preserve the full plan when it needs more. Use one nesting level, blank lines between milestone groups and decisive evidence links without large evidence dumps. A subtask inherits its milestone's state unless it needs a different explicit state. Avoid a tool-call diary or repeated summary.
+
+## Percentages and visuals
+
+Include this brief legend once: **Percentages = verified checklist criteria, not effort or time.** For each task with an explicit, complete acceptance checklist, calculate `floor(100 * verified / total)` and show the count, for example `50% (1/2) [#####-----]`. The ten-cell bar has `floor(10 * verified / total)` filled `#` cells and `-` for the rest. The exact fraction is authoritative; the bar is approximate. A task reaches 100% and a checked parent box only when every required criterion is verified.
+
+Count each required criterion once. Partial, failed, blocked and unverified criteria contribute zero to the numerator. Use the stable acceptance checklist from the agreed plan or durable record; do not manufacture criteria, weights or tiny completed subtasks to raise a percentage. Show the counted criteria as subtasks; concise wording may shorten them but must preserve their meaning and count. If the checklist or denominator is incomplete, label the task **Not yet measurable** and omit its numerical bar; still show known subtasks and what is missing. An empty checklist is not 100%.
+
+When authorized criteria change, state the change briefly (for example, “Basis changed: added cold recovery, now 1/3”) and recompute without implying lost work. Reopen a criterion when later evidence invalidates it. Keep deferred/cancelled criteria visibly labelled until an authorized scope change removes them from the denominator; explain that change. Keep optional, unapproved work outside committed totals. Do not add an overall percentage by averaging task percentages or equate these counts with an ETA.
 
 End with one concrete **Next action:** line. Include **Needed from you:** only for a real unresolved dependency. Do not request permission already granted. A status request does not authorize external messages, deployments, new scope or background monitoring. During active work, report briefly and continue authorized work.
 
@@ -36,12 +44,26 @@ When a milestone was previously complete but new evidence invalidates it, reopen
 
 ## Example shape
 
-**Objective:** Ship the agreed change. **Status:** Validation in progress.
+Illustrative plan with explicit criteria; use the current task's actual plan and evidence in reports.
 
-- [x] Define scope and acceptance criteria.
-- [x] Implement the change.
-- [ ] **In progress:** Run integration checks; unit checks passed.
-- [ ] **Remaining:** Resolve findings and obtain required review.
-- [ ] **Blocked:** Release; integration evidence is incomplete.
+**Objective:** Prove recovery before migration. **Status:** Validation active.
 
-**Next action:** Run the pending integration scenario and record its result.
+**Percentages = verified checklist criteria, not effort or time.**
+
+- [x] **Install repairs — Complete · 100% (2/2)** `[##########]`
+  - [x] Verify installed source matches reviewed repairs.
+  - [x] Publish the repaired source.
+
+- [ ] **Validate recovery — Active · 33% (1/3)** `[###-------]`
+  - [x] Pass the defined unit checks.
+  - [ ] **Next:** Verify native hook execution.
+  - [ ] Verify cold recovery.
+
+- [ ] **Migrate project — Blocked · 0% (0/2)** `[----------]`
+  - [ ] Establish required continuity proof.
+  - [ ] Complete project enrollment and migration.
+
+- [ ] **Extend runtime support — Remaining · Not yet measurable**
+  - [ ] Define the required runtime acceptance checklist.
+
+**Next action:** Run the native hook check and record its evidence.
