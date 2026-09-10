@@ -24,4 +24,3 @@ LEAPWare-continuity is uninstalled and provides no protection. A manual ledger r
 ## Rollback
 
 Retain the prior plugin version and source commit. If the new installation fails, reinstall the prior version from the private marketplace and verify its cached files against that commit. Never overwrite or delete unrelated work.
-

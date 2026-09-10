@@ -15,6 +15,15 @@ EXPECTED_PATHS = {
     "skills/LEAPWare-status/agents/openai.yaml",
 }
 
+ALLOWED_MANIFEST_FIELDS = {
+    "name",
+    "version",
+    "description",
+    "author",
+    "skills",
+    "interface",
+}
+
 
 def _plugin_directory(path):
     if (path / ".codex-plugin").is_dir():
@@ -47,7 +56,7 @@ def validate(plugin_dir):
     manifest_path = plugin_path / ".codex-plugin" / "plugin.json"
     manifest_text = _read_text(manifest_path, errors, "plugin manifest")
     manifest = None
-    if manifest_text:
+    if manifest_path.is_file():
         try:
             parsed_manifest = json.loads(manifest_text)
         except json.JSONDecodeError:
@@ -59,8 +68,13 @@ def validate(plugin_dir):
                 manifest = parsed_manifest
 
     if manifest is not None:
+        for field in sorted(set(manifest) - ALLOWED_MANIFEST_FIELDS):
+            errors.append(f"manifest top-level field is not allowed: {field}")
         if manifest.get("name") != "LEAPWare-status":
             errors.append("manifest name must be LEAPWare-status")
+        version = manifest.get("version")
+        if not isinstance(version, str) or not version.strip():
+            errors.append("manifest version must be a non-empty string")
         author = manifest.get("author")
         if not isinstance(author, dict) or author.get("name") != "LEAPWare":
             errors.append("manifest author must be LEAPWare")

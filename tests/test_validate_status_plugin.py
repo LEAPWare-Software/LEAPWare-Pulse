@@ -45,6 +45,22 @@ class ValidateStatusPluginTests(unittest.TestCase):
 
         self.assertMutationIsRejected(mutate, "manifest name")
 
+    def test_rejects_a_zero_byte_manifest(self):
+        def mutate(plugin_directory):
+            manifest_path = plugin_directory / ".codex-plugin" / "plugin.json"
+            manifest_path.write_text("", encoding="utf-8")
+
+        self.assertMutationIsRejected(mutate, "valid JSON")
+
+    def test_rejects_a_manifest_without_a_version(self):
+        def mutate(plugin_directory):
+            manifest_path = plugin_directory / ".codex-plugin" / "plugin.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            del manifest["version"]
+            manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+        self.assertMutationIsRejected(mutate, "manifest version")
+
     def test_rejects_a_non_object_manifest(self):
         def mutate(plugin_directory):
             manifest_path = plugin_directory / ".codex-plugin" / "plugin.json"
@@ -57,6 +73,24 @@ class ValidateStatusPluginTests(unittest.TestCase):
             (plugin_directory / "hooks").mkdir()
 
         self.assertMutationIsRejected(mutate, "package inventory")
+
+    def test_rejects_inline_mcp_servers(self):
+        def mutate(plugin_directory):
+            manifest_path = plugin_directory / ".codex-plugin" / "plugin.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest["mcpServers"] = {"server": {"command": "python"}}
+            manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+        self.assertMutationIsRejected(mutate, "mcpServers")
+
+    def test_rejects_inline_apps(self):
+        def mutate(plugin_directory):
+            manifest_path = plugin_directory / ".codex-plugin" / "plugin.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest["apps"] = {"app": {"id": "example"}}
+            manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+        self.assertMutationIsRejected(mutate, "apps")
 
     def test_rejects_a_missing_full_plan_rule(self):
         def mutate(plugin_directory):
