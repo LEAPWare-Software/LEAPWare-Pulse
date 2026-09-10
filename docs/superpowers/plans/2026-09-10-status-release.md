@@ -67,17 +67,15 @@ Commit the task with its tests and documentation.
 
 ---
 
-### Task 2: Independent behavioral QA and source correction
+### Task 2: Independent behavioral QA
 
 **Files:**
 - Create: `tests/behavioral-scenarios.md`
 - Create: `docs/evidence/behavioral-validation-2026-09-10.md`
-- Modify only if a scenario fails: `plugins/LEAPWare-status/skills/LEAPWare-status/SKILL.md`
-- Modify only if the skill changes: `plugins/LEAPWare-status/skills/LEAPWare-status/agents/openai.yaml`
 
 **Interfaces:**
 - Consumes: exact candidate commit and realistic status prompts with complete fixture evidence.
-- Produces: source-bound prompts, raw outputs, verdicts, limitations, and any narrow correction supported by an observed failure.
+- Produces: independently authored, source-bound prompts, raw outputs, verdicts, limitations, and reproducible failing cases. QA does not modify product source.
 
 - [ ] **Step 1: Define behavioral cases before changing the skill**
 
@@ -87,21 +85,50 @@ Record seven cases: complete and partial milestones; 99/100 flooring; unknown or
 
 Give each evaluator only the installed skill, one fixture, and one request. Save each exact prompt and response. Judge against explicit expected properties, not preferred wording.
 
-- [ ] **Step 3: Correct only demonstrated failures**
+- [ ] **Step 3: Judge every case against its written properties**
 
-If every case passes, leave the skill unchanged. For each failure, first preserve the failing output, then make the smallest instruction change that addresses it.
+Record PASS or FAIL for each required property. Preserve every failing output unchanged so a separate implementer can reproduce it.
 
-- [ ] **Step 4: Rerun failed cases and one regression case**
+- [ ] **Step 4: Save complete QA evidence**
 
-Require all seven cases to pass. Save source identity, environment, outputs, verdicts, skips, and untested paths.
+Save source identity, environment, commands or dispatch method, prompts, raw outputs, verdicts, skips, and untested paths. Do not call failed, skipped, or unavailable behavior ready.
 
 - [ ] **Step 5: Validate and commit**
 
-Run the deterministic suite and plugin validator again. Commit the scenario matrix, evidence, and any justified skill correction.
+Run the deterministic suite and plugin validator again. Commit only the independently authored scenario matrix and evidence.
 
 ---
 
-### Task 3: Package, install, and release verification
+### Task 3: Correct demonstrated behavioral failures
+
+**Files:**
+- Modify only for a reproducible Task 2 failure: `plugins/LEAPWare-status/skills/LEAPWare-status/SKILL.md`
+- Modify only if UI metadata becomes inconsistent: `plugins/LEAPWare-status/skills/LEAPWare-status/agents/openai.yaml`
+- Append rerun evidence: `docs/evidence/behavioral-validation-2026-09-10.md`
+
+**Interfaces:**
+- Consumes: exact failing Task 2 prompt, output, expected property, and source identity.
+- Produces: the smallest justified skill correction plus unchanged-case rerun evidence. If Task 2 has no failures, record this task as not required and make no product edit.
+
+- [ ] **Step 1: Reproduce each failing behavior**
+
+Run the exact failing case against the same source and confirm the failure before editing the skill.
+
+- [ ] **Step 2: Make the smallest instruction correction**
+
+Change only guidance directly supported by the observed failure. Preserve discovery, reporting shape, authority limits, and all passing behavior.
+
+- [ ] **Step 3: Rerun failed cases and one passing regression case**
+
+Require every formerly failing property to pass and confirm at least one previously passing case remains passing. Preserve raw outputs.
+
+- [ ] **Step 4: Validate and commit**
+
+Run the deterministic suite, repository validator, and plugin validator. Commit the correction and source-bound rerun evidence. If no Task 2 failure exists, make no commit and ledger the task as not required.
+
+---
+
+### Task 4: Package, install, and release verification
 
 **Files:**
 - Modify: `plugins/LEAPWare-status/.codex-plugin/plugin.json` through the cachebuster helper.
@@ -139,4 +166,3 @@ Verify skill discovery, explicit `lw-status`, and ordinary status selection in f
 - [ ] **Step 7: Final release gate and repository hygiene**
 
 Confirm review, QA, CI, installed hashes, rollback instructions, commit, version, and private `main` all identify the same candidate. Tag the internal release only after the gate passes. Leave local and remote `main` equal and the working tree clean.
-
