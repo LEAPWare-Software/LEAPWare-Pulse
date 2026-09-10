@@ -38,8 +38,8 @@ After the v7 action update, the unchanged plugin tree at `acde2221594b89b7407445
 
 ## Still pending — do not infer a pass
 
-- Push the final reviewed documentation/evidence head and obtain clean branch and private-main GitHub Actions results for that exact SHA; the clean `acde222` runs do not cover its descendant commit.
-- Complete final source/release review against that exact head, then verify private `main` and `origin/main` identify the same SHA.
-- Perform the final release gate, reconcile the already established installed hashes and fresh-task evidence with the final exact head, and tag only if every identity and result agrees.
+- Push the final reviewed documentation/evidence head and obtain clean branch CI for that exact SHA; the clean `acde222` runs do not cover its descendant commit.
+- Complete whole-branch source/release review against that exact head, resolve every required finding, then integrate that same SHA into private `main` and verify local `main` and `origin/main` identify it.
+- Obtain clean private-main CI for the same integrated SHA, reconcile the established installed hashes and fresh-task evidence with that exact head, make the final release-readiness decision, and tag only if it passes.
 
 LEAPWare-continuity is uninstalled and inactive. This documentation and the SDD ledger are recovery records, not continuity-hook protection.
