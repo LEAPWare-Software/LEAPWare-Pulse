@@ -17,3 +17,9 @@ Keep the entire committed plan in milestone order, including completed work. Che
 Each milestone shows its acceptance criteria as nested checkbox subtasks. Percentages count verified criteria against the explicit complete checklist, not effort or time; show the fraction beside a ten-cell progress bar. Unknown denominators are not yet measurable. Explain changes to the counting basis, and reserve 100% for verified completion of every required criterion.
 
 Source: `plugins/LEAPWare-status/skills/LEAPWare-status/SKILL.md`.
+
+## Deterministic validation
+
+Run the mutation suite with `py -3.12 -m unittest discover -s tests -v`. To inspect the package directly, run `py -3.12 scripts/validate_status_plugin.py plugins/LEAPWare-status`; the command also accepts the repository root.
+
+These checks verify the source package's fixed identity, inventory, metadata, report rules and authority boundary. They do not replace behavioral QA or fresh installation tests in Codex.
