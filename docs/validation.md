@@ -30,9 +30,13 @@ The Phase A local candidate uses plugin version `0.1.0+codex.20260910194515`, pr
 
 After packaging this candidate, Phase A reran the 12-test deterministic suite, repository validator, plugin-creator validator, and `git diff --check`; all exited 0. No deterministic test or requested behavioral rerun was skipped. Exact commands and output belong in the release record.
 
+## Remote CI warning remediation
+
+GitHub Actions run `34525323554` for exact reviewed head `ddf26ed` completed the 12-test suite, but GitHub emitted a Node.js 20 deprecation annotation because the workflow used `actions/checkout@v4` and `actions/setup-python@v5`. Treat that result as **RED** for this release gate: it is a pass-with-warning, not a clean CI pass. The workflow now uses `actions/checkout@v7` and `actions/setup-python@v7`; a new clean CI run for the final reviewed branch tip is still required and is not claimed here.
+
 ## Still pending — do not infer a pass
 
-- Push this exact committed candidate and obtain a passing private GitHub Actions result for it.
+- Push the final reviewed branch tip and obtain a clean private GitHub Actions result for that exact SHA; the earlier `ddf26ed` pass-with-warning does not satisfy this gate.
 - Review/integrate it into private `main` and verify `origin/main` identifies the same commit.
 - Reinstall `LEAPWare-status@LEAPWare-Status`, verify installed/enabled state, and compare manifest, skill, and UI-metadata hashes with private `main`.
 - In fresh Codex tasks, record skill discovery, explicit `lw-status`, and ordinary status-request selection/behavior.
