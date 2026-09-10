@@ -17,8 +17,12 @@ class ValidateStatusPluginTests(unittest.TestCase):
             plugin_directory = Path(temporary_directory) / "LEAPWare-status"
             shutil.copytree(PLUGIN_DIRECTORY, plugin_directory)
             mutate(plugin_directory)
+            try:
+                errors = validate(plugin_directory)
+            except Exception as error:
+                self.fail(f"validator raised {error!r}")
             self.assertTrue(
-                any(expected_error in error for error in validate(plugin_directory)),
+                any(expected_error in error for error in errors),
                 expected_error,
             )
 
@@ -33,6 +37,20 @@ class ValidateStatusPluginTests(unittest.TestCase):
             manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
 
         self.assertMutationIsRejected(mutate, "manifest name")
+
+    def test_rejects_an_empty_manifest_object(self):
+        def mutate(plugin_directory):
+            manifest_path = plugin_directory / ".codex-plugin" / "plugin.json"
+            manifest_path.write_text("{}", encoding="utf-8")
+
+        self.assertMutationIsRejected(mutate, "manifest name")
+
+    def test_rejects_a_non_object_manifest(self):
+        def mutate(plugin_directory):
+            manifest_path = plugin_directory / ".codex-plugin" / "plugin.json"
+            manifest_path.write_text("[]", encoding="utf-8")
+
+        self.assertMutationIsRejected(mutate, "JSON object")
 
     def test_rejects_an_undeclared_top_level_capability(self):
         def mutate(plugin_directory):
@@ -78,6 +96,32 @@ class ValidateStatusPluginTests(unittest.TestCase):
             )
 
         self.assertMutationIsRejected(mutate, "percentage floor")
+
+    def test_rejects_a_missing_unchecked_criteria_rule(self):
+        def mutate(plugin_directory):
+            skill_path = plugin_directory / "skills" / "LEAPWare-status" / "SKILL.md"
+            skill_path.write_text(
+                skill_path.read_text(encoding="utf-8").replace(
+                    "A failed attempt leaves its outcome unchecked. Partial completion stays unchecked; state the completed portion briefly if useful.",
+                    "A failed attempt should be recorded.",
+                ),
+                encoding="utf-8",
+            )
+
+        self.assertMutationIsRejected(mutate, "unchecked criteria")
+
+    def test_rejects_a_missing_optional_work_total_rule(self):
+        def mutate(plugin_directory):
+            skill_path = plugin_directory / "skills" / "LEAPWare-status" / "SKILL.md"
+            skill_path.write_text(
+                skill_path.read_text(encoding="utf-8").replace(
+                    "Keep optional, unapproved work outside committed totals.",
+                    "Keep optional work visible.",
+                ),
+                encoding="utf-8",
+            )
+
+        self.assertMutationIsRejected(mutate, "optional work totals")
 
     def test_rejects_a_missing_authority_boundary(self):
         def mutate(plugin_directory):

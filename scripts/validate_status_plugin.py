@@ -46,21 +46,29 @@ def validate(plugin_dir):
 
     manifest_path = plugin_path / ".codex-plugin" / "plugin.json"
     manifest_text = _read_text(manifest_path, errors, "plugin manifest")
-    manifest = {}
+    manifest = None
     if manifest_text:
         try:
-            manifest = json.loads(manifest_text)
+            parsed_manifest = json.loads(manifest_text)
         except json.JSONDecodeError:
             errors.append("plugin manifest must contain valid JSON")
+        else:
+            if not isinstance(parsed_manifest, dict):
+                errors.append("plugin manifest must be a JSON object")
+            else:
+                manifest = parsed_manifest
 
-    if manifest:
+    if manifest is not None:
         if manifest.get("name") != "LEAPWare-status":
             errors.append("manifest name must be LEAPWare-status")
-        if manifest.get("author", {}).get("name") != "LEAPWare":
+        author = manifest.get("author")
+        if not isinstance(author, dict) or author.get("name") != "LEAPWare":
             errors.append("manifest author must be LEAPWare")
         if manifest.get("skills") != "./skills/":
             errors.append("manifest skills path must be ./skills/")
-        interface = manifest.get("interface", {})
+        interface = manifest.get("interface")
+        if not isinstance(interface, dict):
+            interface = {}
         if interface.get("displayName") != "LEAPWare status":
             errors.append("manifest display name must be LEAPWare status")
         if interface.get("capabilities") != []:
@@ -74,21 +82,31 @@ def validate(plugin_dir):
     skill = _read_text(skill_path, errors, "status skill")
     required_skill_rules = {
         "full-plan rule": (
-            "Keep all agreed milestones visible; preserve stable names and criteria across updates."
+            "Keep all agreed milestones visible; preserve stable names and criteria across updates.",
         ),
         "unknown denominator rule": (
             "If the checklist or denominator is incomplete, label the task **Not yet measurable** "
-            "and omit its numerical bar; still show known subtasks and what is missing."
+            "and omit its numerical bar; still show known subtasks and what is missing.",
         ),
-        "percentage floor rule": "calculate `floor(100 * verified / total)`",
-        "progress-bar floor rule": "floor(10 * verified / total)",
+        "percentage floor rule": ("calculate `floor(100 * verified / total)`",),
+        "progress-bar floor rule": ("floor(10 * verified / total)",),
+        "unchecked criteria rule": (
+            "A task reaches 100% and a checked parent box only when every required criterion is verified.",
+            "A failed attempt leaves its outcome unchecked. Partial completion stays unchecked; "
+            "state the completed portion briefly if useful.",
+            "- `[ ]` **Blocked:** identify the missing prerequisite and how it can be resolved.",
+            "- `[ ]` **Unverified:** reported or attempted work whose outcome is not established.",
+        ),
+        "optional work totals rule": (
+            "Keep optional, unapproved work outside committed totals.",
+        ),
         "authority boundary": (
             "A status request does not authorize external messages, deployments, new scope or "
-            "background monitoring."
+            "background monitoring.",
         ),
     }
-    for rule_name, required_text in required_skill_rules.items():
-        if required_text not in skill:
+    for rule_name, required_texts in required_skill_rules.items():
+        if not all(required_text in skill for required_text in required_texts):
             errors.append(f"missing {rule_name}")
 
     metadata_path = plugin_path / "skills" / "LEAPWare-status" / "agents" / "openai.yaml"
