@@ -30,16 +30,16 @@ The Phase A local candidate uses plugin version `0.1.0+codex.20260910194515`, pr
 
 After packaging this candidate, Phase A reran the 12-test deterministic suite, repository validator, plugin-creator validator, and `git diff --check`; all exited 0. No deterministic test or requested behavioral rerun was skipped. Exact commands and output belong in the release record.
 
-## Remote CI warning remediation
+## Remote CI history and current evidence scope
 
-GitHub Actions run `34525323554` for exact reviewed head `ddf26ed` completed the 12-test suite, but GitHub emitted a Node.js 20 deprecation annotation because the workflow used `actions/checkout@v4` and `actions/setup-python@v5`. Treat that result as **RED** for this release gate: it is a pass-with-warning, not a clean CI pass. The workflow now uses `actions/checkout@v7` and `actions/setup-python@v7`; a new clean CI run for the final reviewed branch tip is still required and is not claimed here.
+GitHub Actions run `34525323554` for exact reviewed head `ddf26ed` completed the 12-test suite, but GitHub emitted a Node.js 20 deprecation annotation because the workflow used `actions/checkout@v4` and `actions/setup-python@v5`. That result remains **RED** pass-with-warning evidence, not a clean release gate.
+
+After the v7 action update, the unchanged plugin tree at `acde2221594b89b740744550b3a42a95925a51a4` received clean CI in both required locations: private branch run `34525852462`, job `103034436406`, and private-main run `34525948672`, job `103034754774`. Each succeeded, its 12-test step succeeded, and GitHub reported zero annotations. Private `main` was fast-forwarded and pushed to that same SHA clean. These results establish CI for the `acde222` plugin tree; the documentation-only evidence commit that follows is a new reviewed head and still requires final exact-head branch/main CI before a tag.
 
 ## Still pending — do not infer a pass
 
-- Push the final reviewed branch tip and obtain a clean private GitHub Actions result for that exact SHA; the earlier `ddf26ed` pass-with-warning does not satisfy this gate.
-- Review/integrate it into private `main` and verify `origin/main` identifies the same commit.
-- Reinstall `LEAPWare-status@LEAPWare-Status`, verify installed/enabled state, and compare manifest, skill, and UI-metadata hashes with private `main`.
-- In fresh Codex tasks, record skill discovery, explicit `lw-status`, and ordinary status-request selection/behavior.
-- Perform the final release gate, then tag only if every identity and result agrees.
+- Push the final reviewed documentation/evidence head and obtain clean branch and private-main GitHub Actions results for that exact SHA; the clean `acde222` runs do not cover its descendant commit.
+- Complete final source/release review against that exact head, then verify private `main` and `origin/main` identify the same SHA.
+- Perform the final release gate, reconcile the already established installed hashes and fresh-task evidence with the final exact head, and tag only if every identity and result agrees.
 
 LEAPWare-continuity is uninstalled and inactive. This documentation and the SDD ledger are recovery records, not continuity-hook protection.
