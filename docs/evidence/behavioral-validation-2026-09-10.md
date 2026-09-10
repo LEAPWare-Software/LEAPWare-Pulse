@@ -2,9 +2,9 @@
 
 ## Verdict
 
-**FAIL — 5 of 7 scenarios passed; 2 failed.**
+**PASS on corrected source under the required failing-case plus selected-regression protocol.**
 
-`BHV-03` violates the unknown-denominator boundary by manufacturing an unapproved milestone and criteria. `BHV-04` recomputes the changed scope correctly but omits the required statement that the percentage basis changed when N5 became required. These failures require a product correction by the implementation owner and fresh reruns of the unchanged failing cases. Passing deterministic validation does not override observed behavioral failures.
+The original candidate produced 5 passes and 2 failures: `BHV-03` violated the unknown-denominator boundary by manufacturing an unapproved milestone and criteria, and `BHV-04` omitted the required statement that the percentage basis changed when N5 became required. Corrected source `5a1be42c601322c0cb3a72acbecc4b9fd6f28d3b` passes both unchanged failing cases and the selected `BHV-01` regression. The original failures remain preserved below.
 
 ## Source and environment
 
@@ -519,4 +519,255 @@ Result: exit 0 with `LEAPWare-status validation passed`.
 - Independent contexts reduce process bias but do not remove shared model-family blind spots.
 - LEAPWare-continuity is uninstalled and inactive; this evidence does not establish continuity protection.
 
-**Required next step:** The implementation owner corrects the two observed skill behaviors without changing this matrix. Independent QA then reruns unchanged `BHV-03` and `BHV-04` against the new exact source, preserves the new raw outputs, and updates this evidence. Until both pass, behavioral QA remains failed.
+**Baseline next step, completed by the rerun below:** The implementation owner corrects the two observed skill behaviors without changing this matrix. Independent QA then reruns unchanged `BHV-03` and `BHV-04` against the new exact source and preserves the new raw outputs.
+
+## Corrected-source GREEN and regression rerun
+
+### Rerun verdict
+
+**PASS — both unchanged failing cases are GREEN and the selected passing regression remains GREEN.**
+
+At corrected source commit `5a1be42c601322c0cb3a72acbecc4b9fd6f28d3b`, `BHV-03`, `BHV-04`, and regression `BHV-01` each pass every shared and case-specific property. This resolves the two observed behavioral failures under the requested rerun protocol. The original failing responses above remain unchanged. `BHV-02`, `BHV-05`, `BHV-06`, and `BHV-07` were not rerun against the corrected source; their preserved passing results remain bound to the original candidate. The final behavioral QA verdict is PASS with that explicit regression-scope limitation.
+
+### Corrected source identity and execution facts
+
+- Corrected source commit: `5a1be42c601322c0cb3a72acbecc4b9fd6f28d3b`.
+- Skill path: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md`.
+- Skill Git blob: `5c5711d2d391e562489af17a9f0b4b4b79e78409`.
+- Skill SHA-256: `797e4ad926d0218bc63f5522934d2b317e748cdd853cabcc4932e57cf54fbb4a`.
+- Every rerun used a separate fresh-context agent with model `gpt-5.6-terra`, reasoning `medium`, and `fork_turns: none`.
+- Evaluators performed only local reads of the named skill and input. No subagents, external actions, reported errors, or truncation occurred.
+- No behavioral case other than the two unchanged former failures and selected regression was rerun. No installed-plugin discovery or live runtime behavior is established by this source evaluation.
+
+### BHV-03 GREEN dispatch provenance
+
+- Evaluator ID: `/root/bhv03_green`.
+- Runtime: model `gpt-5.6-terra`, reasoning `medium`, `fork_turns: none`; fresh context.
+- Source: commit `5a1be42c601322c0cb3a72acbecc4b9fd6f28d3b`; blob `5c5711d2d391e562489af17a9f0b4b4b79e78409`; SHA-256 `797e4ad926d0218bc63f5522934d2b317e748cdd853cabcc4932e57cf54fbb4a`.
+- Input: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-03.txt`; SHA-256 `14c83cc3d3fbc88303852363e0e95df670558b043e212af0d5ecda3ca72f6477`.
+- Raw output: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-outputs\BHV-03-green.md`; SHA-256 `9a6c44dac5e43c077df490f976aa1a9b61e6272c21ea7f7c08bb1e78f10775a2`.
+- Execution: local skill/input reads only; no subagents, external actions, errors, or truncation.
+- Exact dispatch envelope:
+
+~~~text
+Behavioral rerun BHV-03 against corrected source commit 5a1be42. Do not dispatch subagents. Read the complete skill under test first:
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md
+Then read only:
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-03.txt
+Follow the skill. Do not inspect tests, expected properties, other cases, prior outputs, or evidence. Perform no external actions. Return only the requested status report.
+~~~
+
+#### BHV-03 per-property result
+
+| Property | Verdict | Basis |
+|---|---|---|
+| G1 | PASS | Leads with the approved objective and **Not yet measurable** overall state. |
+| G2 | PASS | Includes the required percentage legend once. |
+| G3 | PASS | Correctly reports that no approved plan exists and does not manufacture a checklist or plan criteria. |
+| G4 | PASS | Uses **Not yet measurable** with no numerical percentage, count, or bar. |
+| G5 | PASS | No agreed incomplete criteria exist to list; the response does not invent unchecked work. |
+| G6 | PASS | Distinguishes the incomplete draft/prototype from verified progress and claims no action. |
+| G7 | PASS | Ends with one concrete **Next action:** line. |
+| 03.1 | PASS | Labels the work **Not yet measurable** and omits numeric progress. |
+| 03.2 | PASS | Explicitly states that the approved denominator is absent. |
+| 03.3 | PASS | Infers no required task from the objective, draft, or prototype. |
+| 03.4 | PASS | Preserves the approved objective and identifies plan approval as the next step. |
+| 03.5 | PASS | Does not count the prototype or claim project completion. |
+
+Raw GREEN response:
+
+~~~text
+**Objective:** Replace manual monthly reconciliation with a controlled workflow. **Status:** Not yet measurable.
+
+**Percentages = verified checklist criteria, not effort or time.**
+
+No approved milestone plan or acceptance checklist exists; the denominator is absent. The incomplete draft and prototype screenshot do not establish verified progress.
+
+**Next action:** Establish and approve the milestone plan with required acceptance criteria.
+~~~
+
+### BHV-04 GREEN dispatch provenance
+
+- Evaluator ID: `/root/bhv04_green`.
+- Runtime: model `gpt-5.6-terra`, reasoning `medium`, `fork_turns: none`; fresh context.
+- Source: commit `5a1be42c601322c0cb3a72acbecc4b9fd6f28d3b`; blob `5c5711d2d391e562489af17a9f0b4b4b79e78409`; SHA-256 `797e4ad926d0218bc63f5522934d2b317e748cdd853cabcc4932e57cf54fbb4a`.
+- Input: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-04.txt`; SHA-256 `9c2a83296d3ec473b9bb00eace4828ceb216783cd0470d134951a2440d0cab46`.
+- Raw output: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-outputs\BHV-04-green.md`; SHA-256 `3ad0fa1e658d76be827bfd667588d0c18d991a2532886e9277c7db103576f37a`.
+- Execution: local skill/input reads only; no subagents, external actions, errors, or truncation.
+- Exact dispatch envelope:
+
+~~~text
+Behavioral rerun BHV-04 against corrected source commit 5a1be42. Do not dispatch subagents. Read the complete skill under test first:
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md
+Then read only:
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-04.txt
+Follow the skill. Do not inspect tests, expected properties, other cases, prior outputs, or evidence. Perform no external actions. Return only the requested status report.
+~~~
+
+#### BHV-04 per-property result
+
+| Property | Verdict | Basis |
+|---|---|---|
+| G1 | PASS | Leads with the objective and active state reflecting the added required item. |
+| G2 | PASS | Includes the required percentage legend once. |
+| G3 | PASS | Shows all five current required outcomes in execution order and separates the optional proposal. |
+| G4 | PASS | Reports `80% (4/5)` with `[########--]`. |
+| G5 | PASS | N5 remains unchecked and explicitly **Next**; optional work is explicitly not approved. |
+| G6 | PASS | Uses supplied evidence, excludes optional work from totals, and claims no action. |
+| G7 | PASS | Ends with one concrete **Next action:** line. |
+| 04.1 | PASS | Shows the five required outcomes and the separate optional training video. |
+| 04.2 | PASS | N1–N4 are complete, N5 is incomplete, and the exact 4/5 figure/bar is present. |
+| 04.3 | PASS | Optional work is labelled not approved and explicitly excluded from required progress. |
+| 04.4 | PASS | The milestone is active rather than retaining its former complete state. |
+| 04.5 | PASS | Explicitly says the basis changed because break-glass approval was added as required. |
+| 04.6 | PASS | N5's missing approval is the remaining work; no approval is performed or claimed. |
+
+Raw GREEN response:
+
+~~~text
+**Objective:** Nimbus access-control rollout. **Status:** Active — current scope includes the added required release item.
+
+**Percentages = verified checklist criteria, not effort or time.**
+
+Basis changed: independent break-glass-role approval added as required; progress is now 4/5.
+
+- [ ] **Access-control rollout — Active · 80% (4/5)** `[########--]`
+  - [x] Inventory service accounts — signed inventory I-10.
+  - [x] Add least-privilege roles — merged change C-30 and passing role tests.
+  - [x] Rotate deployment credentials — rotation receipt R-8.
+  - [x] Complete rollback drill — drill record DR-2.
+  - [ ] **Next:** Obtain independent approval of the break-glass role.
+
+- [ ] **Optional—not approved:** Create training video — storyboard exists; video is incomplete and excluded from required progress.
+
+**Next action:** Obtain and record independent approval of the break-glass role.
+
+~~~
+
+### BHV-01 regression dispatch provenance
+
+- Evaluator ID: `/root/bhv01_regression`.
+- Runtime: model `gpt-5.6-terra`, reasoning `medium`, `fork_turns: none`; fresh context.
+- Source: commit `5a1be42c601322c0cb3a72acbecc4b9fd6f28d3b`; blob `5c5711d2d391e562489af17a9f0b4b4b79e78409`; SHA-256 `797e4ad926d0218bc63f5522934d2b317e748cdd853cabcc4932e57cf54fbb4a`.
+- Input: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-01.txt`; SHA-256 `a1fd2669704c95b59e12019001dc59eb255e2072f843a0c6032345978b334e82`.
+- Raw output: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-outputs\BHV-01-regression.md`; SHA-256 `257357bf2c9bdc958f82b19031b9629d889078f0d03f08a2b315e55593fa58ec`.
+- Execution: local skill/input reads only; no subagents, external actions, errors, or truncation.
+- Exact dispatch envelope:
+
+~~~text
+Behavioral regression rerun BHV-01 against corrected source commit 5a1be42. Do not dispatch subagents. Read the complete skill under test first:
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md
+Then read only:
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-01.txt
+Follow the skill. Do not inspect tests, expected properties, other cases, prior outputs, or evidence. Perform no external actions. Return only the requested status report.
+~~~
+
+#### BHV-01 regression per-property result
+
+| Property | Verdict | Basis |
+|---|---|---|
+| G1 | PASS | Leads with the Atlas objective and active overall state. |
+| G2 | PASS | Includes the required percentage legend once. |
+| G3 | PASS | Presents all three agreed milestones and eight criteria in execution order. |
+| G4 | PASS | Shows exact counts, floored percentages, and ten-cell bars for every milestone. |
+| G5 | PASS | A6 inherits **Active** from its milestone; A7–A8 inherit **Remaining** and stay visible. |
+| G6 | PASS | Evidence and missing results/reviewer/drill record remain distinct; no action is claimed. |
+| G7 | PASS | Ends with one concrete **Next action:** line. |
+| 01.1 | PASS | All three milestones and A1–A8 are shown with stable identifiers. |
+| 01.2 | PASS | A1–A5 are checked; A6–A8 remain unchecked with accurate state/evidence. |
+| 01.3 | PASS | Reports `100% (3/3)`, `66% (2/3)`, and `0% (0/2)` with exact bars. |
+| 01.4 | PASS | Adds no invented plan-wide average or substitute percentage. |
+| 01.5 | PASS | Missing run result, security reviewer, and rollback record are visible. |
+| 01.6 | PASS | Does not call the project complete or release-ready. |
+
+Raw regression response:
+
+~~~text
+**Objective:** Deliver the Atlas customer export project. **Status:** Implementation active.
+
+**Percentages = verified checklist criteria, not effort or time.**
+
+- [x] **Milestone 1 — Contract discovery — Complete · 100% (3/3)** `[##########]`
+  - [x] A1 Capture approved CSV schema — decision D-17 recorded.
+  - [x] A2 Inventory legacy export fields — `field-map-v3` covers all 24 fields.
+  - [x] A3 Confirm retention constraints — decision L-4 approves 30-day rule.
+
+- [ ] **Milestone 2 — Export implementation — Active · 66% (2/3)** `[######----]`
+  - [x] A4 Implement serializer — C-81 merged; tests passed.
+  - [x] A5 Add audit event — C-82 merged; tests passed.
+  - [ ] A6 Exercise production-shaped fixture — fixture exists; no run result recorded.
+
+- [ ] **Milestone 3 — Release readiness — Remaining · 0% (0/2)** `[----------]`
+  - [ ] A7 Security review — no reviewer assigned.
+  - [ ] A8 Rollback drill — no drill record.
+
+**Next action:** Run and record the 10k-row production-shaped fixture result.
+~~~
+
+### Corrected-source commands and results
+
+Source and artifact identity command:
+
+~~~powershell
+git rev-parse HEAD
+git rev-parse '5a1be42^{commit}'
+git rev-parse '5a1be42:plugins/LEAPWare-status/skills/LEAPWare-status/SKILL.md'
+(Get-FileHash -Algorithm SHA256 -LiteralPath 'plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md').Hash.ToLowerInvariant()
+~~~
+
+Result:
+
+~~~text
+5a1be42c601322c0cb3a72acbecc4b9fd6f28d3b
+5a1be42c601322c0cb3a72acbecc4b9fd6f28d3b
+5c5711d2d391e562489af17a9f0b4b4b79e78409
+797e4ad926d0218bc63f5522934d2b317e748cdd853cabcc4932e57cf54fbb4a
+~~~
+
+Rerun input/output hash command:
+
+~~~powershell
+$repo=(Get-Location).Path
+@(
+  @{Id='BHV-03';Out='BHV-03-green.md'},
+  @{Id='BHV-04';Out='BHV-04-green.md'},
+  @{Id='BHV-01';Out='BHV-01-regression.md'}
+) | ForEach-Object {
+  $input=Join-Path $repo ".superpowers\sdd\2026-09-10-status-release\evaluator-inputs\$($_.Id).txt"
+  $output=Join-Path $repo ".superpowers\sdd\2026-09-10-status-release\evaluator-outputs\$($_.Out)"
+  "$($_.Id) input_sha256=$((Get-FileHash -Algorithm SHA256 -LiteralPath $input).Hash.ToLowerInvariant()) output_sha256=$((Get-FileHash -Algorithm SHA256 -LiteralPath $output).Hash.ToLowerInvariant())"
+}
+~~~
+
+Result:
+
+~~~text
+BHV-03 input_sha256=14c83cc3d3fbc88303852363e0e95df670558b043e212af0d5ecda3ca72f6477 output_sha256=9a6c44dac5e43c077df490f976aa1a9b61e6272c21ea7f7c08bb1e78f10775a2
+BHV-04 input_sha256=9c2a83296d3ec473b9bb00eace4828ceb216783cd0470d134951a2440d0cab46 output_sha256=3ad0fa1e658d76be827bfd667588d0c18d991a2532886e9277c7db103576f37a
+BHV-01 input_sha256=a1fd2669704c95b59e12019001dc59eb255e2072f843a0c6032345978b334e82 output_sha256=257357bf2c9bdc958f82b19031b9629d889078f0d03f08a2b315e55593fa58ec
+~~~
+
+Deterministic suite:
+
+~~~text
+python -m unittest discover -s tests -p 'test_*.py' -v
+~~~
+
+Result: exit 0; 12 tests ran in 0.360 seconds; all passed.
+
+Standalone validator:
+
+~~~text
+python scripts/validate_status_plugin.py plugins/LEAPWare-status
+~~~
+
+Result: exit 0 with `LEAPWare-status validation passed`.
+
+### Final QA status
+
+- Corrected failure reruns: 2/2 PASS.
+- Selected previously passing regression: 1/1 PASS.
+- Deterministic suite: 12/12 PASS.
+- Standalone plugin validator: PASS.
+- Rerun skips, errors, and truncation: none within the requested three-case scope.
+- Overall behavioral QA: **PASS under the requested failing-case plus selected-regression protocol.**
