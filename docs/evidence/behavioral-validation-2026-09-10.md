@@ -16,6 +16,150 @@
 - QA host: Windows PowerShell 7.6.5, Python 3.12.10.
 - QA role: independent author of the matrix and verdict; the QA author did not implement the candidate.
 
+## Durable dispatch and installed-cache provenance
+
+All evaluator agents used model `gpt-5.6-terra`, reasoning effort `medium`, and `fork_turns: none`. Each was a fresh agent. The skill content read by every evaluator was the candidate Git blob `09bf867bf1bfceacc6c0c33819acc1c484f9e733` from:
+
+`C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md`
+
+Its SHA-256 was `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`. The installed cache skill at evaluation time was:
+
+`C:\Users\leapw\.codex\plugins\cache\LEAPWare-Status\LEAPWare-status\0.1.0+codex.20260909223703\skills\LEAPWare-status\SKILL.md`
+
+Its SHA-256 was also `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; a byte-for-byte comparison returned `True`. Thus the dispatched source skill and installed-cache skill were content-equivalent. The evaluations read the source path named in each envelope; they were not plugin-discovery tests.
+
+### BHV-01 dispatch record
+
+- Evaluator ID: `/root/bhv01`.
+- Runtime: model `gpt-5.6-terra`, reasoning `medium`, `fork_turns: none`; fresh agent.
+- Skill provenance: candidate blob `09bf867bf1bfceacc6c0c33819acc1c484f9e733` at `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; installed cache `C:\Users\leapw\.codex\plugins\cache\LEAPWare-Status\LEAPWare-status\0.1.0+codex.20260909223703\skills\LEAPWare-status\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; byte-for-byte equal.
+- Input: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-01.txt`; SHA-256 `a1fd2669704c95b59e12019001dc59eb255e2072f843a0c6032345978b334e82`.
+- Raw output: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-outputs\BHV-01.md`; SHA-256 `eeda1149007dac12467fb03fd5e1ff63512f51166288b736b025c1402cf698c9`.
+- Execution facts: no subagents, external actions, errors, or truncation; local file reads only.
+- Exact dispatch envelope:
+
+~~~text
+Behavioral evaluation BHV-01. Do not dispatch subagents. Read the complete skill under test first:
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md
+
+Then read the evaluator request:
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-01.txt
+
+Follow the skill to answer that request. Do not inspect tests, expected properties, other cases, or prior outputs. Perform no external actions. Your final response must contain only the requested status report, with no evaluation commentary.
+~~~
+
+### BHV-02 dispatch record
+
+- Evaluator ID: `/root/bhv02`.
+- Runtime: model `gpt-5.6-terra`, reasoning `medium`, `fork_turns: none`; fresh agent.
+- Skill provenance: candidate blob `09bf867bf1bfceacc6c0c33819acc1c484f9e733` at `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; installed cache `C:\Users\leapw\.codex\plugins\cache\LEAPWare-Status\LEAPWare-status\0.1.0+codex.20260909223703\skills\LEAPWare-status\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; byte-for-byte equal.
+- Input: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-02.txt`; SHA-256 `4b864aadc4469003018c469b316046796619174f861ae5b5e0fbebf114423448`.
+- Raw output: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-outputs\BHV-02.md`; SHA-256 `1feb8e3213e0394d444581b505b812feb17520e7610e5f1b0ba9399275a34f41`.
+- Execution facts: no subagents, external actions, errors, or truncation; local file reads only.
+- Exact dispatch envelope:
+
+~~~text
+Behavioral evaluation BHV-02. Do not dispatch subagents. Read the complete skill under test first:
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md
+
+Then read the evaluator request:
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-02.txt
+
+Follow the skill to answer that request. Do not inspect tests, expected properties, other cases, or prior outputs. Perform no external actions. Your final response must contain only the requested status report, with no evaluation commentary.
+~~~
+
+### BHV-03 dispatch record
+
+- Evaluator ID: `/root/bhv03`.
+- Runtime: model `gpt-5.6-terra`, reasoning `medium`, `fork_turns: none`; fresh agent.
+- Skill provenance: candidate blob `09bf867bf1bfceacc6c0c33819acc1c484f9e733` at `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; installed cache `C:\Users\leapw\.codex\plugins\cache\LEAPWare-Status\LEAPWare-status\0.1.0+codex.20260909223703\skills\LEAPWare-status\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; byte-for-byte equal.
+- Input: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-03.txt`; SHA-256 `14c83cc3d3fbc88303852363e0e95df670558b043e212af0d5ecda3ca72f6477`.
+- Raw output: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-outputs\BHV-03.md`; SHA-256 `5ed8242514f50620b2ada98a2eeade02580004b3d4461695ee25043dd17a43bb`.
+- Execution facts: no subagents, external actions, errors, or truncation; local file reads only.
+- Exact dispatch envelope:
+
+~~~text
+Behavioral evaluation BHV-03. Do not dispatch subagents. Read the complete skill under test first:
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md
+
+Then read the evaluator request:
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-03.txt
+
+Follow the skill to answer that request. Do not inspect tests, expected properties, other cases, or prior outputs. Perform no external actions. Your final response must contain only the requested status report, with no evaluation commentary.
+~~~
+
+### BHV-04 dispatch record
+
+- Evaluator ID: `/root/bhv04`.
+- Runtime: model `gpt-5.6-terra`, reasoning `medium`, `fork_turns: none`; fresh agent.
+- Skill provenance: candidate blob `09bf867bf1bfceacc6c0c33819acc1c484f9e733` at `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; installed cache `C:\Users\leapw\.codex\plugins\cache\LEAPWare-Status\LEAPWare-status\0.1.0+codex.20260909223703\skills\LEAPWare-status\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; byte-for-byte equal.
+- Input: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-04.txt`; SHA-256 `9c2a83296d3ec473b9bb00eace4828ceb216783cd0470d134951a2440d0cab46`.
+- Raw output: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-outputs\BHV-04.md`; SHA-256 `5aaa491320869e8979bcd24cf16165061b2b0244d5fc544b5cf4c967108604df`.
+- Execution facts: no subagents, external actions, errors, or truncation; local file reads only.
+- Exact dispatch envelope:
+
+~~~text
+Behavioral evaluation BHV-04. Do not dispatch subagents. Read the complete skill under test first:
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md
+Then read:
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-04.txt
+Follow the skill to answer that request. Do not inspect tests, expected properties, other cases, or prior outputs. Perform no external actions. Return only the requested status report.
+~~~
+
+### BHV-05 dispatch record
+
+- Evaluator ID: `/root/bhv05`.
+- Runtime: model `gpt-5.6-terra`, reasoning `medium`, `fork_turns: none`; fresh agent.
+- Skill provenance: candidate blob `09bf867bf1bfceacc6c0c33819acc1c484f9e733` at `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; installed cache `C:\Users\leapw\.codex\plugins\cache\LEAPWare-Status\LEAPWare-status\0.1.0+codex.20260909223703\skills\LEAPWare-status\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; byte-for-byte equal.
+- Input: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-05.txt`; SHA-256 `8f8eac66f7f3543c4a8d4c1597ad5361ca97c58737c55c683c8d089d9be4777a`.
+- Raw output: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-outputs\BHV-05.md`; SHA-256 `aced3d65884016521b89e665ad2741be26b3fa49ab4a06bf7a96530381b73222`.
+- Execution facts: no subagents, external actions, errors, or truncation; local file reads only.
+- Exact dispatch envelope:
+
+~~~text
+Behavioral evaluation BHV-05. Do not dispatch subagents. Read the complete skill under test first:
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md
+Then read:
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-05.txt
+Follow the skill to answer that request. Do not inspect tests, expected properties, other cases, or prior outputs. Perform no external actions. Return only the requested status report.
+~~~
+
+### BHV-06 dispatch record
+
+- Evaluator ID: `/root/bhv06`.
+- Runtime: model `gpt-5.6-terra`, reasoning `medium`, `fork_turns: none`; fresh agent.
+- Skill provenance: candidate blob `09bf867bf1bfceacc6c0c33819acc1c484f9e733` at `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; installed cache `C:\Users\leapw\.codex\plugins\cache\LEAPWare-Status\LEAPWare-status\0.1.0+codex.20260909223703\skills\LEAPWare-status\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; byte-for-byte equal.
+- Input: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-06.txt`; SHA-256 `8b54155a12c9c09ebca8348e52112d61fc02718ff3058026078168af81cde605`.
+- Raw output: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-outputs\BHV-06.md`; SHA-256 `4a09964d7399fbee4628b2fb5d9f4eaeec32175964aa62c59c882c7b62a185ee`.
+- Execution facts: no subagents, external actions, errors, or truncation; local file reads only.
+- Exact dispatch envelope:
+
+~~~text
+Behavioral evaluation BHV-06. Do not dispatch subagents. Read the complete skill under test first:
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md
+Then read:
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-06.txt
+Follow the skill to answer that request. Do not inspect tests, expected properties, other cases, or prior outputs. Perform no external actions. Return only the requested status report.
+~~~
+
+### BHV-07 dispatch record
+
+- Evaluator ID: `/root/bhv07`.
+- Runtime: model `gpt-5.6-terra`, reasoning `medium`, `fork_turns: none`; fresh agent.
+- Skill provenance: candidate blob `09bf867bf1bfceacc6c0c33819acc1c484f9e733` at `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; installed cache `C:\Users\leapw\.codex\plugins\cache\LEAPWare-Status\LEAPWare-status\0.1.0+codex.20260909223703\skills\LEAPWare-status\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; byte-for-byte equal.
+- Input: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-07.txt`; SHA-256 `55f48354741d0656dc6ec2d0e48e3f4c567614321293625278ee3235692876ce`.
+- Raw output: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-outputs\BHV-07.md`; SHA-256 `b9afe18cc6ce8df7fd5d094073aa514b55f05281d8f2dc27dbfde830d4d71c8d`.
+- Execution facts: no subagents, external actions, errors, or truncation; local file reads only.
+- Exact dispatch envelope:
+
+~~~text
+Behavioral evaluation BHV-07. Do not dispatch subagents. Read the complete skill under test first:
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md
+Then read:
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-07.txt
+Follow the skill to answer that request. Do not inspect tests, expected properties, other cases, or prior outputs. Perform no external actions. Return only the requested status report.
+~~~
+
 ## Method
 
 The exact prompts are retained in the committed matrix under the `### Evaluator input` heading for each named case. Each fresh evaluator received the candidate skill and exactly one of those inputs, without expected properties, other cases, prior outputs, or implementation tests. The controller returned the raw responses in `.superpowers/sdd/2026-09-10-status-release/evaluator-outputs/BHV-01.md` through `BHV-07.md`. They are reproduced unchanged below.
@@ -371,7 +515,7 @@ Result: exit 0 with `LEAPWare-status validation passed`.
 
 - No scenario, deterministic test, or validator run was skipped.
 - Evaluators reported no truncation, error, or tool-side effect.
-- These are fresh agent evaluations of the source-bound skill, not a live installed-plugin discovery or runtime integration test.
+- These are fresh agent evaluations of the source-path skill whose bytes matched the installed cache at evaluation time; they are not live plugin-discovery or runtime-integration tests.
 - Independent contexts reduce process bias but do not remove shared model-family blind spots.
 - LEAPWare-continuity is uninstalled and inactive; this evidence does not establish continuity protection.
 
