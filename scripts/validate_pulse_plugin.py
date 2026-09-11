@@ -18,7 +18,7 @@ EXPECTED_PATHS = {
 # Explicit bundled inventory: runtime files are permitted, arbitrary additions are not.
 EXPECTED_PATHS |= {'scripts', 'scripts/learning'} | {
     'scripts/' + name for name in (
-        'lw-pulse.py', 'lw-learn.py', 'lw-acceptance.py', 'lw_learning_bridge.py',
+        'lw-pulse.py', 'lw-capture.py', 'lw-learn.py', 'lw-acceptance.py', 'lw_learning_bridge.py',
         'learning-origin.json', 'release-learning.json', 'learning/__init__.py', 'learning/storage.py',
         'learning/git_binding.py', 'learning/README.md')
 }

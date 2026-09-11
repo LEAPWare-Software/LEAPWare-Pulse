@@ -69,3 +69,11 @@ Expected failure injections in the tests use disposable isolated projects/regist
 fixture reviewer names demonstrate schema assertions, not actual independent review.
 Native trust, packaging, cold compaction and active-runtime acceptance remain separate
 release checks owned by the coordinator.
+
+
+Private runtime capture now establishes `.leapware/local/learning/.gitignore` with
+exact `*` content before writing an incident. Its two bytes count in the reviewed
+managed storage budget and admission uses the same registry lock. Existing differing,
+partial or redirected markers cause visible capture refusal; no user ignore file is
+overwritten. Public lessons and semantic handoffs remain eligible for publication.
+This protects ordinary Git adds, not explicit force-add or already tracked files.
