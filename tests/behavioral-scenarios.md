@@ -1,4 +1,4 @@
-# LEAPWare-status behavioral scenarios
+# LEAPWare-Pulse behavioral scenarios
 
 These cases are the independently authored behavioral acceptance matrix for candidate source `3886571c16cce6f87997124138f55fadedcc06fe`. Each case is a complete evaluator input: give a fresh evaluator the skill under test plus exactly one case's **Evaluator input**, and retain its response unchanged. The evaluator must produce only the requested status report. Judge behavior against the properties, not preferred prose.
 

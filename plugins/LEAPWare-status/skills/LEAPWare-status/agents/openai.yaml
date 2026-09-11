@@ -1,4 +1,0 @@
-interface:
-  display_name: "LEAPWare status"
-  short_description: "Full-plan progress in a concise checklist"
-  default_prompt: "Use $LEAPWare-status to show the full plan, what is done and what remains."

@@ -1,11 +1,11 @@
 ---
-name: LEAPWare-status
-description: Report project status as a full-plan checklist with subtasks, evidence-based completion percentages and compact progress bars. Use for lw-status, status requests, progress updates and project handoffs.
+name: LEAPWare-Pulse
+description: Report project status as a full-plan checklist with subtasks, evidence-based completion percentages and compact progress bars. Use for lw-pulse, status requests, progress updates and project handoffs.
 ---
 
-# LEAPWare status
+# LEAPWare Pulse
 
-Request phrase: `lw-status`. This is a skill routing phrase, not an installed shell executable or native slash command. Follow the owner's preference for concise checklist reporting.
+Request phrase: `lw-pulse`. This is a skill routing phrase, not an installed shell executable or native slash command. Follow the owner's preference for concise checklist reporting.
 
 ## Build the report
 

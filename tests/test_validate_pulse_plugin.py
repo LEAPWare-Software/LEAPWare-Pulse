@@ -4,17 +4,17 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from scripts.validate_status_plugin import validate
+from scripts.validate_pulse_plugin import validate
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
-PLUGIN_DIRECTORY = REPOSITORY_ROOT / "plugins" / "LEAPWare-status"
+PLUGIN_DIRECTORY = REPOSITORY_ROOT / "plugins" / "LEAPWare-Pulse"
 
 
 class ValidateStatusPluginTests(unittest.TestCase):
     def assertMutationIsRejected(self, mutate, expected_error):
         with tempfile.TemporaryDirectory() as temporary_directory:
-            plugin_directory = Path(temporary_directory) / "LEAPWare-status"
+            plugin_directory = Path(temporary_directory) / "LEAPWare-Pulse"
             shutil.copytree(PLUGIN_DIRECTORY, plugin_directory)
             mutate(plugin_directory)
             try:
@@ -94,7 +94,7 @@ class ValidateStatusPluginTests(unittest.TestCase):
 
     def test_rejects_a_missing_full_plan_rule(self):
         def mutate(plugin_directory):
-            skill_path = plugin_directory / "skills" / "LEAPWare-status" / "SKILL.md"
+            skill_path = plugin_directory / "skills" / "LEAPWare-Pulse" / "SKILL.md"
             skill_path.write_text(
                 skill_path.read_text(encoding="utf-8").replace(
                     "Keep all agreed milestones visible; preserve stable names and criteria across updates.",
@@ -107,7 +107,7 @@ class ValidateStatusPluginTests(unittest.TestCase):
 
     def test_rejects_a_missing_unknown_denominator_rule(self):
         def mutate(plugin_directory):
-            skill_path = plugin_directory / "skills" / "LEAPWare-status" / "SKILL.md"
+            skill_path = plugin_directory / "skills" / "LEAPWare-Pulse" / "SKILL.md"
             skill_path.write_text(
                 skill_path.read_text(encoding="utf-8").replace(
                     "If the checklist or denominator is incomplete, label the task **Not yet measurable** and omit its numerical bar; still show known subtasks and what is missing.",
@@ -120,7 +120,7 @@ class ValidateStatusPluginTests(unittest.TestCase):
 
     def test_rejects_an_incorrect_percentage_floor_rule(self):
         def mutate(plugin_directory):
-            skill_path = plugin_directory / "skills" / "LEAPWare-status" / "SKILL.md"
+            skill_path = plugin_directory / "skills" / "LEAPWare-Pulse" / "SKILL.md"
             skill_path.write_text(
                 skill_path.read_text(encoding="utf-8").replace(
                     "calculate `floor(100 * verified / total)`",
@@ -133,7 +133,7 @@ class ValidateStatusPluginTests(unittest.TestCase):
 
     def test_rejects_a_missing_unchecked_criteria_rule(self):
         def mutate(plugin_directory):
-            skill_path = plugin_directory / "skills" / "LEAPWare-status" / "SKILL.md"
+            skill_path = plugin_directory / "skills" / "LEAPWare-Pulse" / "SKILL.md"
             skill_path.write_text(
                 skill_path.read_text(encoding="utf-8").replace(
                     "A failed attempt leaves its outcome unchecked. Partial completion stays unchecked; state the completed portion briefly if useful.",
@@ -146,7 +146,7 @@ class ValidateStatusPluginTests(unittest.TestCase):
 
     def test_rejects_a_missing_optional_work_total_rule(self):
         def mutate(plugin_directory):
-            skill_path = plugin_directory / "skills" / "LEAPWare-status" / "SKILL.md"
+            skill_path = plugin_directory / "skills" / "LEAPWare-Pulse" / "SKILL.md"
             skill_path.write_text(
                 skill_path.read_text(encoding="utf-8").replace(
                     "Keep optional, unapproved work outside committed totals.",
@@ -159,7 +159,7 @@ class ValidateStatusPluginTests(unittest.TestCase):
 
     def test_rejects_a_missing_authority_boundary(self):
         def mutate(plugin_directory):
-            skill_path = plugin_directory / "skills" / "LEAPWare-status" / "SKILL.md"
+            skill_path = plugin_directory / "skills" / "LEAPWare-Pulse" / "SKILL.md"
             skill_path.write_text(
                 skill_path.read_text(encoding="utf-8").replace(
                     "A status request does not authorize external messages, deployments, new scope or background monitoring.",
@@ -172,13 +172,13 @@ class ValidateStatusPluginTests(unittest.TestCase):
 
     def test_rejects_a_missing_default_skill_prompt(self):
         def mutate(plugin_directory):
-            metadata_path = plugin_directory / "skills" / "LEAPWare-status" / "agents" / "openai.yaml"
+            metadata_path = plugin_directory / "skills" / "LEAPWare-Pulse" / "agents" / "openai.yaml"
             metadata_path.write_text(
                 metadata_path.read_text(encoding="utf-8").replace(
-                    "$LEAPWare-status",
-                    "LEAPWare-status",
+                    "$LEAPWare-Pulse",
+                    "LEAPWare-Pulse",
                 ),
                 encoding="utf-8",
             )
 
-        self.assertMutationIsRejected(mutate, "$LEAPWare-status")
+        self.assertMutationIsRejected(mutate, "$LEAPWare-Pulse")

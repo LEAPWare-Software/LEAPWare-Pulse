@@ -1,14 +1,14 @@
 {
-  "name": "LEAPWare-Status",
+  "name": "LEAPWare-Pulse",
   "interface": {
-    "displayName": "LEAPWare Status"
+    "displayName": "LEAPWare Pulse"
   },
   "plugins": [
     {
-      "name": "LEAPWare-status",
+      "name": "LEAPWare-Pulse",
       "source": {
         "source": "local",
-        "path": "./plugins/LEAPWare-status"
+        "path": "./plugins/LEAPWare-Pulse"
       },
       "policy": {
         "installation": "AVAILABLE",

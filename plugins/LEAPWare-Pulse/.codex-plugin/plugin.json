@@ -1,18 +1,18 @@
 {
-  "name": "LEAPWare-status",
-  "version": "0.1.0+codex.20260910194515",
+  "name": "LEAPWare-Pulse",
+  "version": "0.1.0+codex.20260911154409",
   "description": "Concise checklist status reports covering the full plan, completed work and remaining steps.",
   "author": {
     "name": "LEAPWare"
   },
   "skills": "./skills/",
   "interface": {
-    "displayName": "LEAPWare status",
+    "displayName": "LEAPWare Pulse",
     "shortDescription": "Full-plan progress in a concise checklist.",
     "longDescription": "Evidence-based progress reports that preserve the full agreed plan and show completed, active, remaining and blocked work.",
     "developerName": "LEAPWare",
     "category": "Productivity",
     "capabilities": [],
-    "defaultPrompt": "lw-status: show the full plan, completed work and what remains."
+    "defaultPrompt": "lw-pulse: show the full plan, completed work and what remains."
   }
 }

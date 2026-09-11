@@ -1,4 +1,4 @@
-# LEAPWare-status behavioral validation — 2026-09-10
+# LEAPWare-Pulse behavioral validation — 2026-09-10
 
 ## Verdict
 
@@ -10,7 +10,7 @@ The original candidate produced 5 passes and 2 failures: `BHV-03` violated the u
 
 - Product candidate: `3886571c16cce6f87997124138f55fadedcc06fe` (`Harden status plugin validator`).
 - Independently authored matrix commit: `9a5da4ee3dfa7530564a5ff7e7f9ad309b82f9ff` (`Add independent status behavior scenarios`).
-- Skill blob tested: `09bf867bf1bfceacc6c0c33819acc1c484f9e733` at `plugins/LEAPWare-status/skills/LEAPWare-status/SKILL.md`.
+- Skill blob tested: `09bf867bf1bfceacc6c0c33819acc1c484f9e733` at `plugins/LEAPWare-Pulse/skills/LEAPWare-Pulse/SKILL.md`.
 - Matrix: `tests/behavioral-scenarios.md` at the matrix commit above.
 - Evaluators: seven separate fresh-context agents, `gpt-5.6-terra`, medium reasoning. Each evaluator read only the candidate skill and one case input. Evaluators used no tools beyond local file reads and reported no truncation or errors.
 - QA host: Windows PowerShell 7.6.5, Python 3.12.10.
@@ -20,11 +20,11 @@ The original candidate produced 5 passes and 2 failures: `BHV-03` violated the u
 
 All evaluator agents used model `gpt-5.6-terra`, reasoning effort `medium`, and `fork_turns: none`. Each was a fresh agent. The skill content read by every evaluator was the candidate Git blob `09bf867bf1bfceacc6c0c33819acc1c484f9e733` from:
 
-`C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md`
+`C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\plugins\LEAPWare-Pulse\skills\LEAPWare-Pulse\SKILL.md`
 
 Its SHA-256 was `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`. The installed cache skill at evaluation time was:
 
-`C:\Users\leapw\.codex\plugins\cache\LEAPWare-Status\LEAPWare-status\0.1.0+codex.20260909223703\skills\LEAPWare-status\SKILL.md`
+`C:\Users\leapw\.codex\plugins\cache\LEAPWare-Pulse\LEAPWare-Pulse\0.1.0+codex.20260909223703\skills\LEAPWare-Pulse\SKILL.md`
 
 Its SHA-256 was also `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; a byte-for-byte comparison returned `True`. Thus the dispatched source skill and installed-cache skill were content-equivalent. The evaluations read the source path named in each envelope; they were not plugin-discovery tests.
 
@@ -32,18 +32,18 @@ Its SHA-256 was also `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d
 
 - Evaluator ID: `/root/bhv01`.
 - Runtime: model `gpt-5.6-terra`, reasoning `medium`, `fork_turns: none`; fresh agent.
-- Skill provenance: candidate blob `09bf867bf1bfceacc6c0c33819acc1c484f9e733` at `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; installed cache `C:\Users\leapw\.codex\plugins\cache\LEAPWare-Status\LEAPWare-status\0.1.0+codex.20260909223703\skills\LEAPWare-status\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; byte-for-byte equal.
-- Input: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-01.txt`; SHA-256 `a1fd2669704c95b59e12019001dc59eb255e2072f843a0c6032345978b334e82`.
-- Raw output: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-outputs\BHV-01.md`; SHA-256 `eeda1149007dac12467fb03fd5e1ff63512f51166288b736b025c1402cf698c9`.
+- Skill provenance: candidate blob `09bf867bf1bfceacc6c0c33819acc1c484f9e733` at `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\plugins\LEAPWare-Pulse\skills\LEAPWare-Pulse\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; installed cache `C:\Users\leapw\.codex\plugins\cache\LEAPWare-Pulse\LEAPWare-Pulse\0.1.0+codex.20260909223703\skills\LEAPWare-Pulse\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; byte-for-byte equal.
+- Input: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-pulse-release\evaluator-inputs\BHV-01.txt`; SHA-256 `a1fd2669704c95b59e12019001dc59eb255e2072f843a0c6032345978b334e82`.
+- Raw output: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-pulse-release\evaluator-outputs\BHV-01.md`; SHA-256 `eeda1149007dac12467fb03fd5e1ff63512f51166288b736b025c1402cf698c9`.
 - Execution facts: no subagents, external actions, errors, or truncation; local file reads only.
 - Exact dispatch envelope:
 
 ~~~text
 Behavioral evaluation BHV-01. Do not dispatch subagents. Read the complete skill under test first:
-C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\plugins\LEAPWare-Pulse\skills\LEAPWare-Pulse\SKILL.md
 
 Then read the evaluator request:
-C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-01.txt
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-pulse-release\evaluator-inputs\BHV-01.txt
 
 Follow the skill to answer that request. Do not inspect tests, expected properties, other cases, or prior outputs. Perform no external actions. Your final response must contain only the requested status report, with no evaluation commentary.
 ~~~
@@ -52,18 +52,18 @@ Follow the skill to answer that request. Do not inspect tests, expected properti
 
 - Evaluator ID: `/root/bhv02`.
 - Runtime: model `gpt-5.6-terra`, reasoning `medium`, `fork_turns: none`; fresh agent.
-- Skill provenance: candidate blob `09bf867bf1bfceacc6c0c33819acc1c484f9e733` at `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; installed cache `C:\Users\leapw\.codex\plugins\cache\LEAPWare-Status\LEAPWare-status\0.1.0+codex.20260909223703\skills\LEAPWare-status\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; byte-for-byte equal.
-- Input: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-02.txt`; SHA-256 `4b864aadc4469003018c469b316046796619174f861ae5b5e0fbebf114423448`.
-- Raw output: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-outputs\BHV-02.md`; SHA-256 `1feb8e3213e0394d444581b505b812feb17520e7610e5f1b0ba9399275a34f41`.
+- Skill provenance: candidate blob `09bf867bf1bfceacc6c0c33819acc1c484f9e733` at `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\plugins\LEAPWare-Pulse\skills\LEAPWare-Pulse\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; installed cache `C:\Users\leapw\.codex\plugins\cache\LEAPWare-Pulse\LEAPWare-Pulse\0.1.0+codex.20260909223703\skills\LEAPWare-Pulse\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; byte-for-byte equal.
+- Input: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-pulse-release\evaluator-inputs\BHV-02.txt`; SHA-256 `4b864aadc4469003018c469b316046796619174f861ae5b5e0fbebf114423448`.
+- Raw output: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-pulse-release\evaluator-outputs\BHV-02.md`; SHA-256 `1feb8e3213e0394d444581b505b812feb17520e7610e5f1b0ba9399275a34f41`.
 - Execution facts: no subagents, external actions, errors, or truncation; local file reads only.
 - Exact dispatch envelope:
 
 ~~~text
 Behavioral evaluation BHV-02. Do not dispatch subagents. Read the complete skill under test first:
-C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\plugins\LEAPWare-Pulse\skills\LEAPWare-Pulse\SKILL.md
 
 Then read the evaluator request:
-C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-02.txt
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-pulse-release\evaluator-inputs\BHV-02.txt
 
 Follow the skill to answer that request. Do not inspect tests, expected properties, other cases, or prior outputs. Perform no external actions. Your final response must contain only the requested status report, with no evaluation commentary.
 ~~~
@@ -72,18 +72,18 @@ Follow the skill to answer that request. Do not inspect tests, expected properti
 
 - Evaluator ID: `/root/bhv03`.
 - Runtime: model `gpt-5.6-terra`, reasoning `medium`, `fork_turns: none`; fresh agent.
-- Skill provenance: candidate blob `09bf867bf1bfceacc6c0c33819acc1c484f9e733` at `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; installed cache `C:\Users\leapw\.codex\plugins\cache\LEAPWare-Status\LEAPWare-status\0.1.0+codex.20260909223703\skills\LEAPWare-status\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; byte-for-byte equal.
-- Input: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-03.txt`; SHA-256 `14c83cc3d3fbc88303852363e0e95df670558b043e212af0d5ecda3ca72f6477`.
-- Raw output: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-outputs\BHV-03.md`; SHA-256 `5ed8242514f50620b2ada98a2eeade02580004b3d4461695ee25043dd17a43bb`.
+- Skill provenance: candidate blob `09bf867bf1bfceacc6c0c33819acc1c484f9e733` at `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\plugins\LEAPWare-Pulse\skills\LEAPWare-Pulse\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; installed cache `C:\Users\leapw\.codex\plugins\cache\LEAPWare-Pulse\LEAPWare-Pulse\0.1.0+codex.20260909223703\skills\LEAPWare-Pulse\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; byte-for-byte equal.
+- Input: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-pulse-release\evaluator-inputs\BHV-03.txt`; SHA-256 `14c83cc3d3fbc88303852363e0e95df670558b043e212af0d5ecda3ca72f6477`.
+- Raw output: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-pulse-release\evaluator-outputs\BHV-03.md`; SHA-256 `5ed8242514f50620b2ada98a2eeade02580004b3d4461695ee25043dd17a43bb`.
 - Execution facts: no subagents, external actions, errors, or truncation; local file reads only.
 - Exact dispatch envelope:
 
 ~~~text
 Behavioral evaluation BHV-03. Do not dispatch subagents. Read the complete skill under test first:
-C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\plugins\LEAPWare-Pulse\skills\LEAPWare-Pulse\SKILL.md
 
 Then read the evaluator request:
-C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-03.txt
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-pulse-release\evaluator-inputs\BHV-03.txt
 
 Follow the skill to answer that request. Do not inspect tests, expected properties, other cases, or prior outputs. Perform no external actions. Your final response must contain only the requested status report, with no evaluation commentary.
 ~~~
@@ -92,17 +92,17 @@ Follow the skill to answer that request. Do not inspect tests, expected properti
 
 - Evaluator ID: `/root/bhv04`.
 - Runtime: model `gpt-5.6-terra`, reasoning `medium`, `fork_turns: none`; fresh agent.
-- Skill provenance: candidate blob `09bf867bf1bfceacc6c0c33819acc1c484f9e733` at `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; installed cache `C:\Users\leapw\.codex\plugins\cache\LEAPWare-Status\LEAPWare-status\0.1.0+codex.20260909223703\skills\LEAPWare-status\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; byte-for-byte equal.
-- Input: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-04.txt`; SHA-256 `9c2a83296d3ec473b9bb00eace4828ceb216783cd0470d134951a2440d0cab46`.
-- Raw output: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-outputs\BHV-04.md`; SHA-256 `5aaa491320869e8979bcd24cf16165061b2b0244d5fc544b5cf4c967108604df`.
+- Skill provenance: candidate blob `09bf867bf1bfceacc6c0c33819acc1c484f9e733` at `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\plugins\LEAPWare-Pulse\skills\LEAPWare-Pulse\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; installed cache `C:\Users\leapw\.codex\plugins\cache\LEAPWare-Pulse\LEAPWare-Pulse\0.1.0+codex.20260909223703\skills\LEAPWare-Pulse\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; byte-for-byte equal.
+- Input: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-pulse-release\evaluator-inputs\BHV-04.txt`; SHA-256 `9c2a83296d3ec473b9bb00eace4828ceb216783cd0470d134951a2440d0cab46`.
+- Raw output: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-pulse-release\evaluator-outputs\BHV-04.md`; SHA-256 `5aaa491320869e8979bcd24cf16165061b2b0244d5fc544b5cf4c967108604df`.
 - Execution facts: no subagents, external actions, errors, or truncation; local file reads only.
 - Exact dispatch envelope:
 
 ~~~text
 Behavioral evaluation BHV-04. Do not dispatch subagents. Read the complete skill under test first:
-C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\plugins\LEAPWare-Pulse\skills\LEAPWare-Pulse\SKILL.md
 Then read:
-C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-04.txt
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-pulse-release\evaluator-inputs\BHV-04.txt
 Follow the skill to answer that request. Do not inspect tests, expected properties, other cases, or prior outputs. Perform no external actions. Return only the requested status report.
 ~~~
 
@@ -110,17 +110,17 @@ Follow the skill to answer that request. Do not inspect tests, expected properti
 
 - Evaluator ID: `/root/bhv05`.
 - Runtime: model `gpt-5.6-terra`, reasoning `medium`, `fork_turns: none`; fresh agent.
-- Skill provenance: candidate blob `09bf867bf1bfceacc6c0c33819acc1c484f9e733` at `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; installed cache `C:\Users\leapw\.codex\plugins\cache\LEAPWare-Status\LEAPWare-status\0.1.0+codex.20260909223703\skills\LEAPWare-status\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; byte-for-byte equal.
-- Input: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-05.txt`; SHA-256 `8f8eac66f7f3543c4a8d4c1597ad5361ca97c58737c55c683c8d089d9be4777a`.
-- Raw output: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-outputs\BHV-05.md`; SHA-256 `aced3d65884016521b89e665ad2741be26b3fa49ab4a06bf7a96530381b73222`.
+- Skill provenance: candidate blob `09bf867bf1bfceacc6c0c33819acc1c484f9e733` at `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\plugins\LEAPWare-Pulse\skills\LEAPWare-Pulse\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; installed cache `C:\Users\leapw\.codex\plugins\cache\LEAPWare-Pulse\LEAPWare-Pulse\0.1.0+codex.20260909223703\skills\LEAPWare-Pulse\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; byte-for-byte equal.
+- Input: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-pulse-release\evaluator-inputs\BHV-05.txt`; SHA-256 `8f8eac66f7f3543c4a8d4c1597ad5361ca97c58737c55c683c8d089d9be4777a`.
+- Raw output: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-pulse-release\evaluator-outputs\BHV-05.md`; SHA-256 `aced3d65884016521b89e665ad2741be26b3fa49ab4a06bf7a96530381b73222`.
 - Execution facts: no subagents, external actions, errors, or truncation; local file reads only.
 - Exact dispatch envelope:
 
 ~~~text
 Behavioral evaluation BHV-05. Do not dispatch subagents. Read the complete skill under test first:
-C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\plugins\LEAPWare-Pulse\skills\LEAPWare-Pulse\SKILL.md
 Then read:
-C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-05.txt
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-pulse-release\evaluator-inputs\BHV-05.txt
 Follow the skill to answer that request. Do not inspect tests, expected properties, other cases, or prior outputs. Perform no external actions. Return only the requested status report.
 ~~~
 
@@ -128,17 +128,17 @@ Follow the skill to answer that request. Do not inspect tests, expected properti
 
 - Evaluator ID: `/root/bhv06`.
 - Runtime: model `gpt-5.6-terra`, reasoning `medium`, `fork_turns: none`; fresh agent.
-- Skill provenance: candidate blob `09bf867bf1bfceacc6c0c33819acc1c484f9e733` at `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; installed cache `C:\Users\leapw\.codex\plugins\cache\LEAPWare-Status\LEAPWare-status\0.1.0+codex.20260909223703\skills\LEAPWare-status\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; byte-for-byte equal.
-- Input: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-06.txt`; SHA-256 `8b54155a12c9c09ebca8348e52112d61fc02718ff3058026078168af81cde605`.
-- Raw output: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-outputs\BHV-06.md`; SHA-256 `4a09964d7399fbee4628b2fb5d9f4eaeec32175964aa62c59c882c7b62a185ee`.
+- Skill provenance: candidate blob `09bf867bf1bfceacc6c0c33819acc1c484f9e733` at `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\plugins\LEAPWare-Pulse\skills\LEAPWare-Pulse\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; installed cache `C:\Users\leapw\.codex\plugins\cache\LEAPWare-Pulse\LEAPWare-Pulse\0.1.0+codex.20260909223703\skills\LEAPWare-Pulse\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; byte-for-byte equal.
+- Input: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-pulse-release\evaluator-inputs\BHV-06.txt`; SHA-256 `8b54155a12c9c09ebca8348e52112d61fc02718ff3058026078168af81cde605`.
+- Raw output: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-pulse-release\evaluator-outputs\BHV-06.md`; SHA-256 `4a09964d7399fbee4628b2fb5d9f4eaeec32175964aa62c59c882c7b62a185ee`.
 - Execution facts: no subagents, external actions, errors, or truncation; local file reads only.
 - Exact dispatch envelope:
 
 ~~~text
 Behavioral evaluation BHV-06. Do not dispatch subagents. Read the complete skill under test first:
-C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\plugins\LEAPWare-Pulse\skills\LEAPWare-Pulse\SKILL.md
 Then read:
-C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-06.txt
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-pulse-release\evaluator-inputs\BHV-06.txt
 Follow the skill to answer that request. Do not inspect tests, expected properties, other cases, or prior outputs. Perform no external actions. Return only the requested status report.
 ~~~
 
@@ -146,23 +146,23 @@ Follow the skill to answer that request. Do not inspect tests, expected properti
 
 - Evaluator ID: `/root/bhv07`.
 - Runtime: model `gpt-5.6-terra`, reasoning `medium`, `fork_turns: none`; fresh agent.
-- Skill provenance: candidate blob `09bf867bf1bfceacc6c0c33819acc1c484f9e733` at `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; installed cache `C:\Users\leapw\.codex\plugins\cache\LEAPWare-Status\LEAPWare-status\0.1.0+codex.20260909223703\skills\LEAPWare-status\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; byte-for-byte equal.
-- Input: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-07.txt`; SHA-256 `55f48354741d0656dc6ec2d0e48e3f4c567614321293625278ee3235692876ce`.
-- Raw output: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-outputs\BHV-07.md`; SHA-256 `b9afe18cc6ce8df7fd5d094073aa514b55f05281d8f2dc27dbfde830d4d71c8d`.
+- Skill provenance: candidate blob `09bf867bf1bfceacc6c0c33819acc1c484f9e733` at `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\plugins\LEAPWare-Pulse\skills\LEAPWare-Pulse\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; installed cache `C:\Users\leapw\.codex\plugins\cache\LEAPWare-Pulse\LEAPWare-Pulse\0.1.0+codex.20260909223703\skills\LEAPWare-Pulse\SKILL.md`, SHA-256 `47bd11dd2419c4de32b1edb46eabe1f3713a45a1887bc3dfecfaf0c10d78493c`; byte-for-byte equal.
+- Input: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-pulse-release\evaluator-inputs\BHV-07.txt`; SHA-256 `55f48354741d0656dc6ec2d0e48e3f4c567614321293625278ee3235692876ce`.
+- Raw output: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-pulse-release\evaluator-outputs\BHV-07.md`; SHA-256 `b9afe18cc6ce8df7fd5d094073aa514b55f05281d8f2dc27dbfde830d4d71c8d`.
 - Execution facts: no subagents, external actions, errors, or truncation; local file reads only.
 - Exact dispatch envelope:
 
 ~~~text
 Behavioral evaluation BHV-07. Do not dispatch subagents. Read the complete skill under test first:
-C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\plugins\LEAPWare-Pulse\skills\LEAPWare-Pulse\SKILL.md
 Then read:
-C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-07.txt
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-pulse-release\evaluator-inputs\BHV-07.txt
 Follow the skill to answer that request. Do not inspect tests, expected properties, other cases, or prior outputs. Perform no external actions. Return only the requested status report.
 ~~~
 
 ## Method
 
-The exact prompts are retained in the committed matrix under the `### Evaluator input` heading for each named case. Each fresh evaluator received the candidate skill and exactly one of those inputs, without expected properties, other cases, prior outputs, or implementation tests. The controller returned the raw responses in `.superpowers/sdd/2026-09-10-status-release/evaluator-outputs/BHV-01.md` through `BHV-07.md`. They are reproduced unchanged below.
+The exact prompts are retained in the committed matrix under the `### Evaluator input` heading for each named case. Each fresh evaluator received the candidate skill and exactly one of those inputs, without expected properties, other cases, prior outputs, or implementation tests. The controller returned the raw responses in `.superpowers/sdd/2026-09-10-pulse-release/evaluator-outputs/BHV-01.md` through `BHV-07.md`. They are reproduced unchanged below.
 
 Every case is graded against the shared report properties and its numbered case properties. Shared properties are:
 
@@ -506,10 +506,10 @@ Result: exit 0; 12 tests ran in 0.253 seconds; all passed. This includes accepta
 Standalone validator command:
 
 ~~~text
-python scripts/validate_status_plugin.py plugins/LEAPWare-status
+python scripts/validate_pulse_plugin.py plugins/LEAPWare-Pulse
 ~~~
 
-Result: exit 0 with `LEAPWare-status validation passed`.
+Result: exit 0 with `LEAPWare-Pulse validation passed`.
 
 ## Skips, limits, and required next step
 
@@ -532,7 +532,7 @@ At corrected source commit `5a1be42c601322c0cb3a72acbecc4b9fd6f28d3b`, `BHV-03`,
 ### Corrected source identity and execution facts
 
 - Corrected source commit: `5a1be42c601322c0cb3a72acbecc4b9fd6f28d3b`.
-- Skill path: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md`.
+- Skill path: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\plugins\LEAPWare-Pulse\skills\LEAPWare-Pulse\SKILL.md`.
 - Skill Git blob: `5c5711d2d391e562489af17a9f0b4b4b79e78409`.
 - Skill SHA-256: `797e4ad926d0218bc63f5522934d2b317e748cdd853cabcc4932e57cf54fbb4a`.
 - Every rerun used a separate fresh-context agent with model `gpt-5.6-terra`, reasoning `medium`, and `fork_turns: none`.
@@ -544,16 +544,16 @@ At corrected source commit `5a1be42c601322c0cb3a72acbecc4b9fd6f28d3b`, `BHV-03`,
 - Evaluator ID: `/root/bhv03_green`.
 - Runtime: model `gpt-5.6-terra`, reasoning `medium`, `fork_turns: none`; fresh context.
 - Source: commit `5a1be42c601322c0cb3a72acbecc4b9fd6f28d3b`; blob `5c5711d2d391e562489af17a9f0b4b4b79e78409`; SHA-256 `797e4ad926d0218bc63f5522934d2b317e748cdd853cabcc4932e57cf54fbb4a`.
-- Input: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-03.txt`; SHA-256 `14c83cc3d3fbc88303852363e0e95df670558b043e212af0d5ecda3ca72f6477`.
-- Raw output: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-outputs\BHV-03-green.md`; SHA-256 `9a6c44dac5e43c077df490f976aa1a9b61e6272c21ea7f7c08bb1e78f10775a2`.
+- Input: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-pulse-release\evaluator-inputs\BHV-03.txt`; SHA-256 `14c83cc3d3fbc88303852363e0e95df670558b043e212af0d5ecda3ca72f6477`.
+- Raw output: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-pulse-release\evaluator-outputs\BHV-03-green.md`; SHA-256 `9a6c44dac5e43c077df490f976aa1a9b61e6272c21ea7f7c08bb1e78f10775a2`.
 - Execution: local skill/input reads only; no subagents, external actions, errors, or truncation.
 - Exact dispatch envelope:
 
 ~~~text
 Behavioral rerun BHV-03 against corrected source commit 5a1be42. Do not dispatch subagents. Read the complete skill under test first:
-C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\plugins\LEAPWare-Pulse\skills\LEAPWare-Pulse\SKILL.md
 Then read only:
-C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-03.txt
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-pulse-release\evaluator-inputs\BHV-03.txt
 Follow the skill. Do not inspect tests, expected properties, other cases, prior outputs, or evidence. Perform no external actions. Return only the requested status report.
 ~~~
 
@@ -591,16 +591,16 @@ No approved milestone plan or acceptance checklist exists; the denominator is ab
 - Evaluator ID: `/root/bhv04_green`.
 - Runtime: model `gpt-5.6-terra`, reasoning `medium`, `fork_turns: none`; fresh context.
 - Source: commit `5a1be42c601322c0cb3a72acbecc4b9fd6f28d3b`; blob `5c5711d2d391e562489af17a9f0b4b4b79e78409`; SHA-256 `797e4ad926d0218bc63f5522934d2b317e748cdd853cabcc4932e57cf54fbb4a`.
-- Input: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-04.txt`; SHA-256 `9c2a83296d3ec473b9bb00eace4828ceb216783cd0470d134951a2440d0cab46`.
-- Raw output: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-outputs\BHV-04-green.md`; SHA-256 `3ad0fa1e658d76be827bfd667588d0c18d991a2532886e9277c7db103576f37a`.
+- Input: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-pulse-release\evaluator-inputs\BHV-04.txt`; SHA-256 `9c2a83296d3ec473b9bb00eace4828ceb216783cd0470d134951a2440d0cab46`.
+- Raw output: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-pulse-release\evaluator-outputs\BHV-04-green.md`; SHA-256 `3ad0fa1e658d76be827bfd667588d0c18d991a2532886e9277c7db103576f37a`.
 - Execution: local skill/input reads only; no subagents, external actions, errors, or truncation.
 - Exact dispatch envelope:
 
 ~~~text
 Behavioral rerun BHV-04 against corrected source commit 5a1be42. Do not dispatch subagents. Read the complete skill under test first:
-C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\plugins\LEAPWare-Pulse\skills\LEAPWare-Pulse\SKILL.md
 Then read only:
-C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-04.txt
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-pulse-release\evaluator-inputs\BHV-04.txt
 Follow the skill. Do not inspect tests, expected properties, other cases, prior outputs, or evidence. Perform no external actions. Return only the requested status report.
 ~~~
 
@@ -649,16 +649,16 @@ Basis changed: independent break-glass-role approval added as required; progress
 - Evaluator ID: `/root/bhv01_regression`.
 - Runtime: model `gpt-5.6-terra`, reasoning `medium`, `fork_turns: none`; fresh context.
 - Source: commit `5a1be42c601322c0cb3a72acbecc4b9fd6f28d3b`; blob `5c5711d2d391e562489af17a9f0b4b4b79e78409`; SHA-256 `797e4ad926d0218bc63f5522934d2b317e748cdd853cabcc4932e57cf54fbb4a`.
-- Input: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-01.txt`; SHA-256 `a1fd2669704c95b59e12019001dc59eb255e2072f843a0c6032345978b334e82`.
-- Raw output: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-outputs\BHV-01-regression.md`; SHA-256 `257357bf2c9bdc958f82b19031b9629d889078f0d03f08a2b315e55593fa58ec`.
+- Input: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-pulse-release\evaluator-inputs\BHV-01.txt`; SHA-256 `a1fd2669704c95b59e12019001dc59eb255e2072f843a0c6032345978b334e82`.
+- Raw output: `C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-pulse-release\evaluator-outputs\BHV-01-regression.md`; SHA-256 `257357bf2c9bdc958f82b19031b9629d889078f0d03f08a2b315e55593fa58ec`.
 - Execution: local skill/input reads only; no subagents, external actions, errors, or truncation.
 - Exact dispatch envelope:
 
 ~~~text
 Behavioral regression rerun BHV-01 against corrected source commit 5a1be42. Do not dispatch subagents. Read the complete skill under test first:
-C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\plugins\LEAPWare-Pulse\skills\LEAPWare-Pulse\SKILL.md
 Then read only:
-C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Status\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-status-release\evaluator-inputs\BHV-01.txt
+C:\Users\leapw\Documents\Codex\2026-09-09\i-x20\work\LEAPWare-Pulse\.worktrees\status-private-release\.superpowers\sdd\2026-09-10-pulse-release\evaluator-inputs\BHV-01.txt
 Follow the skill. Do not inspect tests, expected properties, other cases, prior outputs, or evidence. Perform no external actions. Return only the requested status report.
 ~~~
 
@@ -711,8 +711,8 @@ Source and artifact identity command:
 ~~~powershell
 git rev-parse HEAD
 git rev-parse '5a1be42^{commit}'
-git rev-parse '5a1be42:plugins/LEAPWare-status/skills/LEAPWare-status/SKILL.md'
-(Get-FileHash -Algorithm SHA256 -LiteralPath 'plugins\LEAPWare-status\skills\LEAPWare-status\SKILL.md').Hash.ToLowerInvariant()
+git rev-parse '5a1be42:plugins/LEAPWare-Pulse/skills/LEAPWare-Pulse/SKILL.md'
+(Get-FileHash -Algorithm SHA256 -LiteralPath 'plugins\LEAPWare-Pulse\skills\LEAPWare-Pulse\SKILL.md').Hash.ToLowerInvariant()
 ~~~
 
 Result:
@@ -733,8 +733,8 @@ $repo=(Get-Location).Path
   @{Id='BHV-04';Out='BHV-04-green.md'},
   @{Id='BHV-01';Out='BHV-01-regression.md'}
 ) | ForEach-Object {
-  $input=Join-Path $repo ".superpowers\sdd\2026-09-10-status-release\evaluator-inputs\$($_.Id).txt"
-  $output=Join-Path $repo ".superpowers\sdd\2026-09-10-status-release\evaluator-outputs\$($_.Out)"
+  $input=Join-Path $repo ".superpowers\sdd\2026-09-10-pulse-release\evaluator-inputs\$($_.Id).txt"
+  $output=Join-Path $repo ".superpowers\sdd\2026-09-10-pulse-release\evaluator-outputs\$($_.Out)"
   "$($_.Id) input_sha256=$((Get-FileHash -Algorithm SHA256 -LiteralPath $input).Hash.ToLowerInvariant()) output_sha256=$((Get-FileHash -Algorithm SHA256 -LiteralPath $output).Hash.ToLowerInvariant())"
 }
 ~~~
@@ -758,10 +758,10 @@ Result: exit 0; 12 tests ran in 0.360 seconds; all passed.
 Standalone validator:
 
 ~~~text
-python scripts/validate_status_plugin.py plugins/LEAPWare-status
+python scripts/validate_pulse_plugin.py plugins/LEAPWare-Pulse
 ~~~
 
-Result: exit 0 with `LEAPWare-status validation passed`.
+Result: exit 0 with `LEAPWare-Pulse validation passed`.
 
 ### Final QA status
 

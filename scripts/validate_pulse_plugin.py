@@ -1,4 +1,4 @@
-"""Validate the source-only LEAPWare-status plugin package."""
+"""Validate the source-only LEAPWare-Pulse plugin package."""
 
 import argparse
 import json
@@ -9,10 +9,10 @@ EXPECTED_PATHS = {
     ".codex-plugin",
     ".codex-plugin/plugin.json",
     "skills",
-    "skills/LEAPWare-status",
-    "skills/LEAPWare-status/SKILL.md",
-    "skills/LEAPWare-status/agents",
-    "skills/LEAPWare-status/agents/openai.yaml",
+    "skills/LEAPWare-Pulse",
+    "skills/LEAPWare-Pulse/SKILL.md",
+    "skills/LEAPWare-Pulse/agents",
+    "skills/LEAPWare-Pulse/agents/openai.yaml",
 }
 
 ALLOWED_MANIFEST_FIELDS = {
@@ -28,7 +28,7 @@ ALLOWED_MANIFEST_FIELDS = {
 def _plugin_directory(path):
     if (path / ".codex-plugin").is_dir():
         return path
-    return path / "plugins" / "LEAPWare-status"
+    return path / "plugins" / "LEAPWare-Pulse"
 
 
 def _read_text(path, errors, description):
@@ -39,7 +39,7 @@ def _read_text(path, errors, description):
 
 
 def validate(plugin_dir):
-    """Return one error for each LEAPWare-status acceptance invariant violated."""
+    """Return one error for each LEAPWare-Pulse acceptance invariant violated."""
     errors = []
     plugin_path = _plugin_directory(Path(plugin_dir))
 
@@ -70,8 +70,8 @@ def validate(plugin_dir):
     if manifest is not None:
         for field in sorted(set(manifest) - ALLOWED_MANIFEST_FIELDS):
             errors.append(f"manifest top-level field is not allowed: {field}")
-        if manifest.get("name") != "LEAPWare-status":
-            errors.append("manifest name must be LEAPWare-status")
+        if manifest.get("name") != "LEAPWare-Pulse":
+            errors.append("manifest name must be LEAPWare-Pulse")
         version = manifest.get("version")
         if not isinstance(version, str) or not version.strip():
             errors.append("manifest version must be a non-empty string")
@@ -83,16 +83,16 @@ def validate(plugin_dir):
         interface = manifest.get("interface")
         if not isinstance(interface, dict):
             interface = {}
-        if interface.get("displayName") != "LEAPWare status":
-            errors.append("manifest display name must be LEAPWare status")
+        if interface.get("displayName") != "LEAPWare Pulse":
+            errors.append("manifest display name must be LEAPWare Pulse")
         if interface.get("capabilities") != []:
             errors.append("manifest capabilities must be empty")
         if interface.get("defaultPrompt") != (
-            "lw-status: show the full plan, completed work and what remains."
+            "lw-pulse: show the full plan, completed work and what remains."
         ):
-            errors.append("manifest default prompt must preserve lw-status")
+            errors.append("manifest default prompt must preserve lw-pulse")
 
-    skill_path = plugin_path / "skills" / "LEAPWare-status" / "SKILL.md"
+    skill_path = plugin_path / "skills" / "LEAPWare-Pulse" / "SKILL.md"
     skill = _read_text(skill_path, errors, "status skill")
     required_skill_rules = {
         "full-plan rule": (
@@ -123,13 +123,13 @@ def validate(plugin_dir):
         if not all(required_text in skill for required_text in required_texts):
             errors.append(f"missing {rule_name}")
 
-    metadata_path = plugin_path / "skills" / "LEAPWare-status" / "agents" / "openai.yaml"
+    metadata_path = plugin_path / "skills" / "LEAPWare-Pulse" / "agents" / "openai.yaml"
     metadata = _read_text(metadata_path, errors, "skill metadata")
     required_metadata = {
-        "metadata display name": 'display_name: "LEAPWare status"',
+        "metadata display name": 'display_name: "LEAPWare Pulse"',
         "metadata short description": 'short_description: "Full-plan progress in a concise checklist"',
-        "$LEAPWare-status default prompt": (
-            'default_prompt: "Use $LEAPWare-status to show the full plan, what is done and what remains."'
+        "$LEAPWare-Pulse default prompt": (
+            'default_prompt: "Use $LEAPWare-Pulse to show the full plan, what is done and what remains."'
         ),
     }
     for rule_name, required_text in required_metadata.items():
@@ -140,13 +140,13 @@ def validate(plugin_dir):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Validate LEAPWare-status source files.")
+    parser = argparse.ArgumentParser(description="Validate LEAPWare-Pulse source files.")
     parser.add_argument(
         "path",
         nargs="?",
         default=Path(__file__).resolve().parents[1],
         type=Path,
-        help="repository root or explicit LEAPWare-status plugin directory",
+        help="repository root or explicit LEAPWare-Pulse plugin directory",
     )
     arguments = parser.parse_args()
     errors = validate(arguments.path)
@@ -154,7 +154,7 @@ def main():
         for error in errors:
             print(error)
         return 1
-    print("LEAPWare-status validation passed")
+    print("LEAPWare-Pulse validation passed")
     return 0
 
 

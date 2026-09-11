@@ -1,4 +1,4 @@
-name: Validate LEAPWare-status
+name: Validate LEAPWare-Pulse
 
 on:
   push:

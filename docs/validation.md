@@ -9,10 +9,10 @@ At reviewed evidence head `f17832fdca1bdd5efd6690c56c0abfd9473fe347`, the determ
 The repository validator also passed:
 
 ```text
-py -3.12 scripts/validate_status_plugin.py plugins/LEAPWare-status
+py -3.12 scripts/validate_pulse_plugin.py plugins/LEAPWare-Pulse
 ```
 
-It printed `LEAPWare-status validation passed`. The repository-root entry path passed as well. These checks verify source invariants; they do not establish that Codex has installed, discovered, or selected this local candidate.
+It printed `LEAPWare-Pulse validation passed`. The repository-root entry path passed as well. These checks verify source invariants; they do not establish that Codex has installed, discovered, or selected this local candidate.
 
 ## Established independent behavioral QA
 
