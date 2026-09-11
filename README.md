@@ -53,6 +53,19 @@ paths and SHA-256 values. It works without [removed] running. See the bundled
 sanitation, promotion, withdrawal, recurrence and export commands. Those are
 explicit operator operations; incident data and lesson text are never executed.
 
+The bundled acceptance runner has a known Windows short-path limitation: mixed
+8.3 aliases and long names can produce `write escapes managed scratch root`.
+For this pinned revision, supply canonical absolute long-name paths for `--root`,
+`--spec`, `--evidence` and `--scratch-root`. Validate lexical paths for traversal
+and symlinks/junctions before resolving operator input; never bypass those checks.
+The integration tests canonicalize only their own newly created temporary fixture.
+The Pulse report helper separately accepts real short-root aliases and retains
+traversal and containment tests. Acceptance-runner alias support remains a deferred
+upstream defect, not a fixed behavior in this release. A failed acceptance run may
+already have executed cases and created a partial evidence directory: inspect the
+failed run, then use a fresh evidence directory after correcting the paths. A
+refused or incomplete receipt is never passing evidence.
+
 All three plugins use `LEAPWARE_LEARNING_HOME` when set, otherwise
 `LOCALAPPDATA/LEAPWare/state/learning` (non-Windows fallback
 `~/.local/share/LEAPWare/state/learning`). Share this exact registry convention.
