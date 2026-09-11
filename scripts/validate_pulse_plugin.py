@@ -15,6 +15,14 @@ EXPECTED_PATHS = {
     "skills/LEAPWare-Pulse/agents/openai.yaml",
 }
 
+# Explicit bundled inventory: runtime files are permitted, arbitrary additions are not.
+EXPECTED_PATHS |= {'scripts', 'scripts/learning'} | {
+    'scripts/' + name for name in (
+        'lw-pulse.py', 'lw-learn.py', 'lw-acceptance.py', 'lw_learning_bridge.py',
+        'learning-origin.json', 'release-learning.json', 'learning/__init__.py', 'learning/storage.py',
+        'learning/git_binding.py', 'learning/README.md')
+}
+
 ALLOWED_MANIFEST_FIELDS = {
     "name",
     "version",
@@ -49,6 +57,7 @@ def validate(plugin_dir):
     actual_paths = {
         path.relative_to(plugin_path).as_posix()
         for path in plugin_path.rglob("*")
+        if "__pycache__" not in path.parts and path.suffix != ".pyc"
     }
     if actual_paths != EXPECTED_PATHS:
         errors.append("package inventory must contain only the declared source files")

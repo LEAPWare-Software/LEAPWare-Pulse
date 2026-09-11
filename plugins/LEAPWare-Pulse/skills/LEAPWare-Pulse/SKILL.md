@@ -67,3 +67,25 @@ Illustrative plan with explicit criteria; use the current task's actual plan and
   - [ ] Define the required runtime acceptance checklist.
 
 **Next action:** Run the native hook check and record its evidence.
+
+
+## Deterministic evidence and learning
+
+`lw-status` is a supported natural-language alias for `lw-pulse`; both route to this
+skill, not a native shell alias. Keep the owner's concise full-plan formatting above.
+When canonical task/evidence files are available, use
+`python <plugin>/scripts/lw-pulse.py --root <project> --tasks <OpenSpec-tasks.md> --session <session-id>`.
+Optionally add `--spec <relative-acceptance-spec> --evidence <relative-evidence-directory>`.
+Read the existing OpenSpec checklist; do not create a second task database.
+The helper counts checked rows separately from source-bound verification and refuses
+stale receipt candidates. A checked row is not a verified criterion. Source-fixed,
+pushed, packaged and active are distinct; the helper leaves unavailable delivery and
+token facts unknown. Bind source evidence to specific acceptance criteria before using
+it in the percentage numerator. Do not infer a percentage from the raw checked count.
+
+Use returned applicable validated lessons as bounded advice with canonical ID/version/hash.
+A blocked lookup means resolve the conflict, not silently drop mandatory constraints.
+Report unresolved issue IDs and unavailable capture briefly when material. Preserve
+unknowns; do not repeat model polling to manufacture progress. Observed stale evidence
+and malformed task input receive sanitized local issue receipts. `--occurrence` can
+identify a new observed run within the same session; reuse it for unchanged retries.

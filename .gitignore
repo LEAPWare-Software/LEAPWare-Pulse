@@ -3,3 +3,8 @@
 __pycache__/
 *.py[cod]
 .venv/
+
+.leapware/local/learning/
+.leapware/*.lock
+__pycache__/
+*.pyc
