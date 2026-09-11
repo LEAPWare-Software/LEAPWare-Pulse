@@ -1,7 +1,7 @@
 {
   "name": "LEAPWare-Pulse",
-  "version": "0.2.0",
-  "description": "Concise checklist status reports covering the full plan, completed work and remaining steps.",
+  "version": "0.2.0+codex.20260911202133",
+  "description": "Panorama, Brief and Focus checklist views with evidence-based completion.",
   "author": {
     "name": "LEAPWare"
   },
@@ -9,7 +9,7 @@
   "interface": {
     "displayName": "LEAPWare Pulse",
     "shortDescription": "Full-plan progress in a concise checklist.",
-    "longDescription": "Evidence-based progress reports that preserve the full agreed plan and show completed, active, remaining and blocked work.",
+    "longDescription": "Choose LEAPWare Pulse Panorama for milestones and progress bars, Brief for a compact checklist, or Focus for active work and blockers first. Every view retains the full agreed plan and evidence-based completion.",
     "developerName": "LEAPWare",
     "category": "Productivity",
     "capabilities": [],

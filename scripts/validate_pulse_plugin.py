@@ -13,6 +13,8 @@ EXPECTED_PATHS = {
     "skills/LEAPWare-Pulse/SKILL.md",
     "skills/LEAPWare-Pulse/agents",
     "skills/LEAPWare-Pulse/agents/openai.yaml",
+    "skills/LEAPWare-Pulse/references",
+    "skills/LEAPWare-Pulse/references/formats.md",
 }
 
 # Explicit bundled inventory: runtime files are permitted, arbitrary additions are not.
@@ -104,6 +106,19 @@ def validate(plugin_dir):
     skill_path = plugin_path / "skills" / "LEAPWare-Pulse" / "SKILL.md"
     skill = _read_text(skill_path, errors, "status skill")
     required_skill_rules = {
+        "default view rule": (
+            "Without an explicit view or a recorded owner preference, use Panorama.",
+        ),
+        "view routing": (
+            "`lw-pulse panorama`", "`lw-pulse brief`", "`lw-pulse focus`",
+            "[view recipes](references/formats.md)",
+        ),
+        "completion evidence rule": (
+            "A checked task row, a teammate claim or a passing unrelated test is not completion evidence.",
+        ),
+        "main cleanliness rule": (
+            "Claim main is clean only after checking main's worktree for staged, unstaged and untracked changes; a clean feature worktree does not prove this.",
+        ),
         "full-plan rule": (
             "Keep all agreed milestones visible; preserve stable names and criteria across updates.",
         ),
@@ -130,6 +145,28 @@ def validate(plugin_dir):
     }
     for rule_name, required_texts in required_skill_rules.items():
         if not all(required_text in skill for required_text in required_texts):
+            errors.append(f"missing {rule_name}")
+
+    formats = _read_text(skill_path.parent / "references" / "formats.md", errors, "view recipes")
+    required_format_rules = {
+        "Panorama layout": (
+            "LEAPWare Pulse Panorama",
+            "Show all milestones in execution order, with every required criterion as a nested checkbox.",
+        ),
+        "Brief layout": (
+            "LEAPWare Pulse Brief",
+            "Show one flat checkbox per required criterion in execution order, labelled with its milestone and stable criterion identity.",
+        ),
+        "Focus layout": (
+            "LEAPWare Pulse Focus",
+            "Group criteria under Active, Next, Blocked, Unverified, Remaining, Complete, Deferred and Cancelled, in that order; omit empty groups.",
+        ),
+        "view counting rule": (
+            "Compute the plan-wide count from unique required criteria, never from milestone rows or state-group totals.",
+        ),
+    }
+    for rule_name, required_texts in required_format_rules.items():
+        if not all(required_text in formats for required_text in required_texts):
             errors.append(f"missing {rule_name}")
 
     metadata_path = plugin_path / "skills" / "LEAPWare-Pulse" / "agents" / "openai.yaml"

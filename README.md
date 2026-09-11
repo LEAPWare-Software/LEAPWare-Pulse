@@ -1,10 +1,22 @@
 # LEAPWare Pulse
 
-Concise checklist progress reporting that keeps the full agreed plan visible, with subtasks, verified completion percentages and compact progress bars: complete, active, next, remaining, blocked and unverified work.
+Three branded checklist views of the full agreed plan: **LEAPWare Pulse Panorama**, **LEAPWare Pulse Brief** and **LEAPWare Pulse Focus**. All retain completed and outstanding work, evidence-based completion and one concrete next action.
 
 Use `lw-pulse` in a task or select the LEAPWare-Pulse skill. The phrase is not a shell command. The skill also supports ordinary status requests, progress updates and handoffs through automatic skill selection.
 
 This dedicated repository belongs to LEAPWare-Software. The Codex plugin contains one self-contained skill; it adds no hooks, MCP servers, scheduled jobs or background agents. Reporting does not change task authorization or replace a continuity record.
+
+## Choose your view
+
+| Brand | Request phrase | Report shape |
+|---|---|---|
+| LEAPWare Pulse Panorama | `lw-pulse panorama` | Full plan in milestone order, nested criteria and per-milestone progress bars |
+| LEAPWare Pulse Brief | `lw-pulse brief` | Flat checklist in execution order, milestone labels and one verified count |
+| LEAPWare Pulse Focus | `lw-pulse focus` | Active work and blockers first; all criteria grouped by state with milestone labels |
+
+Natural requests such as "Pulse Brief", "compact checklist status" and "attention-first checklist status" select the matching view. Generic "checklist status", `lw-pulse` and `lw-status` use Panorama unless the owner has explicitly recorded another default. An explicit view overrides that default for the current request. One-off requests do not change the saved preference. These phrases select the skill; they are not shell commands or new native slash commands.
+
+See [the three view recipes and examples](plugins/LEAPWare-Pulse/skills/LEAPWare-Pulse/references/formats.md). The views share the existing task/evidence record; switching views cannot change the underlying scope or progress.
 
 ## Install
 
@@ -12,9 +24,11 @@ Register this repository with `codex plugin marketplace add <repository-root>`, 
 
 ## Reporting contract
 
-Keep the entire committed plan in milestone order, including completed work. Check a box only when its stated outcome has evidence. Keep partial, blocked, failed or unverified work unchecked. Preserve owner corrections, material gates and the exact next action. Separate optional proposals from approved work. Prefer a brief checklist over a narrative activity log.
+Keep the entire committed plan, including completed work. Panorama and Brief preserve execution order; Focus groups criteria by state while preserving their identities and milestone context. Check a box only when its stated outcome has current, relevant evidence. Keep partial, blocked, failed or unverified work unchecked. Preserve owner corrections, material gates and the exact next action. Separate optional proposals from approved work.
 
-Each milestone shows its acceptance criteria as nested checkbox subtasks. Percentages count verified criteria against the explicit complete checklist, not effort or time; show the fraction beside a ten-cell progress bar. Unknown denominators are not yet measurable. Explain changes to the counting basis, and reserve 100% for verified completion of every required criterion.
+Panorama shows nested acceptance criteria, verified fractions and ten-cell progress bars per milestone. Brief and Focus show each criterion once and one plan-wide verified/required count. Counts and percentages represent verified criteria, not effort or time. Unknown denominators are not yet measurable. Explain changes to the counting basis, and reserve completion for verified satisfaction of every required criterion.
+
+"Done" requires evidence for the exact outcome and relevant source/environment. A checked task, unsupported claim or unrelated test pass is insufficient. A clean feature worktree does not prove main is clean; integration, main's working-tree cleanliness and current remote synchronization are separate observations. A status request does not authorize fixes, installation, commits or deployment.
 
 Source: `plugins/LEAPWare-Pulse/skills/LEAPWare-Pulse/SKILL.md`.
 
@@ -23,6 +37,12 @@ Source: `plugins/LEAPWare-Pulse/skills/LEAPWare-Pulse/SKILL.md`.
 Run the mutation suite with `py -3.12 -m unittest discover -s tests -v`. To inspect the package directly, run `py -3.12 scripts/validate_pulse_plugin.py plugins/LEAPWare-Pulse`; the command also accepts the repository root.
 
 These checks verify the source package's fixed identity, inventory, metadata, report rules and authority boundary. They do not replace behavioral QA or fresh installation tests in Codex.
+
+The bundled upstream learning README refers to its own `tests/test_learning.py`.
+In this Pulse repository, the executable integration workflow is
+`tests/test_plugin_learning_cycle.py`; use the discovery command above. Its
+concurrency checks distinguish acknowledged capture from unavailable receipts,
+reconcile uncertain effects before same-session retries, and verify idempotence.
 
 ## Bounded learning (candidate 0.2.0)
 
