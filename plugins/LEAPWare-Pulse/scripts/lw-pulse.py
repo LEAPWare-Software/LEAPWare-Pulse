@@ -9,11 +9,11 @@ from pathlib import Path
 import re
 import subprocess
 import sys
-from learning.storage import decode, relative
+from learning.storage import absolute, decode, relative
 from lw_learning_bridge import capture, retrieve
 
 def report(args):
-    root=Path(args.root).absolute()
+    root=absolute(Path(args.root).absolute())
     path=relative(root,args.tasks)
     with path.open('rb') as stream: raw=stream.read(262145)
     if len(raw)>262144: raise ValueError('task document exceeds 256 KiB')
