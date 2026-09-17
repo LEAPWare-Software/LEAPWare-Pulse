@@ -1,0 +1,52 @@
+{
+  "gate": "G-PUB",
+  "item": "pre-publication history scan",
+  "date": "2026-09-17",
+  "verifier": "independent verifier run (separate from the rewrite session)",
+  "checks": [
+    {
+      "id": "private-origin-files-absent",
+      "result": "pass",
+      "detail": "All six private-origin files listed in the old learning-origin.json are absent from every commit.",
+      "files": [
+        "learning/__init__.py",
+        "learning/storage.py",
+        "learning/git_binding.py",
+        "learning/README.md",
+        "lw-learn.py",
+        "lw-acceptance.py"
+      ]
+    },
+    {
+      "id": "no-copied-blocks",
+      "result": "pass",
+      "detail": "Line-by-line comparison of those files against every added line in history found no copied block of 3 or more lines; only 3 standard-library import lines match."
+    },
+    {
+      "id": "clean-room-rewrite",
+      "result": "pass",
+      "detail": "absolute() and relative() in lw-pulse.py were rewritten clean-room and share no strings with the originals."
+    },
+    {
+      "id": "residual-learning-matches",
+      "result": "pass",
+      "detail": "Remaining 'learning' matches are prose, the removal stub message, and removed import lines in older commits."
+    },
+    {
+      "id": "no-private-markers",
+      "result": "pass",
+      "detail": "0 hits across all commits for the verifier's private marker list (4 patterns, held outside this repo)."
+    },
+    {
+      "id": "remote-refs",
+      "result": "pass",
+      "detail": "Old PR commit a78ceec is not found on GitHub (verifier: HTTP 404; API re-check 2026-09-17: HTTP 422 'No commit found'). The only refs are main (0586920) and tag v0.1.0+codex.20260910194515."
+    },
+    {
+      "id": "tests-and-validator",
+      "result": "pass",
+      "detail": "Tests: 34 passed. Validator scripts/validate_pulse_plugin.py passed."
+    }
+  ],
+  "verdict": "publishable"
+}

@@ -30,9 +30,11 @@ and traced to `docs/requirements/owner-directives.md`. Do not start phase
    stripped from ALL Pulse history before going public, and learning is
    dropped from 1.0. G-PUB runs after the rewrite and after an independent
    scan verifies it.
-3. Pre-publication history scan runs separately. Gate G-PUB (owner: flip to
-   public, apply rulesets and merge queue, create the `lwp-claude` and
-   `lwp-codex` Apps) must pass before D1 or later merges.
+3. [x] Pre-publication history scan DONE (independent verifier,
+   2026-09-17, verdict publishable): `proof/LWP-GPUB-scan.json`. The repo
+   stays private; owner order is D0 first, then G-PUB. Gate G-PUB (owner:
+   flip to public, apply rulesets and merge queue, create the `lwp-claude`
+   and `lwp-codex` Apps) must pass before D1 or later merges.
 4. D0 — skeleton parity and governance, including the worktree rule
    (LWP-R9) and hosted-runners-only check (LWP-R39).
 5. D1 core extraction, D2 Codex plugin, D3 Codex migration, D4 Claude port,
