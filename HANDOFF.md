@@ -37,7 +37,7 @@ gh repo view LEAPWare-Software/LEAPWare-Pulse --json visibility
 
 <!-- lwp-handoff:begin -->
 
-Generated: 2026-09-17 22:36 UTC
+Generated: 2026-09-17 23:34 UTC
 main SHA: 8bccb1c7c1be6bbbb652c5e88ee7a0138c78479a
 CLI: claude
 Session: d0-skeleton-parity
@@ -46,6 +46,7 @@ Open PRs:
 (unavailable: no `gh` auth in this environment, or no open PRs)
 
 Deliverable proof state (from proof/):
+- LWP-D0: PROVEN (commit 78eba219e21e8f57c66b31378fbe9df37364070f)
 - G-PUB: PROVEN (gate record, verdict 'publishable')
 
 <!-- lwp-handoff:end -->
