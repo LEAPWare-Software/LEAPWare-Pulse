@@ -251,3 +251,41 @@ def test_fixture_exemption_is_scoped_to_the_tests_tree():
     assert check_mod._is_exempt_posix("leak_fixture.md") is False
     assert check_mod._is_exempt_posix("docs/fixture-notes.md") is False
     assert check_mod._is_exempt_posix("plugins/LEAPWare-Pulse/fixtures/thing.json") is False
+
+
+def test_range_scan_catches_a_leak_only_in_a_commit_message(tmp_path):
+    """A clone carries commit messages in full.
+
+    Found by the independent D0 check: an empty commit whose message held a
+    drive-letter path passed the range scan, because only diff hunks were
+    ever read.
+    """
+    repo = tmp_path / "fixture-repo"
+    repo.mkdir()
+    run = lambda *a: subprocess.run(["git", *a], cwd=repo, check=True, capture_output=True)
+    run("init", "-q")
+    run("config", "user.name", "Fixture")
+    run("config", "user.email", "fixture@example.invalid")
+    (repo / "README.md").write_text("clean\n", encoding="utf-8")
+    run("add", "README.md")
+    run("commit", "-q", "-m", "base commit, nothing to see")
+    base = subprocess.run(
+        ["git", "rev-parse", "HEAD"], cwd=repo, capture_output=True, text=True
+    ).stdout.strip()
+    run(
+        "commit",
+        "-q",
+        "--allow-empty",
+        "-m",
+        "notes: built from " + "C:" + chr(92) + "Users" + chr(92) + "realperson, no file change",
+    )
+
+    original_root = check_mod.REPO_ROOT
+    try:
+        check_mod.REPO_ROOT = repo
+        findings = check_mod.check_range_messages(f"{base}..HEAD")
+    finally:
+        check_mod.REPO_ROOT = original_root
+
+    assert findings, "a drive-letter path in a commit message must be caught"
+    assert any("commit message" in f for f in findings)

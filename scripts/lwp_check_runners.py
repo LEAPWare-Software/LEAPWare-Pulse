@@ -71,18 +71,48 @@ def _read_lines(text: str) -> list[tuple[int, str]]:
     return result
 
 
-def _collect_block_list(lines: list[tuple[int, str]], start: int, parent_indent: int) -> tuple[list[str], int]:
-    """Collect a ``- item`` block sequence starting at ``start``."""
-    items: list[str] = []
+def _collect_block_list(lines: list[tuple[int, str]], start: int, parent_indent: int) -> tuple[list, int]:
+    """Collect a ``- item`` block sequence starting at ``start``.
+
+    An item that is itself a ``key: value`` mapping comes back as a dict,
+    with any deeper continuation lines folded into the same mapping, so
+
+        include:
+          - os: self-hosted
+            python-version: "3.12"
+
+    yields ``[{"os": "self-hosted", "python-version": "3.12"}]`` rather than
+    the string ``"os: self-hosted"`` with the second key dropped. A plain
+    scalar item still comes back as a string. Found by the independent D0
+    check: `matrix.include:` legs were being read as opaque strings, so a
+    self-hosted leg declared there was invisible to LWP-R39.
+    """
+    items: list = []
     idx = start
     while idx < len(lines):
         indent, content = lines[idx]
         if indent <= parent_indent or not content.startswith("-"):
             break
         item = content[1:].strip()
-        if item:
-            items.append(_unquote(item))
         idx += 1
+        if not item:
+            continue
+        if ":" in item:
+            key, _, value = item.partition(":")
+            mapping: dict[str, object] = {key.strip(): _unquote(value.strip())}
+            # Fold in continuation keys of this same list item: deeper than
+            # the dash, and not themselves a new item.
+            while idx < len(lines):
+                cont_indent, cont_content = lines[idx]
+                if cont_indent <= indent or cont_content.startswith("-"):
+                    break
+                if ":" in cont_content:
+                    ckey, _, cvalue = cont_content.partition(":")
+                    mapping[ckey.strip()] = _unquote(cvalue.strip())
+                idx += 1
+            items.append(mapping)
+        else:
+            items.append(_unquote(item))
     return items, idx
 
 
@@ -118,6 +148,36 @@ def _collect_mapping_keys(lines: list[tuple[int, str]], start: int, parent_inden
     return mapping, idx
 
 
+def _matrix_include_os_values(matrix: dict) -> list[str]:
+    """Runner labels added through `matrix.include:`.
+
+    `include:` is a real GitHub Actions mechanism for adding a matrix leg,
+    and a leg added there can carry its own `os:`. Reading only
+    `matrix.os` misses it entirely:
+
+        strategy:
+          matrix:
+            os: [ubuntu-latest]
+            include:
+              - os: self-hosted
+          runs-on: ${{ matrix.os }}
+
+    That job runs on a self-hosted runner while `matrix.os` lists nothing
+    but `ubuntu-latest`. Found by the independent D0 check (LWP-R39).
+    """
+    include = matrix.get("include")
+    values: list[str] = []
+    if isinstance(include, list):
+        for leg in include:
+            if isinstance(leg, dict):
+                leg_os = leg.get("os")
+                if isinstance(leg_os, str):
+                    values.append(leg_os)
+                elif isinstance(leg_os, list):
+                    values.extend(v for v in leg_os if isinstance(v, str))
+    return values
+
+
 def _matrix_os_values(job: dict) -> list[str]:
     strategy = job.get("strategy")
     if not isinstance(strategy, dict):
@@ -125,20 +185,25 @@ def _matrix_os_values(job: dict) -> list[str]:
     matrix = strategy.get("matrix")
     if not isinstance(matrix, dict):
         return []
+    included = _matrix_include_os_values(matrix)
     os_value = matrix.get("os")
     if os_value is None:
-        return []
+        return included
     if isinstance(os_value, list):
-        values: list[str] = []
+        values: list[str] = list(included)
         for item in os_value:
+            if isinstance(item, dict):
+                # A mapping inside an `os:` list is not a runner label; the
+                # include-leg reader above already handled those.
+                continue
             if isinstance(item, str) and item.strip().startswith("["):
                 values.extend(_parse_flow_list(item))
             elif isinstance(item, str):
                 values.append(item)
         return values
     if isinstance(os_value, str):
-        return _parse_flow_list(os_value)
-    return []
+        return included + _parse_flow_list(os_value)
+    return included
 
 
 def _check_runs_on(job_name: str, job: dict) -> list[str]:

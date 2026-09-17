@@ -54,6 +54,35 @@ COMMIT_RE = re.compile(r"^[0-9a-f]{7,40}$")
 GATE_ID_RE = re.compile(r"^G-[A-Z0-9-]+$")
 DATE_RE = re.compile(r"^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
 
+# Values that name nobody. A `checked_by` matching one of these (case- and
+# punctuation-insensitive) is treated as "the independent check has not
+# happened", not as a valid identity.
+_PLACEHOLDER_IDENTITIES = frozenset(
+    {
+        "pending",
+        "todo",
+        "tbd",
+        "tba",
+        "none",
+        "n/a",
+        "na",
+        "unknown",
+        "unchecked",
+        "xxx",
+        "-",
+        "?",
+        "someone",
+        "self",
+        "me",
+    }
+)
+
+
+def _is_placeholder(value: str) -> bool:
+    """True when `value` names nobody (see _PLACEHOLDER_IDENTITIES)."""
+    return value.strip().strip(".!<>[]() ").casefold() in _PLACEHOLDER_IDENTITIES
+
+
 REQUIRED_TOP = ("deliverable", "author", "checked_by", "commit", "commands", "mutations", "unproven")
 REQUIRED_COMMAND = ("argv", "exit", "expect_exit", "tail", "sha256")
 
@@ -146,8 +175,17 @@ def _validate_phase_record(path: Path, data: dict) -> list[str]:
         errors.append(f"{rel}: 'author' must be a non-empty string")
     if not isinstance(data["checked_by"], str) or not data["checked_by"]:
         errors.append(f"{rel}: 'checked_by' must be a non-empty string")
-    elif data["checked_by"] == data.get("author"):
+    elif data["checked_by"].strip().casefold() == str(data.get("author", "")).strip().casefold():
         errors.append(f"{rel}: 'checked_by' equals 'author' -- proof cannot be self-certified")
+    elif _is_placeholder(data["checked_by"]):
+        # String inequality alone is a cosmetic guard: "PENDING", "TODO" or
+        # "" with a trailing space all differ from the author and would pass
+        # while naming nobody. A proof record whose independent check has not
+        # happened yet is not a proof record.
+        errors.append(
+            f"{rel}: 'checked_by' is the placeholder {data['checked_by']!r} -- "
+            "name the identity that actually ran the check"
+        )
 
     commit = data["commit"]
     if not isinstance(commit, str) or not COMMIT_RE.match(commit):

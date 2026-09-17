@@ -84,4 +84,38 @@ def test_real_proof_directory_validates_clean():
     """
     errors, count = lwp_check_proof.validate_all()
     assert errors == []
-    assert count == 1
+    # Not `== 1`: proof/ gains a record every phase (LWP-D0 ... LWP-D5), so
+    # pinning the count makes the suite fail the moment the phase it is
+    # meant to prove writes its own record. The real assertion is that every
+    # record present validates and that the gate record is still among them.
+    assert count >= 1
+    names = {p.name for p in (REPO_ROOT / "proof").glob("*.json")}
+    assert "LWP-GPUB-scan.json" in names
+
+
+def test_placeholder_checked_by_is_rejected():
+    """`checked_by` must name a real identity, not a promise of one.
+
+    Found by the independent D0 check: the record was carrying
+    `"checked_by": "PENDING"` and `lwp_check_proof.py` passed it, because
+    the only guard was string inequality with `author`.
+    """
+    base = json.loads((FIXTURES / "valid.json").read_text(encoding="utf-8"))
+    for placeholder in ("PENDING", "pending ", "TODO", "TBD", "n/a", "unknown", "[pending]"):
+        record = dict(base, checked_by=placeholder)
+        errors = lwp_check_proof._validate_record(Path("proof/fake.json"), record)
+        assert any("placeholder" in e for e in errors), f"{placeholder!r} was accepted"
+
+
+def test_author_and_checked_by_differing_only_by_case_or_space_is_rejected():
+    base = json.loads((FIXTURES / "valid.json").read_text(encoding="utf-8"))
+    record = dict(base, checked_by=f"  {str(base['author']).upper()} ")
+    errors = lwp_check_proof._validate_record(Path("proof/fake.json"), record)
+    assert any("self-certified" in e for e in errors)
+
+
+def test_a_real_identity_is_still_accepted():
+    base = json.loads((FIXTURES / "valid.json").read_text(encoding="utf-8"))
+    record = dict(base, checked_by="lw-verifier (sonnet), independent check, 2026-09-17")
+    errors = lwp_check_proof._validate_record(Path("proof/fake.json"), record)
+    assert errors == []

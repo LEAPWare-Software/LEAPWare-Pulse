@@ -129,3 +129,57 @@ def test_runner_group_mapping_fails(tmp_path: Path) -> None:
     assert result.returncode == 1
     assert "group" in result.stderr
     assert "test" in result.stderr
+
+
+def test_self_hosted_reached_through_matrix_include_fails(tmp_path):
+    """`include:` can add a matrix leg with its own `os:`.
+
+    Found by the independent D0 check: reading only `matrix.os` let a job
+    route to a self-hosted runner while the listed `os` values were all
+    GitHub-hosted, and LWP-R39's check passed it.
+    """
+    wf = tmp_path / ".github" / "workflows"
+    wf.mkdir(parents=True)
+    (wf / "sneaky.yml").write_text(
+        "name: Sneaky\n"
+        "on: [push]\n"
+        "jobs:\n"
+        "  build:\n"
+        "    strategy:\n"
+        "      matrix:\n"
+        "        os: [ubuntu-latest]\n"
+        "        include:\n"
+        "          - os: self-hosted\n"
+        "    runs-on: ${{ matrix.os }}\n"
+        "    steps:\n"
+        "      - run: echo hi\n",
+        encoding="utf-8",
+    )
+    result = _run_check(tmp_path)
+    out = result.stdout + result.stderr
+    assert result.returncode == 1, "a self-hosted leg added via matrix.include must fail LWP-R39"
+    assert "self-hosted" in out
+    assert "sneaky.yml" in out
+    assert "build" in out
+
+
+def test_github_hosted_matrix_include_still_passes(tmp_path):
+    wf = tmp_path / ".github" / "workflows"
+    wf.mkdir(parents=True)
+    (wf / "fine.yml").write_text(
+        "name: Fine\n"
+        "on: [push]\n"
+        "jobs:\n"
+        "  build:\n"
+        "    strategy:\n"
+        "      matrix:\n"
+        "        os: [ubuntu-latest]\n"
+        "        include:\n"
+        "          - os: macos-latest\n"
+        "    runs-on: ${{ matrix.os }}\n"
+        "    steps:\n"
+        "      - run: echo hi\n",
+        encoding="utf-8",
+    )
+    proc = _run_check(tmp_path)
+    assert proc.returncode == 0, proc.stdout + proc.stderr

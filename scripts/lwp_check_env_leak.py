@@ -16,8 +16,10 @@ was built on. Scans every git-tracked, non-binary file for:
     still runs with the generic default alone
 
 Allow-listed: this script's own pattern data (it necessarily names the
-patterns it looks for) and files under `tests/**/fixtures/**` whose
-filename or path makes clear they are synthetic (contain `fixture`).
+patterns it looks for) and synthetic fixtures UNDER `tests/` whose path
+contains `fixture`. The exemption is scoped to `tests/` deliberately: a
+bare "contains fixture" rule let `leak_fixture.md` at the repo root carry
+a real drive-letter path straight past this check.
 
 A working-tree scan alone misses a leak that was committed and then
 removed again -- it is still sitting in the branch's history, and a
@@ -25,7 +27,10 @@ removed again -- it is still sitting in the branch's history, and a
 final tree. `--range <base>..<head>` additionally scans the ADDED lines
 of every commit in that range (via `git log -p --unified=0`), so a leak
 that was committed then reverted within the same PR is still caught, not
-just the leaks visible in the final diff.
+just the leaks visible in the final diff. `--range` also scans every
+COMMIT MESSAGE in the range: a clone carries messages in full, so a path
+pasted into a commit body leaks as hard as one in a file, and shows up in
+no diff at all.
 
 Usage:
     python scripts/lwp_check_env_leak.py
@@ -179,6 +184,35 @@ _NEW_FILE_RE = re.compile(r"^\+\+\+ b/(.+)$")
 _HUNK_RE = re.compile(r"^@@ -\d+(?:,\d+)? \+(\d+)(?:,\d+)? @@")
 
 
+def check_range_messages(rev_range: str) -> list[str]:
+    """Scan the COMMIT MESSAGES of every commit in `rev_range`.
+
+    Beyond LWP-R3's literal wording, which speaks of tracked files and added
+    lines. A `git clone` carries commit messages in full, so a machine path
+    or a private project name pasted into a commit body leaks exactly as
+    hard as one in a file -- and is harder to spot, since no file diff shows
+    it. Found by the independent D0 check: an empty commit whose message
+    held a drive-letter path passed the range scan cleanly.
+    """
+    result = subprocess.run(
+        ["git", "log", "--no-color", "--format=%H%x1f%B%x1e", rev_range],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+
+    findings: list[str] = []
+    for entry in result.stdout.split("\x1e"):
+        if "\x1f" not in entry:
+            continue
+        sha, _, message = entry.strip().partition("\x1f")
+        for lineno, line in enumerate(message.splitlines(), start=1):
+            for f in _findings_for_line(f"(commit message) {sha[:12]}", lineno, line):
+                findings.append(f)
+    return findings
+
+
 def check_range(rev_range: str) -> list[str]:
     """Scan the ADDED lines of every commit in `rev_range` (base..head).
 
@@ -264,6 +298,7 @@ def main() -> int:
     findings = [] if args.range_only else check()
     if args.rev_range:
         findings.extend(check_range(args.rev_range))
+        findings.extend(check_range_messages(args.rev_range))
     if findings:
         for f in findings:
             print(f"FAIL: {f}")

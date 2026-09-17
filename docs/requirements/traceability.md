@@ -8,7 +8,7 @@ fixture heading that should have no row, not a real requirement.
 
 ## Status column, and why it exists
 
-Only D0's requirements have a check and tests landed today. R1 and R7,
+Only D0's requirements have a check and tests landed today. R7 and
 R13-R38 are proven in D1-D5, by scripts and tests that do not exist in
 this tree yet — their **Test:** line in `requirements.md` names the
 *future* test node, not a node that resolves right now.
@@ -25,11 +25,15 @@ So every row carries a `status`:
   require it to resolve yet. This is the plan, not yet the proof.
 
 A requirement's `Phase:` in `requirements.md` being `D0` does not by
-itself make its row `proven` here — several D0-phase requirements
-(R1, R4, R8, R10, R11) have their check script already landed in
-`scripts/` but no test file for it yet in `tests/` as of this matrix's
-last edit, so they are `planned` until that lands. Re-run
+itself make its row `proven` here — the row flips only once its named
+test node actually resolves. All twelve D0 requirements (R1-R6, R8-R12,
+R39) are `proven` as of this edit; every other row is `planned`. Re-run
 `scripts/lwp_check_trace.py` after adding a test to see a row flip.
+
+R1's row is `proven` in the narrow sense the phase allows: the check and
+its tests exist and pass, including against this tree with the
+pre-recast legacy exemption active. The rule is not yet proven against
+real `lwp`-named plugins — that is D2 (Codex) and D4 (Claude).
 
 ## Matrix
 
