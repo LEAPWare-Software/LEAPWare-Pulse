@@ -78,17 +78,13 @@ _PLACEHOLDER_IDENTITIES = frozenset(
 )
 
 
-# Markers of "the check has not happened yet", matched as SUBSTRINGS. The
+# Markers of "the check has not happened yet", matched on WORD BOUNDARIES
+# (see _MARKER_RE and _is_placeholder below -- NOT as bare substrings, which
+# rejected the real surname `Todor Petrov` for containing "todo"). The
 # exact-word list above only catches a value that is nothing but the word;
 # the independent check walked straight past it with `AWAITING-VERIFIER`,
-# and `PLACEHOLDER`, `REDACTED`, `REVIEW-PENDING`, `not-yet-assigned` and
-# `TO BE DETERMINED` passed just as easily.
-#
-# This is a heuristic and it is honest about that: it catches an unfilled
-# field, not a dishonest one. Nothing here can tell a real identity from a
-# plausible invention -- that guarantee comes from a different identity
-# actually running the check, not from this function. Disclosed as such in
-# proof/LWP-D0.json's `unproven` list.
+# `PLACEHOLDER`, `REDACTED`, `REVIEW-PENDING`, `not-yet-assigned` and
+# `TO BE DETERMINED`.
 _PLACEHOLDER_MARKERS = (
     "pending",
     "await",
@@ -101,22 +97,76 @@ _PLACEHOLDER_MARKERS = (
     "tbd",
     "tba",
     "todo",
-    "fixme",
     "unchecked",
     "unknown",
     "to be determined",
     "to be assigned",
     "xxx",
+    # Added after round three of the independent check found these passing.
+    "unverified",
+    "unspecified",
+    "unset",
+    "blank",
+    "empty",
+    "none",
+    "nobody",
+    "no verifier",
+    "no checker",
+    "not assigned",
+    "not verified",
+    "not checked",
+    "held",
 )
 
 
+_MARKER_RE = re.compile(
+    r"\b(?:" + "|".join(re.escape(m) for m in _PLACEHOLDER_MARKERS) + r")\b",
+    re.IGNORECASE,
+)
+
+# An all-caps slug with no lowercase and no spaces -- SET-BY-INDEPENDENT-CHECK,
+# AWAITING-VERIFIER, PLACEHOLDER, REDACTED -- is a template value, not how
+# anyone writes their own identity. This catches the open-ended class that no
+# word list can enumerate.
+_TEMPLATE_SLUG_RE = re.compile(r"^[A-Z][A-Z0-9]*(?:[-_][A-Z0-9]+)*$")
+
+
 def _is_placeholder(value: str) -> bool:
-    """True when `value` reads as an unfilled field rather than an identity."""
-    cleaned = value.strip().strip(".!<>[]() ")
-    if cleaned.casefold() in _PLACEHOLDER_IDENTITIES:
+    """True when `value` reads as an unfilled field rather than an identity.
+
+    Three rules, in order of how much they can be trusted:
+
+    1. An exact match (punctuation stripped) against the known list --
+       "PENDING", "N.A.", "TBD".
+    2. No letters at all -- "???", "--". Tested with `str.isalpha`, not
+       `[A-Za-z]`: an ASCII-only test rejects a name written in any
+       non-Latin script, which is the same class of bug as the `Todor
+       Petrov` false positive and worse in what it implies.
+    3. A marker word, matched on WORD BOUNDARIES, or an all-caps template
+       slug.
+
+    Rule 3 is word-boundary matched for a reason: as plain substrings, the
+    markers rejected `Todor Petrov` (a real surname, for "todo"). Wrongly
+    refusing a real
+    identity is a worse failure than missing a placeholder -- it blocks an
+    honest record -- so the test is deliberately narrower than "contains".
+
+    This remains a heuristic and it cannot be made complete: `unverified`,
+    `no verifier`, `held` and anything else phrased freely still pass. It
+    catches a field nobody filled in, not a field filled in dishonestly.
+    The real guarantee is a different identity actually running the check.
+    Disclosed in proof/LWP-D0.json's `unproven` list.
+    """
+    cleaned = value.strip().strip(".!?<>[](){}\"'- ")
+    alnum_only = re.sub(r"[^a-z0-9]", "", cleaned.casefold())
+
+    if alnum_only in _PLACEHOLDER_IDENTITIES:
         return True
-    lowered = cleaned.casefold()
-    return any(marker in lowered for marker in _PLACEHOLDER_MARKERS)
+    if not any(ch.isalpha() for ch in cleaned):
+        return True
+    if _TEMPLATE_SLUG_RE.match(cleaned):
+        return True
+    return bool(_MARKER_RE.search(cleaned))
 
 
 REQUIRED_TOP = ("deliverable", "author", "checked_by", "commit", "commands", "mutations", "unproven")

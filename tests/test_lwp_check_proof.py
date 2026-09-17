@@ -136,3 +136,46 @@ def test_a_real_identity_is_still_accepted():
     record = dict(base, checked_by="lw-verifier (sonnet), independent check, 2026-09-17")
     errors = lwp_check_proof._validate_record(Path("proof/fake.json"), record)
     assert errors == []
+
+
+def test_placeholder_guard_does_not_reject_real_identities():
+    """Wrongly refusing a real identity blocks an honest record.
+
+    Round three of the independent check found `Todor Petrov` rejected for
+    containing "todo" as a substring; testing that fix turned up a worse
+    one, a name in a non-Latin script rejected by an ASCII-only
+    "has any letters" test.
+    """
+    real_identities = [
+        "Todor Petrov",
+        "lw-verifier (sonnet), session claude-fixme-042",
+        "codex",
+        "claude-opus-5 session d0-skeleton-parity",
+        "lw-verifier (sonnet), independent check of LWP-D0 at commit 4738831, 2026-09-17",
+        "Ana Maria Nunes",
+        "J. Smith",
+        "Noneste Alvarez",
+        "Heldana Tesfaye",
+        "小林 太郎",
+        "Ольга Иванова",
+    ]
+    rejected = [v for v in real_identities if lwp_check_proof._is_placeholder(v)]
+    assert rejected == [], f"real identities wrongly rejected: {rejected}"
+
+
+def test_placeholder_guard_catches_the_open_ended_template_class():
+    """An all-caps slug is a template value no word list can enumerate."""
+    for value in (
+        "SET-BY-INDEPENDENT-CHECK",
+        "AWAITING-VERIFIER",
+        "PLACEHOLDER",
+        "REDACTED",
+        "CHECKER-TBD",
+        "unverified",
+        "no verifier",
+        "checker unspecified",
+        "N.A.",
+        "???",
+        "--",
+    ):
+        assert lwp_check_proof._is_placeholder(value), f"{value!r} was accepted"

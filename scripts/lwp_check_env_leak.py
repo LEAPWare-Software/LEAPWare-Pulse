@@ -172,12 +172,24 @@ def _findings_for_wrapped(rel: str, lineno: int, first: str, second: str) -> lis
     reported, so a wrapped hit is never double-counted.
     """
     joined = first.rstrip() + second.lstrip()
-    alone = set(_findings_for_line(rel, lineno, first)) | set(
-        _findings_for_line(rel, lineno + 1, second)
-    )
+
+    # Compare by finding KIND, not by the whole line-tagged string. Every
+    # finding reads "<rel>:<lineno>: <kind>", and the joined text is always
+    # tagged with the pair's FIRST line number -- so when the real leak sits
+    # entirely on the second line (the common case) the two strings can
+    # never be equal and the dedup silently fails. That produced 42 spurious
+    # "wrapped" duplicates on this repo's own tree; found by the independent
+    # D0 check, which read the code rather than trusting the claim.
+    def _kind(finding: str) -> str:
+        _, _, kind = finding.partition(": ")
+        return kind
+
+    alone = {_kind(f) for f in _findings_for_line(rel, lineno, first)}
+    alone |= {_kind(f) for f in _findings_for_line(rel, lineno + 1, second)}
+
     findings = []
     for f in _findings_for_line(rel, lineno, joined):
-        if f not in alone:
+        if _kind(f) not in alone:
             findings.append(f"{f} (wrapped across lines {lineno}-{lineno + 1})")
     return findings
 
@@ -268,11 +280,18 @@ def check_range(rev_range: str) -> list[str]:
     prev_added: tuple[str, int, str] | None = None
 
     for raw_line in result.stdout.splitlines():
+        # Every boundary below also clears prev_added. Without that, a
+        # coincidental same-path, consecutive-line-number pair spanning two
+        # commits (or two hunks) would be rejoined and reported as a wrap
+        # that never existed in any single file state. Raised as PLAUSIBLE
+        # by the independent D0 check; cheap to close, so closed rather
+        # than argued about.
         commit_match = _COMMIT_RE.match(raw_line)
         if commit_match:
             commit_sha = commit_match.group(1)[:12]
             rel = None
             next_new_line = None
+            prev_added = None
             continue
 
         new_file_match = _NEW_FILE_RE.match(raw_line)
@@ -280,11 +299,13 @@ def check_range(rev_range: str) -> list[str]:
             candidate = new_file_match.group(1)
             rel = None if candidate == "dev/null" else PurePosixPath(candidate).as_posix()
             next_new_line = None
+            prev_added = None
             continue
 
         hunk_match = _HUNK_RE.match(raw_line)
         if hunk_match:
             next_new_line = int(hunk_match.group(1))
+            prev_added = None
             continue
 
         if rel is None or next_new_line is None or _is_exempt_posix(rel):

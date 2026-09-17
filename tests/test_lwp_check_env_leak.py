@@ -321,3 +321,25 @@ def test_a_wrapped_hit_is_not_double_counted():
     findings = check_mod._findings_for_text("(test)", lines)
     assert len(findings) == 1
     assert "wrapped" not in findings[0]
+
+
+def test_a_leak_on_the_second_line_of_a_pair_is_not_double_reported():
+    """Dedup must compare finding KIND, not the line-tagged string.
+
+    Round three of the independent check found 42 spurious "wrapped"
+    duplicates on this repo's own tree: the joined text is always tagged
+    with the pair's FIRST line number, so a real leak living entirely on
+    the SECOND line produced two differently-tagged strings that could
+    never compare equal.
+    """
+    lines = ["a harmless first line", "leak here C:" + BACKSLASH + "Users" + BACKSLASH + "bob x"]
+    findings = check_mod._findings_for_text("(test)", lines)
+    assert len(findings) == 1, f"expected one finding, got {findings}"
+    assert "wrapped" not in findings[0]
+
+
+def test_the_real_tree_reports_no_wrapped_duplicates():
+    """Regression guard on the actual repository, not a fixture."""
+    findings = check_mod.check()
+    wrapped = [f for f in findings if "wrapped across lines" in f]
+    assert wrapped == [], f"wrapped duplicates reappeared: {wrapped[:5]}"
