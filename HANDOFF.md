@@ -25,9 +25,11 @@ and traced to `docs/requirements/owner-directives.md`. Do not start phase
 1. Work from this repo only. Clone fresh on any machine; no dependence on
    the local environment.
 2. The recast requirements and plan are merged. Decisions Q1, Q3–Q5 are
-   recorded in `plan.md` (CTO, 2026-09-17). Q2 (learning subsystem
-   publication) is OPEN, OWNER-RESERVED: it gates G-PUB, not D0; D0 may
-   proceed while the repo is private.
+   recorded in `plan.md` (CTO, 2026-09-17). Q2 DECIDED (owner, 2026-09-17):
+   the learning code migrated from the private [removed] is
+   stripped from ALL Pulse history before going public, and learning is
+   dropped from 1.0. G-PUB runs after the rewrite and after an independent
+   scan verifies it.
 3. Pre-publication history scan runs separately. Gate G-PUB (owner: flip to
    public, apply rulesets and merge queue, create the `lwp-claude` and
    `lwp-codex` Apps) must pass before D1 or later merges.

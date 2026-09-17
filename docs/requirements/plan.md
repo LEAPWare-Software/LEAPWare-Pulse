@@ -172,10 +172,10 @@ on both hosts. Duplicating it per host would break LWP-R32. Recorded in
 **Q1 ACCEPTED.** The Claude plugin name is `lwp` in both manifests and
 marketplaces; the marketplace name is `leapware-pulse`.
 
-**Q2 OPEN, OWNER-RESERVED.** The learning code was migrated from the
-private repo [removed], so publishing it is an owner decision.
-G-PUB (going public) is BLOCKED until the owner rules. D0 may proceed
-while the repo is private.
+**Q2 DECIDED (owner, 2026-09-17).** The learning code migrated from the
+private [removed] is stripped from ALL Pulse history before
+going public, and learning is dropped from 1.0. G-PUB runs after the
+rewrite and after an independent scan verifies it.
 
 **Q3 ACCEPTED.** One skill, `lwp-status`, answering to `lwp panorama` /
 `lwp brief` / `lwp focus`; `lw-pulse` stays an alias through 1.x;
