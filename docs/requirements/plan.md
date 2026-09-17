@@ -85,6 +85,8 @@ on both hosts. Duplicating it per host would break LWP-R32. Recorded in
 ## D1 — Core extraction and adapters (L)
 
 - **Entry:** D0 merged; owner answer to Q2 (learning subsystem).
+  `lw-acceptance.py` removed (private-origin); a clean-room acceptance
+  runner is rebuilt in D1.
 - **Work:** capture golden outputs of the pre-recast helpers on fixture
   projects first. Move pure logic (checklist parsing, report assembly, spec
   and receipt validation, lesson records, pins) into `core/lwp_core`; move

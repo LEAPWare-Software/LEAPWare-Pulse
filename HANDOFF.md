@@ -39,6 +39,8 @@ and traced to `docs/requirements/owner-directives.md`. Do not start phase
    D5 rehearsal and independent proof, release 1.0.0.
 6. Every phase: proof record `proof/LWP-Dn.json`, pushed, CI green, alert
    line `LWP - Alert: LWP-Dn DONE ...`.
+7. `lw-acceptance.py` removed (private-origin); a clean-room acceptance
+   runner is rebuilt in D1.
 
 <!-- lwp-handoff:begin -->
 
@@ -90,5 +92,3 @@ the plan; the commands above are the facts.
 - The existing `docs/evidence/*` files contain absolute local paths; they
   are dropped from the tree in D2 and will fail the D0 env-leak check on a
   full-tree scan until then — run that check in range mode for D0/D1 PRs.
-- The learning data key stays `leapware-pulse` through the rename
-  (LWP-R27); changing it orphans existing registries.

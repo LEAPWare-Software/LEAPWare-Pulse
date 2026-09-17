@@ -62,7 +62,7 @@ Claim main is clean only after checking main's worktree for staged, unstaged and
 
 When a milestone was previously complete but new evidence invalidates it, reopen it and explain the change briefly. When reporting saved state, include its date if freshness matters. Never imply a checkpoint guarantees recovery beyond the evidence. This skill formats status; it is not a replacement for the project's durable work record.
 
-## Deterministic evidence and learning
+## Deterministic evidence
 
 `lw-status` is a supported natural-language alias for `lw-pulse`; both route to this
 skill, not a native shell alias. Keep the owner's concise full-plan formatting above.
@@ -75,10 +75,4 @@ stale receipt candidates. A checked row is not a verified criterion. Source-fixe
 pushed, packaged and active are distinct; the helper leaves unavailable delivery and
 token facts unknown. Bind source evidence to specific acceptance criteria before using
 it in the percentage numerator. Do not infer a percentage from the raw checked count.
-
-Use returned applicable validated lessons as bounded advice with canonical ID/version/hash.
-A blocked lookup means resolve the conflict, not silently drop mandatory constraints.
-Report unresolved issue IDs and unavailable capture briefly when material. Preserve
-unknowns; do not repeat model polling to manufacture progress. Observed stale evidence
-and malformed task input receive sanitized local issue receipts. `--occurrence` can
-identify a new observed run within the same session; reuse it for unchanged retries.
+Preserve unknowns; do not repeat model polling to manufacture progress.
