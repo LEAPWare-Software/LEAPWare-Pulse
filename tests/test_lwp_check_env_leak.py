@@ -289,3 +289,35 @@ def test_range_scan_catches_a_leak_only_in_a_commit_message(tmp_path):
 
     assert findings, "a drive-letter path in a commit message must be caught"
     assert any("commit message" in f for f in findings)
+
+
+BACKSLASH = chr(92)
+
+
+def test_a_path_wrapped_across_two_lines_is_caught():
+    """Detection is per-line, so a path that merely wraps was invisible.
+
+    Found by the independent D0 check against the commit-message scanner;
+    the file and diff scanners had the same blind spot from the start. The
+    path is fully present and usable in the file -- it is just split.
+    """
+    lines = [
+        "built from C:",
+        BACKSLASH + "Users" + BACKSLASH + "realperson" + BACKSLASH + "proj.txt",
+    ]
+    findings = check_mod._findings_for_text("(test)", lines)
+    assert findings, "a drive-letter path split across two lines must be caught"
+    assert any("wrapped across lines" in f for f in findings)
+
+
+def test_wrapping_does_not_invent_findings_from_unrelated_lines():
+    assert check_mod._findings_for_text("(test)", ["see the docs", "for details"]) == []
+    assert check_mod._findings_for_text("(test)", ["nothing here", "or here either"]) == []
+
+
+def test_a_wrapped_hit_is_not_double_counted():
+    """A leak fully on one line is reported once, not again as 'wrapped'."""
+    lines = ["a C:" + BACKSLASH + "Users" + BACKSLASH + "bob here", "next line"]
+    findings = check_mod._findings_for_text("(test)", lines)
+    assert len(findings) == 1
+    assert "wrapped" not in findings[0]

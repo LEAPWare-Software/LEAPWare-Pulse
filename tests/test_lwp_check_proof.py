@@ -101,7 +101,24 @@ def test_placeholder_checked_by_is_rejected():
     the only guard was string inequality with `author`.
     """
     base = json.loads((FIXTURES / "valid.json").read_text(encoding="utf-8"))
-    for placeholder in ("PENDING", "pending ", "TODO", "TBD", "n/a", "unknown", "[pending]"):
+    for placeholder in (
+        "PENDING",
+        "pending ",
+        "TODO",
+        "TBD",
+        "n/a",
+        "unknown",
+        "[pending]",
+        # Round two: the first guard was an exact-word list, and the
+        # independent check walked straight past it with these.
+        "AWAITING-VERIFIER",
+        "PLACEHOLDER",
+        "REDACTED",
+        "REVIEW-PENDING",
+        "TO BE DETERMINED",
+        "not-yet-assigned",
+        "CHECKER-TBD",
+    ):
         record = dict(base, checked_by=placeholder)
         errors = lwp_check_proof._validate_record(Path("proof/fake.json"), record)
         assert any("placeholder" in e for e in errors), f"{placeholder!r} was accepted"

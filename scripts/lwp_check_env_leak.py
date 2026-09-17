@@ -158,6 +158,40 @@ def _findings_for_line(rel: str, lineno: int, line: str) -> list[str]:
     return findings
 
 
+def _findings_for_wrapped(rel: str, lineno: int, first: str, second: str) -> list[str]:
+    """Findings visible only when two consecutive lines are rejoined.
+
+    Detection is per-line everywhere else, so a path that merely WRAPS --
+    `C:` ending one line and `\\Users\\someone\\project` starting the next --
+    is fully present and usable in the file, and invisible to every regex
+    here. Found by the independent D0 check against the commit-message
+    scanner, but the file and diff scanners had the same blind spot from
+    the start.
+
+    Only findings the two lines do not already produce on their own are
+    reported, so a wrapped hit is never double-counted.
+    """
+    joined = first.rstrip() + second.lstrip()
+    alone = set(_findings_for_line(rel, lineno, first)) | set(
+        _findings_for_line(rel, lineno + 1, second)
+    )
+    findings = []
+    for f in _findings_for_line(rel, lineno, joined):
+        if f not in alone:
+            findings.append(f"{f} (wrapped across lines {lineno}-{lineno + 1})")
+    return findings
+
+
+def _findings_for_text(rel: str, lines: list[str]) -> list[str]:
+    """Per-line findings, plus findings that only a rejoined pair reveals."""
+    findings: list[str] = []
+    for lineno, line in enumerate(lines, start=1):
+        findings.extend(_findings_for_line(rel, lineno, line))
+    for lineno in range(1, len(lines)):
+        findings.extend(_findings_for_wrapped(rel, lineno, lines[lineno - 1], lines[lineno]))
+    return findings
+
+
 def check() -> list[str]:
     findings: list[str] = []
     for path in _tracked_files():
@@ -170,8 +204,7 @@ def check() -> list[str]:
         except (UnicodeDecodeError, OSError):
             continue
         rel = path.relative_to(REPO_ROOT).as_posix()
-        for lineno, line in enumerate(text.splitlines(), start=1):
-            findings.extend(_findings_for_line(rel, lineno, line))
+        findings.extend(_findings_for_text(rel, text.splitlines()))
     return findings
 
 
@@ -207,9 +240,7 @@ def check_range_messages(rev_range: str) -> list[str]:
         if "\x1f" not in entry:
             continue
         sha, _, message = entry.strip().partition("\x1f")
-        for lineno, line in enumerate(message.splitlines(), start=1):
-            for f in _findings_for_line(f"(commit message) {sha[:12]}", lineno, line):
-                findings.append(f)
+        findings.extend(_findings_for_text(f"(commit message) {sha[:12]}", message.splitlines()))
     return findings
 
 
@@ -234,6 +265,7 @@ def check_range(rev_range: str) -> list[str]:
     commit_sha = "?"
     rel = None
     next_new_line = None
+    prev_added: tuple[str, int, str] | None = None
 
     for raw_line in result.stdout.splitlines():
         commit_match = _COMMIT_RE.match(raw_line)
@@ -262,6 +294,13 @@ def check_range(rev_range: str) -> list[str]:
             content = raw_line[1:]
             for f in _findings_for_line(rel, next_new_line, content):
                 findings.append(f"{commit_sha} {f}")
+            # A wrapped path spans two ADDED lines contiguous in the new
+            # file; rejoin only that case, never across a hunk, a file
+            # boundary or a commit.
+            if prev_added is not None and prev_added[0] == rel and prev_added[1] == next_new_line - 1:
+                for f in _findings_for_wrapped(rel, prev_added[1], prev_added[2], content):
+                    findings.append(f"{commit_sha} {f}")
+            prev_added = (rel, next_new_line, content)
             next_new_line += 1
         # Removed ("-") lines don't advance the new-file line counter, and
         # unified=0 emits no context lines, so nothing else to track here.

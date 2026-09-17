@@ -78,9 +78,45 @@ _PLACEHOLDER_IDENTITIES = frozenset(
 )
 
 
+# Markers of "the check has not happened yet", matched as SUBSTRINGS. The
+# exact-word list above only catches a value that is nothing but the word;
+# the independent check walked straight past it with `AWAITING-VERIFIER`,
+# and `PLACEHOLDER`, `REDACTED`, `REVIEW-PENDING`, `not-yet-assigned` and
+# `TO BE DETERMINED` passed just as easily.
+#
+# This is a heuristic and it is honest about that: it catches an unfilled
+# field, not a dishonest one. Nothing here can tell a real identity from a
+# plausible invention -- that guarantee comes from a different identity
+# actually running the check, not from this function. Disclosed as such in
+# proof/LWP-D0.json's `unproven` list.
+_PLACEHOLDER_MARKERS = (
+    "pending",
+    "await",
+    "placeholder",
+    "redacted",
+    "unassigned",
+    "not-yet",
+    "not yet",
+    "notyet",
+    "tbd",
+    "tba",
+    "todo",
+    "fixme",
+    "unchecked",
+    "unknown",
+    "to be determined",
+    "to be assigned",
+    "xxx",
+)
+
+
 def _is_placeholder(value: str) -> bool:
-    """True when `value` names nobody (see _PLACEHOLDER_IDENTITIES)."""
-    return value.strip().strip(".!<>[]() ").casefold() in _PLACEHOLDER_IDENTITIES
+    """True when `value` reads as an unfilled field rather than an identity."""
+    cleaned = value.strip().strip(".!<>[]() ")
+    if cleaned.casefold() in _PLACEHOLDER_IDENTITIES:
+        return True
+    lowered = cleaned.casefold()
+    return any(marker in lowered for marker in _PLACEHOLDER_MARKERS)
 
 
 REQUIRED_TOP = ("deliverable", "author", "checked_by", "commit", "commands", "mutations", "unproven")
