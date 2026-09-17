@@ -107,16 +107,11 @@ _PLACEHOLDER_MARKERS = (
     "unverified",
     "unspecified",
     "unset",
-    "blank",
-    "empty",
-    "none",
-    "nobody",
     "no verifier",
     "no checker",
     "not assigned",
     "not verified",
     "not checked",
-    "held",
 )
 
 
@@ -157,11 +152,14 @@ def _is_placeholder(value: str) -> bool:
     identity is a worse failure than missing a placeholder -- it blocks an
     honest record -- so the test is deliberately narrower than "contains".
 
-    This remains a heuristic and it cannot be made complete: `unverified`,
-    `no verifier`, `held` and anything else phrased freely still pass. It
-    catches a field nobody filled in, not a field filled in dishonestly.
-    The real guarantee is a different identity actually running the check.
-    Disclosed in proof/LWP-D0.json's `unproven` list.
+    This remains a heuristic and it cannot be made complete: `still
+    deciding`, `ask later` and anything else phrased freely pass, and the
+    list deliberately drops words that are also real surnames (`held`,
+    `blank`, `empty` -- Anna Held, Arthur Blank) rather than reject a
+    person by name. It catches a field nobody filled in, not a field
+    filled in dishonestly. The real guarantee is a different identity
+    actually running the check. Disclosed in proof/LWP-D0.json's
+    `unproven` list.
     """
     cleaned = value.strip().strip(".!?<>[](){}\"'- ")
     alnum_only = re.sub(r"[^a-z0-9]", "", cleaned.casefold())

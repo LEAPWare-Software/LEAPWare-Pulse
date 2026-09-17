@@ -226,3 +226,14 @@ def test_an_omitted_checked_by_is_the_structural_guard():
     record.pop("checked_by")
     errors = lwp_check_proof._validate_record(Path("proof/fake.json"), record)
     assert any("missing required field 'checked_by'" in e for e in errors)
+
+
+def test_marker_list_does_not_reject_real_surnames():
+    """`held`, `blank`, `empty` are real surnames (Anna Held, Arthur Blank).
+
+    Round five of the independent check flagged the collision. By this
+    module's own stated principle -- wrongly refusing a real identity is
+    worse than missing a placeholder -- those words are out of the list.
+    """
+    for name in ("Held", "Blank", "Anna Held", "Arthur Blank", "None Sharma", "Emily Unsett"):
+        assert not lwp_check_proof._is_placeholder(name), f"{name!r} wrongly rejected"

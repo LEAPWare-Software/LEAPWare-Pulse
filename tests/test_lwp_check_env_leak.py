@@ -409,3 +409,24 @@ def test_a_second_line_leak_is_attributed_to_its_own_line():
         "(test)", ["harmless first line", "leak C:" + BACKSLASH + "Users" + BACKSLASH + "bob x"]
     )
     assert findings == ["(test):2: Windows drive letter"]
+
+
+def test_a_leak_wrapping_at_its_own_required_separator_is_caught():
+    r"""`py -3` splitting at its mandatory space was reported NOWHERE.
+
+    Round five of the independent check. The wrap logic joined
+    `first.rstrip() + second.lstrip()`, deleting the very whitespace
+    `\bpy\s+-3\b` requires: no match on line 1, none on line 2, and none
+    rejoined. The scanner now tries both a tight join (a path continuing
+    across the break) and a spaced join (the break IS the separator).
+    """
+    findings = check_mod._findings_for_text("(test)", ["run: py ", "-3.12 to reproduce"])
+    assert findings, "a py -3 launch split at its own space must be caught"
+    assert any("py -3" in f and "wrapped across lines" in f for f in findings)
+
+
+def test_the_spaced_join_does_not_invent_findings():
+    """Rejoining with a space must not manufacture a leak from two benign
+    lines that merely end and begin with the right tokens."""
+    assert check_mod._findings_for_text("(test)", ["deploy the py", "script now"]) == []
+    assert check_mod._findings_for_text("(test)", ["see the docs", "for details"]) == []

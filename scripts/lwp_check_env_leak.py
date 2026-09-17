@@ -207,17 +207,31 @@ def _findings_for_wrapped(rel: str, lineno: int, first: str, second: str) -> lis
     instead of approximating it.
     """
     head = first.rstrip()
-    joined = head + second.lstrip()
-    split = len(head)
+    tail = second.lstrip()
 
+    # TWO joins, because the boundary whitespace matters in both directions.
+    #
+    #   tight  ("")  -- a path continues across the break: `C:` + `\Users\...`
+    #   spaced (" ") -- the break IS the separator the pattern needs
+    #
+    # Only scanning the tight join deletes the very character some patterns
+    # require: `py -3` wrapping at its single mandatory space produced NO
+    # finding on either line and none when rejoined, because `\s+` had
+    # nothing left to match. Reported nowhere -- the one outcome this
+    # scanner must not have. Found by the independent D0 check.
     findings = []
     seen: set[str] = set()
-    for start, end, description in _matches_in(joined):
-        if start < split < end and description not in seen:
-            seen.add(description)
-            findings.append(
-                f"{rel}:{lineno}: {description} (wrapped across lines {lineno}-{lineno + 1})"
-            )
+    for separator in ("", " "):
+        joined = head + separator + tail
+        left_end = len(head)
+        right_start = left_end + len(separator)
+        for start, end, description in _matches_in(joined):
+            # Straddles: begins in the first line's text, ends in the second's.
+            if start < left_end and end > right_start and description not in seen:
+                seen.add(description)
+                findings.append(
+                    f"{rel}:{lineno}: {description} (wrapped across lines {lineno}-{lineno + 1})"
+                )
     return findings
 
 
