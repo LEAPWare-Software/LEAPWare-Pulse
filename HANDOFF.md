@@ -24,9 +24,10 @@ and traced to `docs/requirements/owner-directives.md`. Do not start phase
 
 1. Work from this repo only. Clone fresh on any machine; no dependence on
    the local environment.
-2. The recast requirements and plan are merged. Next: the owner answers
-   the open questions at the end of `plan.md` (Q1 and Q3 gate D0, Q2 gates
-   D1). Record each answer in `plan.md` by PR.
+2. The recast requirements and plan are merged. Decisions Q1, Q3–Q5 are
+   recorded in `plan.md` (CTO, 2026-09-17). Q2 (learning subsystem
+   publication) is OPEN, OWNER-RESERVED: it gates G-PUB, not D0; D0 may
+   proceed while the repo is private.
 3. Pre-publication history scan runs separately. Gate G-PUB (owner: flip to
    public, apply rulesets and merge queue, create the `lwp-claude` and
    `lwp-codex` Apps) must pass before D1 or later merges.

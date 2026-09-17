@@ -167,37 +167,21 @@ on both hosts. Duplicating it per host would break LWP-R32. Recorded in
 | `.github/workflows/validate.yml` | Replace with `ci.yml` in D0 | Windows and 3.12 only; fails LWP-R6. |
 | `scripts/validate_pulse_plugin.py` | Replace with `lwp_validate_codex_plugin.py` in D2 | Mutation cases ported (LWP-R17). |
 
-## Open questions for owner
+## Decisions (CTO, 2026-09-17)
 
-**Q1. Plugin and marketplace name on Claude: `lwp` or `pulse`?** The
-siblings drifted (one Claude plugin was named after its product, the other
-after its code) before their rename. *Recommendation:* `lwp` in both
-manifests and both marketplace entries, marketplace name `leapware-pulse`;
-"LEAPWare Pulse" stays the display name. One name keeps the prefix check
-mechanical.
+**Q1 ACCEPTED.** The Claude plugin name is `lwp` in both manifests and
+marketplaces; the marketplace name is `leapware-pulse`.
 
-**Q2. The learning subsystem was copied from a private LEAPWare repository**
-(`learning/*`, `lw-learn.py`, `lw-acceptance.py`; see
-`learning-origin.json`). OD7 forbids copying private content into the
-public repository, and this code is already in Pulse's tree and history.
-Options: (a) the owner confirms LEAPWare owns it and releases it under
-Apache-2.0 in lwp; (b) remove learning from lwp 1.0, keeping the views and
-source-bound verification; (c) clean-room rewrite. *Recommendation:* (a) if
-the history scan finds nothing private inside those files — it is reviewed,
-tested and cheapest; otherwise (b). The answer also decides whether
-LWP-R20–R27 stay in 1.0.
+**Q2 OPEN, OWNER-RESERVED.** The learning code was migrated from the
+private repo [removed], so publishing it is an owner decision.
+G-PUB (going public) is BLOCKED until the owner rules. D0 may proceed
+while the repo is private.
 
-**Q3. Request phrases.** The prefix rule wants `lwp`; today's phrases are
-`lw-pulse` and `lw-status`. *Recommendation:* one skill `lwp-status`;
-phrases `lwp`, `lwp panorama`, `lwp brief`, `lwp focus`; keep `lw-pulse`
-as a documented alias through 1.x for existing users; drop `lw-status`,
-which reads as a generic LEAPWare status and will collide with sibling
-plugins.
+**Q3 ACCEPTED.** One skill, `lwp-status`, answering to `lwp panorama` /
+`lwp brief` / `lwp focus`; `lw-pulse` stays an alias through 1.x;
+`lw-status` is dropped.
 
-**Q4. Hooks.** The sibling skeletons ship hooks; Pulse deliberately
-registers none. *Recommendation:* no hooks in lwp 1.0; the validators
-assert zero registrations (LWP-R19). A status formatter that cannot act is
-the product's authority boundary.
+**Q4 ACCEPTED.** No hooks in 1.0; the validators check that none are
+registered.
 
-**Q5. Version path.** *Recommendation:* 0.3.0 at D2 (breaking install path
-for Codex users), 1.0.0 only at D5 after the independent proof.
+**Q5 ACCEPTED.** 0.3.0 at D2, 1.0.0 at D5.
