@@ -39,6 +39,7 @@ def _run_git(repo: Path, *args: str) -> subprocess.CompletedProcess:
         capture_output=True,
         text=True,
         encoding="utf-8",
+        errors="replace",
     )
 
 

@@ -88,6 +88,7 @@ _PLACEHOLDER_IDENTITIES = frozenset(
 _PLACEHOLDER_MARKERS = (
     "pending",
     "await",
+    "awaiting",
     "placeholder",
     "redacted",
     "unassigned",
@@ -124,13 +125,6 @@ _MARKER_RE = re.compile(
     re.IGNORECASE,
 )
 
-# An all-caps slug with no lowercase and no spaces -- SET-BY-INDEPENDENT-CHECK,
-# AWAITING-VERIFIER, PLACEHOLDER, REDACTED -- is a template value, not how
-# anyone writes their own identity. This catches the open-ended class that no
-# word list can enumerate.
-_TEMPLATE_SLUG_RE = re.compile(r"^[A-Z][A-Z0-9]*(?:[-_][A-Z0-9]+)*$")
-
-
 def _is_placeholder(value: str) -> bool:
     """True when `value` reads as an unfilled field rather than an identity.
 
@@ -142,8 +136,20 @@ def _is_placeholder(value: str) -> bool:
        `[A-Za-z]`: an ASCII-only test rejects a name written in any
        non-Latin script, which is the same class of bug as the `Todor
        Petrov` false positive and worse in what it implies.
-    3. A marker word, matched on WORD BOUNDARIES, or an all-caps template
-       slug.
+    3. A marker word, matched on WORD BOUNDARIES.
+
+    There is deliberately NO "looks like a template slug" rule. One was
+    tried -- reject any all-caps hyphenated value -- and it rejected
+    `DEPENDABOT`, `GITHUB-ACTIONS-BOT`, `CODEQL`, the surnames `MACDONALD`
+    and `OBRIEN`, and `KIM-MINJI`. Real bot accounts and real names are
+    exactly what a `checked_by` field holds, so that rule did more harm
+    than the placeholders it caught.
+
+    The structural protection is elsewhere and does not guess: a draft
+    record OMITS `checked_by` entirely, so it fails the required-field
+    check until a real identity is written in. That cannot be fooled by
+    phrasing, and it is what this repo relies on. This function is a
+    convenience net under it, nothing more.
 
     Rule 3 is word-boundary matched for a reason: as plain substrings, the
     markers rejected `Todor Petrov` (a real surname, for "todo"). Wrongly
@@ -163,8 +169,6 @@ def _is_placeholder(value: str) -> bool:
     if alnum_only in _PLACEHOLDER_IDENTITIES:
         return True
     if not any(ch.isalpha() for ch in cleaned):
-        return True
-    if _TEMPLATE_SLUG_RE.match(cleaned):
         return True
     return bool(_MARKER_RE.search(cleaned))
 

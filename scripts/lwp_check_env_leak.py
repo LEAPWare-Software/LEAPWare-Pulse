@@ -146,20 +146,38 @@ def _is_exempt(path: Path) -> bool:
     return _is_exempt_posix(path.relative_to(REPO_ROOT).as_posix())
 
 
-def _findings_for_line(rel: str, lineno: int, line: str) -> list[str]:
-    findings: list[str] = []
-    if DRIVE_LETTER.search(line):
-        findings.append(f"{rel}:{lineno}: Windows drive letter")
-    if POSIX_HOME.search(line):
-        findings.append(f"{rel}:{lineno}: POSIX home directory path")
-    if PY_DASH3.search(line):
-        findings.append(f"{rel}:{lineno}: hard-coded 'py -3' interpreter launch")
-    if HARDCODED_INTERPRETER.search(line):
-        findings.append(f"{rel}:{lineno}: absolute path to a python interpreter")
-    lowered = line.lower()
+# (pattern, description) pairs, so the per-line scan and the wrapped-pair
+# scan share one definition of what a leak is and cannot drift apart.
+_LEAK_PATTERNS = (
+    (DRIVE_LETTER, "Windows drive letter"),
+    (POSIX_HOME, "POSIX home directory path"),
+    (PY_DASH3, "hard-coded 'py -3' interpreter launch"),
+    (HARDCODED_INTERPRETER, "absolute path to a python interpreter"),
+)
+
+
+def _matches_in(text: str) -> list[tuple[int, int, str]]:
+    """Every leak match in `text` as (start, end, description)."""
+    spans: list[tuple[int, int, str]] = []
+    for pattern, description in _LEAK_PATTERNS:
+        for m in pattern.finditer(text):
+            spans.append((m.start(), m.end(), description))
+    lowered = text.lower()
     for needle in _private_name_substrings():
-        if needle in lowered:
-            findings.append(f"{rel}:{lineno}: private-project name leak ('{needle}')")
+        start = lowered.find(needle)
+        while start != -1:
+            spans.append((start, start + len(needle), f"private-project name leak ('{needle}')"))
+            start = lowered.find(needle, start + 1)
+    return spans
+
+
+def _findings_for_line(rel: str, lineno: int, line: str) -> list[str]:
+    seen: set[str] = set()
+    findings: list[str] = []
+    for _, _, description in _matches_in(line):
+        if description not in seen:
+            seen.add(description)
+            findings.append(f"{rel}:{lineno}: {description}")
     return findings
 
 
@@ -173,29 +191,33 @@ def _findings_for_wrapped(rel: str, lineno: int, first: str, second: str) -> lis
     scanner, but the file and diff scanners had the same blind spot from
     the start.
 
-    Only findings the two lines do not already produce on their own are
-    reported, so a wrapped hit is never double-counted.
+    A match is reported here ONLY when it actually straddles the join: it
+    starts in the first line's text and ends in the second's. That is the
+    exact definition of "wrapped", so no deduplication against the per-line
+    scan is needed or done.
+
+    Two earlier attempts got this wrong, both found by the independent D0
+    check. Comparing whole finding strings failed because the joined text
+    is tagged with the pair's FIRST line number, so a second-line leak
+    never compared equal -- 42 spurious duplicates on this repo's own tree.
+    Comparing finding KIND instead fixed the noise but introduced a
+    SUPPRESSION: a genuinely distinct second leak sharing a kind with an
+    unrelated hit on the other line was silently dropped and never reported
+    at all. Position beats deduplication -- it answers the real question
+    instead of approximating it.
     """
-    joined = first.rstrip() + second.lstrip()
-
-    # Compare by finding KIND, not by the whole line-tagged string. Every
-    # finding reads "<rel>:<lineno>: <kind>", and the joined text is always
-    # tagged with the pair's FIRST line number -- so when the real leak sits
-    # entirely on the second line (the common case) the two strings can
-    # never be equal and the dedup silently fails. That produced 42 spurious
-    # "wrapped" duplicates on this repo's own tree; found by the independent
-    # D0 check, which read the code rather than trusting the claim.
-    def _kind(finding: str) -> str:
-        _, _, kind = finding.partition(": ")
-        return kind
-
-    alone = {_kind(f) for f in _findings_for_line(rel, lineno, first)}
-    alone |= {_kind(f) for f in _findings_for_line(rel, lineno + 1, second)}
+    head = first.rstrip()
+    joined = head + second.lstrip()
+    split = len(head)
 
     findings = []
-    for f in _findings_for_line(rel, lineno, joined):
-        if _kind(f) not in alone:
-            findings.append(f"{f} (wrapped across lines {lineno}-{lineno + 1})")
+    seen: set[str] = set()
+    for start, end, description in _matches_in(joined):
+        if start < split < end and description not in seen:
+            seen.add(description)
+            findings.append(
+                f"{rel}:{lineno}: {description} (wrapped across lines {lineno}-{lineno + 1})"
+            )
     return findings
 
 

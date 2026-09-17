@@ -382,3 +382,30 @@ def test_range_scan_survives_non_ascii_content(tmp_path):
         assert check_mod.check() == []
     finally:
         check_mod.REPO_ROOT = original_root
+
+
+def test_a_distinct_second_leak_in_a_wrapped_pair_is_not_suppressed():
+    """Dedup by finding-kind silently ate a real leak.
+
+    Round four of the independent check: line 1 carries a standalone
+    drive-letter path AND ends with `D:`, whose path continues on line 2.
+    Deduping by kind saw "Windows drive letter" already reported and
+    dropped the second, genuinely different leak entirely -- not
+    standalone, not wrapped, nowhere. Reporting is now driven by whether a
+    match actually straddles the join, so both are reported.
+    """
+    line1 = "See C:" + BACKSLASH + "Users" + BACKSLASH + "alice" + BACKSLASH + "project too, plus D:"
+    line2 = BACKSLASH + "Users" + BACKSLASH + "bob" + BACKSLASH + "other" + BACKSLASH + "secret.txt here"
+    findings = check_mod._findings_for_text("(test)", [line1, line2])
+    assert len(findings) == 2, f"expected both leaks, got {findings}"
+    assert any("wrapped across lines" in f for f in findings)
+    assert any("wrapped across lines" not in f for f in findings)
+
+
+def test_a_second_line_leak_is_attributed_to_its_own_line():
+    """A match entirely inside line 2 does not straddle the join, so it is
+    reported once, against line 2, and never as a wrap."""
+    findings = check_mod._findings_for_text(
+        "(test)", ["harmless first line", "leak C:" + BACKSLASH + "Users" + BACKSLASH + "bob x"]
+    )
+    assert findings == ["(test):2: Windows drive letter"]

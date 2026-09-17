@@ -118,6 +118,9 @@ def test_placeholder_checked_by_is_rejected():
         "TO BE DETERMINED",
         "not-yet-assigned",
         "CHECKER-TBD",
+        "unverified",
+        "no verifier",
+        "checker unspecified",
     ):
         record = dict(base, checked_by=placeholder)
         errors = lwp_check_proof._validate_record(Path("proof/fake.json"), record)
@@ -163,19 +166,63 @@ def test_placeholder_guard_does_not_reject_real_identities():
     assert rejected == [], f"real identities wrongly rejected: {rejected}"
 
 
-def test_placeholder_guard_catches_the_open_ended_template_class():
-    """An all-caps slug is a template value no word list can enumerate."""
-    for value in (
-        "SET-BY-INDEPENDENT-CHECK",
-        "AWAITING-VERIFIER",
-        "PLACEHOLDER",
-        "REDACTED",
-        "CHECKER-TBD",
-        "unverified",
-        "no verifier",
-        "checker unspecified",
-        "N.A.",
-        "???",
-        "--",
-    ):
+def test_placeholder_guard_catches_values_with_no_identity_in_them():
+    for value in ("N.A.", "???", "--", "   "):
         assert lwp_check_proof._is_placeholder(value), f"{value!r} was accepted"
+
+
+def test_an_arbitrary_slug_is_not_caught_and_that_is_the_documented_contract():
+    """`SET-BY-INDEPENDENT-CHECK` carries no marker word, so the word list
+    does not catch it -- and the rule that used to, by shape, rejected
+    DEPENDABOT and MACDONALD along with it.
+
+    This is not a gap being papered over: a draft record omits
+    `checked_by` entirely rather than filling it with a slug, and the
+    required-field check refuses that with no guessing at all. Asserted
+    here so the contract is explicit rather than assumed.
+    """
+    assert not lwp_check_proof._is_placeholder("SET-BY-INDEPENDENT-CHECK")
+
+    record = json.loads((FIXTURES / "valid.json").read_text(encoding="utf-8"))
+    record.pop("checked_by")
+    assert any(
+        "missing required field 'checked_by'" in e
+        for e in lwp_check_proof._validate_record(Path("proof/fake.json"), record)
+    )
+
+
+def test_placeholder_guard_accepts_bot_names_and_all_caps_surnames():
+    """No 'looks like a template slug' rule, deliberately.
+
+    Round four of the independent check: an all-caps-slug rule rejected
+    DEPENDABOT, GITHUB-ACTIONS-BOT, CODEQL, the surnames MACDONALD and
+    OBRIEN, and KIM-MINJI. Bot accounts and real names are exactly what a
+    checked_by field holds.
+    """
+    for value in (
+        "DEPENDABOT",
+        "GITHUB-ACTIONS-BOT",
+        "CODEQL",
+        "MACDONALD",
+        "OBRIEN",
+        "KIM-MINJI",
+        "CLAUDE-OPUS-5",
+        "SESSION-4F3C-2026",
+        "AI",
+        "OK",
+    ):
+        assert not lwp_check_proof._is_placeholder(value), f"{value!r} wrongly rejected"
+
+
+def test_an_omitted_checked_by_is_the_structural_guard():
+    """The guard that cannot be fooled by phrasing: leave the field out.
+
+    A draft proof record omits `checked_by` entirely, so it fails the
+    required-field check until a real identity is written in. The
+    placeholder word list is a convenience net under this, not the
+    mechanism itself.
+    """
+    record = json.loads((FIXTURES / "valid.json").read_text(encoding="utf-8"))
+    record.pop("checked_by")
+    errors = lwp_check_proof._validate_record(Path("proof/fake.json"), record)
+    assert any("missing required field 'checked_by'" in e for e in errors)
