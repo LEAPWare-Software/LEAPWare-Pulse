@@ -103,6 +103,11 @@ def _tracked_files() -> list[Path]:
         cwd=REPO_ROOT,
         capture_output=True,
         text=True,
+        # Explicit: text=True alone decodes with the locale default, which is
+        # cp1252 on a Windows runner and raises UnicodeDecodeError on any
+        # non-ASCII byte in a diff, filename or commit message.
+        encoding="utf-8",
+        errors="replace",
         check=True,
     )
     return [REPO_ROOT / line for line in result.stdout.splitlines() if line]
@@ -244,6 +249,11 @@ def check_range_messages(rev_range: str) -> list[str]:
         cwd=REPO_ROOT,
         capture_output=True,
         text=True,
+        # Explicit: text=True alone decodes with the locale default, which is
+        # cp1252 on a Windows runner and raises UnicodeDecodeError on any
+        # non-ASCII byte in a diff, filename or commit message.
+        encoding="utf-8",
+        errors="replace",
         check=True,
     )
 
@@ -270,6 +280,11 @@ def check_range(rev_range: str) -> list[str]:
         cwd=REPO_ROOT,
         capture_output=True,
         text=True,
+        # Explicit: text=True alone decodes with the locale default, which is
+        # cp1252 on a Windows runner and raises UnicodeDecodeError on any
+        # non-ASCII byte in a diff, filename or commit message.
+        encoding="utf-8",
+        errors="replace",
         check=True,
     )
 

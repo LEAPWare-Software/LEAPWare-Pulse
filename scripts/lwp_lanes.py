@@ -90,6 +90,11 @@ def commit_agent(sha: str) -> Optional[str]:
         cwd=REPO_ROOT,
         capture_output=True,
         text=True,
+        # Explicit: text=True alone decodes with the locale default, which is
+        # cp1252 on a Windows runner and raises UnicodeDecodeError on any
+        # non-ASCII byte in a diff, filename or commit message.
+        encoding="utf-8",
+        errors="replace",
         check=True,
     )
     m = TRAILER_RE.search(result.stdout)
@@ -104,6 +109,11 @@ def commit_files(sha: str) -> list[str]:
         cwd=REPO_ROOT,
         capture_output=True,
         text=True,
+        # Explicit: text=True alone decodes with the locale default, which is
+        # cp1252 on a Windows runner and raises UnicodeDecodeError on any
+        # non-ASCII byte in a diff, filename or commit message.
+        encoding="utf-8",
+        errors="replace",
         check=True,
     )
     return [line for line in result.stdout.splitlines() if line.strip()]
@@ -115,6 +125,11 @@ def commits_in_range(rev_range: str) -> list[str]:
         cwd=REPO_ROOT,
         capture_output=True,
         text=True,
+        # Explicit: text=True alone decodes with the locale default, which is
+        # cp1252 on a Windows runner and raises UnicodeDecodeError on any
+        # non-ASCII byte in a diff, filename or commit message.
+        encoding="utf-8",
+        errors="replace",
         check=True,
     )
     return [line for line in result.stdout.splitlines() if line.strip()]

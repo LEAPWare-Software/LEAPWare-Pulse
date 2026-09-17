@@ -343,3 +343,42 @@ def test_the_real_tree_reports_no_wrapped_duplicates():
     findings = check_mod.check()
     wrapped = [f for f in findings if "wrapped across lines" in f]
     assert wrapped == [], f"wrapped duplicates reappeared: {wrapped[:5]}"
+
+
+def test_range_scan_survives_non_ascii_content(tmp_path):
+    """`text=True` without `encoding=` decodes with the locale default.
+
+    On a Windows runner that is cp1252, and any non-ASCII byte in a diff,
+    a filename or a commit message raises UnicodeDecodeError -- the check
+    crashes instead of reporting. Windows is one of the six CI jobs, so
+    this would have failed the first PR that touched a file containing a
+    name in a non-Latin script. Found by running the check over this
+    repo's own commit adding such names to a test.
+    """
+    repo = tmp_path / "fixture-non-ascii"
+    repo.mkdir()
+    _init_repo(repo)
+
+    target = repo / "notes.md"
+    target.write_text("base\n", encoding="utf-8")
+    _run(["git", "add", "."], repo)
+    _run(["git", "commit", "-q", "-m", "base"], repo)
+    base_sha = _run(["git", "rev-parse", "HEAD"], repo).stdout.strip()
+
+    target.write_text(
+        "reviewed by 小林 太郎 and Ольга Иванова\n",
+        encoding="utf-8",
+    )
+    _run(["git", "add", "."], repo)
+    _run(["git", "commit", "-q", "-m", "add reviewers: 小林 太郎"], repo)
+    head_sha = _run(["git", "rev-parse", "HEAD"], repo).stdout.strip()
+
+    original_root = check_mod.REPO_ROOT
+    try:
+        check_mod.REPO_ROOT = repo
+        # Must not raise. Nothing here is a leak, so both scans are clean.
+        assert check_mod.check_range(f"{base_sha}..{head_sha}") == []
+        assert check_mod.check_range_messages(f"{base_sha}..{head_sha}") == []
+        assert check_mod.check() == []
+    finally:
+        check_mod.REPO_ROOT = original_root
