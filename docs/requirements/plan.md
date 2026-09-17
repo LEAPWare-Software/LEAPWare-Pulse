@@ -67,7 +67,7 @@ on both hosts. Duplicating it per host would break LWP-R32. Recorded in
   `lwp_apply_rulesets.py`; `lwp_check_runners.py` (hosted runners only,
   every workflow); `docs/handoff-protocol.md`;
   `docs/requirements/traceability.md`. `ci.yml` replaces `validate.yml`
-  and runs the existing 42 tests unchanged on the six-job matrix; a
+  and runs the existing 34 tests unchanged on the six-job matrix; a
   pre-recast test that cannot pass off Windows may be skipped on that OS
   only with a reason naming the D1 requirement that removes the skip. The
   existing Codex package stays where it is and keeps working.
@@ -92,7 +92,7 @@ on both hosts. Duplicating it per host would break LWP-R32. Recorded in
   and receipt validation, lesson records, pins) into `core/lwp_core`; move
   I/O (storage, locks, git binding, subprocess, registry path) into
   `adapters/common`; thin host edges into `adapters/{claude,codex}`. Port
-  the 42 tests into `tests/{core,adapters}`. Fix the acceptance runner's
+  the 34 tests into `tests/{core,adapters}`. Fix the acceptance runner's
   Windows 8.3 alias defect (LWP-R28). Keep the learning data key
   `leapware-pulse` (LWP-R27).
 - **Requirements proven:** R7, R13–R15, R20–R29.
@@ -187,3 +187,11 @@ rewrite and after an independent scan verifies it.
 registered.
 
 **Q5 ACCEPTED.** 0.3.0 at D2, 1.0.0 at D5.
+
+## Corrections
+
+**Test count, 2026-09-17 (D0).** This plan said "the existing 42 tests" in
+D0 and D1. Re-measured at the D0 branch point (`8bccb1c`):
+`python -m unittest discover -s tests` runs **34**, all passing. The
+learning-subsystem removal (`0586920`) dropped the difference. Both
+occurrences corrected to 34 so the D0 exit condition is checkable.

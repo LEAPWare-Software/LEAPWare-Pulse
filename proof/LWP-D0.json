@@ -1,0 +1,634 @@
+{
+  "deliverable": "LWP-D0",
+  "author": "claude-opus-5, session d0-skeleton-parity (main thread); parts built by three dispatched lw-implementer workers",
+  "commit": "78eba219e21e8f57c66b31378fbe9df37364070f",
+  "commands": [
+    {
+      "argv": [
+        "python",
+        "scripts/lwp_check_prefix.py"
+      ],
+      "exit": 0,
+      "expect_exit": 0,
+      "tail": [
+        "lwp-prefix check passed (pre-recast exemption ACTIVE: plugins/LEAPWare-Pulse/ still in the tree; it retires itself when D2 removes that directory)"
+      ],
+      "sha256": "3c3b45ee58a6ece35ef1e98921f9ac10d5eabb11712a9a55d35afc4d4e1ce406"
+    },
+    {
+      "argv": [
+        "python",
+        "scripts/lwp_check_prefix.py"
+      ],
+      "exit": 1,
+      "expect_exit": 1,
+      "tail": [
+        "FAIL: scripts/ entrypoint does not start with 'lwp': scripts/notprefixed_entry.py"
+      ],
+      "sha256": "2809d0f38c3a942cdcf192c260f8da5c17c076a9f8643e27468b3bab74400b19"
+    },
+    {
+      "argv": [
+        "python",
+        "scripts/lwp_check_prefix.py"
+      ],
+      "exit": 0,
+      "expect_exit": 0,
+      "tail": [
+        "lwp-prefix check passed (pre-recast exemption ACTIVE: plugins/LEAPWare-Pulse/ still in the tree; it retires itself when D2 removes that directory)"
+      ],
+      "sha256": "3c3b45ee58a6ece35ef1e98921f9ac10d5eabb11712a9a55d35afc4d4e1ce406"
+    },
+    {
+      "argv": [
+        "python",
+        "scripts/lwp_check_commit_identity.py",
+        "--base",
+        "a52346a2e0ddc638b470962ffd2d093e1faf95e2",
+        "--head",
+        "78eba219e21e8f57c66b31378fbe9df37364070f"
+      ],
+      "exit": 0,
+      "expect_exit": 0,
+      "tail": [
+        "lwp-commit-identity check passed"
+      ],
+      "sha256": "d5d00d8d30e28c2ccf33b3d68004fb56f2fc93c035ae7b88eec5ff5c0d32b6d0"
+    },
+    {
+      "argv": [
+        "python",
+        "scripts/lwp_check_commit_identity.py",
+        "--legacy-boundary",
+        "ea776c70967c94c51f33fa7d73a396aa47239df0"
+      ],
+      "exit": 1,
+      "expect_exit": 1,
+      "tail": [
+        "FAIL: commit author not LEAPWare or an allow-listed bot: f17832fdca1b LEAPWare-HQ <biz_tech_exec@outlook.com>",
+        "FAIL: commit author not LEAPWare or an allow-listed bot: 5a1be42c6013 LEAPWare-HQ <biz_tech_exec@outlook.com>",
+        "FAIL: commit author not LEAPWare or an allow-listed bot: 9083181f1599 LEAPWare-HQ <biz_tech_exec@outlook.com>",
+        "FAIL: commit author not LEAPWare or an allow-listed bot: 45d64adc312d LEAPWare-HQ <biz_tech_exec@outlook.com>",
+        "FAIL: commit author not LEAPWare or an allow-listed bot: 9a5da4ee3dfa LEAPWare-HQ <biz_tech_exec@outlook.com>",
+        "FAIL: commit author not LEAPWare or an allow-listed bot: 3886571c16cc LEAPWare-HQ <biz_tech_exec@outlook.com>",
+        "FAIL: commit author not LEAPWare or an allow-listed bot: a048cb30cbd0 LEAPWare-HQ <biz_tech_exec@outlook.com>",
+        "FAIL: commit author not LEAPWare or an allow-listed bot: 8708ad6afffe LEAPWare-HQ <biz_tech_exec@outlook.com>",
+        "FAIL: commit author not LEAPWare or an allow-listed bot: b15c62a052f8 LEAPWare-HQ <biz_tech_exec@outlook.com>",
+        "FAIL: commit author not LEAPWare or an allow-listed bot: ef123154b717 LEAPWare-HQ <biz_tech_exec@outlook.com>"
+      ],
+      "sha256": "f830b09d8568bb5f8cede6bcc360e7935a185264d40d3e87546fd475150df8a8"
+    },
+    {
+      "argv": [
+        "python",
+        "scripts/lwp_check_commit_identity.py"
+      ],
+      "exit": 0,
+      "expect_exit": 0,
+      "tail": [
+        "lwp-commit-identity check passed (29 legacy commit(s) at/before boundary)"
+      ],
+      "sha256": "663b85fa672359f3304dd53442cae826768237fad4e932f9a576609a17c1875a"
+    },
+    {
+      "argv": [
+        "python",
+        "scripts/lwp_check_env_leak.py",
+        "--range",
+        "a52346a2e0ddc638b470962ffd2d093e1faf95e2..78eba219e21e8f57c66b31378fbe9df37364070f",
+        "--range-only"
+      ],
+      "exit": 0,
+      "expect_exit": 0,
+      "tail": [
+        "lwp-env-leak check passed"
+      ],
+      "sha256": "35e346db3163f5da23cc8dacd73369204dd0fc7a993853d6ab7ba026c60b93e3"
+    },
+    {
+      "argv": [
+        "python",
+        "scripts/lwp_check_env_leak.py",
+        "--range",
+        "78eba219e21e8f57c66b31378fbe9df37364070f..a3d029071eb9d160cd27360ace576a266613c8eb",
+        "--range-only"
+      ],
+      "exit": 1,
+      "expect_exit": 1,
+      "tail": [
+        "FAIL: 81458058a929 leak_probe.md:1: Windows drive letter"
+      ],
+      "sha256": "6ddf0ded97b0e2773d39201aabb7465cd6fb345e72ebdde87511fc1fb47b9061"
+    },
+    {
+      "argv": [
+        "python",
+        "scripts/lwp_check_env_leak.py",
+        "--range",
+        "a52346a2e0ddc638b470962ffd2d093e1faf95e2..78eba219e21e8f57c66b31378fbe9df37364070f",
+        "--range-only"
+      ],
+      "exit": 0,
+      "expect_exit": 0,
+      "tail": [
+        "lwp-env-leak check passed"
+      ],
+      "sha256": "35e346db3163f5da23cc8dacd73369204dd0fc7a993853d6ab7ba026c60b93e3"
+    },
+    {
+      "argv": [
+        "python",
+        "scripts/lwp_check_no_instruction_dep.py"
+      ],
+      "exit": 0,
+      "expect_exit": 0,
+      "tail": [
+        "lwp-no-instruction-dep check passed"
+      ],
+      "sha256": "fa06d286625325ce994b391482a655dd27c534bd8be888baaa7b581af0af3939"
+    },
+    {
+      "argv": [
+        "python",
+        "scripts/lwp_check_no_instruction_dep.py"
+      ],
+      "exit": 1,
+      "expect_exit": 1,
+      "tail": [
+        "FAIL: plugins\\LEAPWare-Pulse\\scripts\\lw-pulse.py:5: references 'AGENTS.md'"
+      ],
+      "sha256": "a7e0ad08fb7029ce2dfb2dd55d5d8e08617a888e88747abdbbf642e222cbb1b6"
+    },
+    {
+      "argv": [
+        "python",
+        "scripts/lwp_check_no_instruction_dep.py"
+      ],
+      "exit": 0,
+      "expect_exit": 0,
+      "tail": [
+        "lwp-no-instruction-dep check passed"
+      ],
+      "sha256": "fa06d286625325ce994b391482a655dd27c534bd8be888baaa7b581af0af3939"
+    },
+    {
+      "argv": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_rulesets_shape.py"
+      ],
+      "exit": 0,
+      "expect_exit": 0,
+      "tail": [
+        "...........                                                              [100%]",
+        "11 passed in 0.01s"
+      ],
+      "sha256": "20a17b7b59e53c75deb5ae3aca0e721262eb9b9ee63592cb04a1c382c58c8d49"
+    },
+    {
+      "argv": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_rulesets_shape.py"
+      ],
+      "exit": 1,
+      "expect_exit": 1,
+      "tail": [
+        ">       assert data[\"bypass_actors\"] == []",
+        "E       AssertionError: assert [{'actor_id':...e': 'always'}] == []",
+        "E         ",
+        "E         Left contains one more item: {'actor_id': 1, 'actor_type': 'OrganizationAdmin', 'bypass_mode': 'always'}",
+        "E         Use -v to get more diff",
+        "tests\\test_rulesets_shape.py:152: AssertionError",
+        "=========================== short test summary info ===========================",
+        "FAILED tests/test_rulesets_shape.py::test_each_ruleset_is_active_with_empty_bypass_actors",
+        "FAILED tests/test_rulesets_shape.py::test_main_ruleset_has_no_bypass_actors",
+        "2 failed, 9 passed in 0.04s"
+      ],
+      "sha256": "406164a6160849c308417599c80cd51ff7d9d54b3d23993e35eb735839674175"
+    },
+    {
+      "argv": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_rulesets_shape.py"
+      ],
+      "exit": 0,
+      "expect_exit": 0,
+      "tail": [
+        "...........                                                              [100%]",
+        "11 passed in 0.02s"
+      ],
+      "sha256": "bb694b324b4319c91905d69899df9d978b64574c7f7a4facbb9d0c4f432e021b"
+    },
+    {
+      "argv": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_ci_matrix.py"
+      ],
+      "exit": 0,
+      "expect_exit": 0,
+      "tail": [
+        ".....                                                                    [100%]",
+        "5 passed in 0.01s"
+      ],
+      "sha256": "9310d484212a1fe2c33b4b8accdf50a2639f09ba039354f8448f8aa8d173e1ff"
+    },
+    {
+      "argv": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_ci_matrix.py"
+      ],
+      "exit": 1,
+      "expect_exit": 1,
+      "tail": [
+        "            f\"expected 6 os x python-version combinations, got {len(combinations)}: {combinations}\"",
+        "        )",
+        "E       AssertionError: expected 6 os x python-version combinations, got 4: {('ubuntu-latest', '3.12'), ('ubuntu-latest', '3.10'), ('windows-latest', '3.10'), ('windows-latest', '3.12')}",
+        "E       assert 4 == 6",
+        "E        +  where 4 = len({('ubuntu-latest', '3.10'), ('ubuntu-latest', '3.12'), ('windows-latest', '3.10'), ('windows-latest', '3.12')})",
+        "tests\\test_ci_matrix.py:58: AssertionError",
+        "=========================== short test summary info ===========================",
+        "FAILED tests/test_ci_matrix.py::test_test_job_matrix_os_covers_all_three_platforms",
+        "FAILED tests/test_ci_matrix.py::test_test_job_produces_exactly_six_combinations",
+        "2 failed, 3 passed in 0.04s"
+      ],
+      "sha256": "2fdea05ffb2d177cec6207974f34b87f81c3baca7f0d9ff78dbbbb410348ceb6"
+    },
+    {
+      "argv": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_ci_matrix.py"
+      ],
+      "exit": 0,
+      "expect_exit": 0,
+      "tail": [
+        ".....                                                                    [100%]",
+        "5 passed in 0.01s"
+      ],
+      "sha256": "9310d484212a1fe2c33b4b8accdf50a2639f09ba039354f8448f8aa8d173e1ff"
+    },
+    {
+      "argv": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_lwp_lanes.py"
+      ],
+      "exit": 0,
+      "expect_exit": 0,
+      "tail": [
+        "...........                                                              [100%]",
+        "11 passed in 0.57s"
+      ],
+      "sha256": "3134c58b38712546485df398f3c9a6b8509b830827740c800a6a8367b771e226"
+    },
+    {
+      "argv": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_lwp_lanes.py"
+      ],
+      "exit": 1,
+      "expect_exit": 1,
+      "tail": [
+        "            lwp_lanes.REPO_ROOT = original_root",
+        ">       assert any(\"outside the codex lane\" in e for e in errors)",
+        "E       assert False",
+        "E        +  where False = any(<generator object test_check_lanes_flags_out_of_lane_commit.<locals>.<genexpr> at 0x000002A4BD288040>)",
+        "tests\\test_lwp_lanes.py:114: AssertionError",
+        "=========================== short test summary info ===========================",
+        "FAILED tests/test_lwp_lanes.py::test_classify_claude_prefixes - AssertionErro...",
+        "FAILED tests/test_lwp_lanes.py::test_classify_codex_prefixes - AssertionError...",
+        "FAILED tests/test_lwp_lanes.py::test_check_lanes_flags_out_of_lane_commit - a...",
+        "3 failed, 8 passed in 0.56s"
+      ],
+      "sha256": "b06909b7d222326b418456afb26e170fe9afc676449fe0afaba019a51757d4d1"
+    },
+    {
+      "argv": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_lwp_lanes.py"
+      ],
+      "exit": 0,
+      "expect_exit": 0,
+      "tail": [
+        "...........                                                              [100%]",
+        "11 passed in 0.70s"
+      ],
+      "sha256": "9563844f1ab94a8576ea90f91858b495ab67195a2d5c45e15c5e44340d3e35f2"
+    },
+    {
+      "argv": [
+        "python",
+        "scripts/lwp_check_worktrees.py"
+      ],
+      "exit": 0,
+      "expect_exit": 0,
+      "tail": [
+        "lwp-worktrees check passed"
+      ],
+      "sha256": "e2c0dacd55be0484a3780c83bd71290faf72a736c3ff74b0b721021fb9cfa49f"
+    },
+    {
+      "argv": [
+        "python",
+        "scripts/lwp_check_worktrees.py"
+      ],
+      "exit": 1,
+      "expect_exit": 1,
+      "tail": [
+        "lwp-worktrees check failed:",
+        "  - .gitignore does not contain .worktrees/"
+      ],
+      "sha256": "acaf7b59ceb914e02757bfd82241abec4498b132689f062de0780337cb7e4b40"
+    },
+    {
+      "argv": [
+        "python",
+        "scripts/lwp_check_worktrees.py"
+      ],
+      "exit": 0,
+      "expect_exit": 0,
+      "tail": [
+        "lwp-worktrees check passed"
+      ],
+      "sha256": "e2c0dacd55be0484a3780c83bd71290faf72a736c3ff74b0b721021fb9cfa49f"
+    },
+    {
+      "argv": [
+        "python",
+        "scripts/lwp_check_proof.py"
+      ],
+      "exit": 0,
+      "expect_exit": 0,
+      "tail": [
+        "lwp-proof check passed (1 record(s))"
+      ],
+      "sha256": "f86005f1a505d0d629098a5814ef08006ebfe8a6bccf0cc1311b2a2e0264a579"
+    },
+    {
+      "argv": [
+        "python",
+        "scripts/lwp_check_proof.py"
+      ],
+      "exit": 1,
+      "expect_exit": 1,
+      "tail": [
+        "FAIL: proof\\LWP-GPUB-scan.json: verdict is 'publishable' but at least one checks[].result is 'fail' -- a gate record with any failing check cannot be publishable"
+      ],
+      "sha256": "ee8bb12e586fefdb9855eb1838efe9a43ebe9525102a9ab4d2c52f9e991e5e04"
+    },
+    {
+      "argv": [
+        "python",
+        "scripts/lwp_check_proof.py"
+      ],
+      "exit": 0,
+      "expect_exit": 0,
+      "tail": [
+        "lwp-proof check passed (1 record(s))"
+      ],
+      "sha256": "f86005f1a505d0d629098a5814ef08006ebfe8a6bccf0cc1311b2a2e0264a579"
+    },
+    {
+      "argv": [
+        "python",
+        "scripts/lwp_handoff.py",
+        "--check"
+      ],
+      "exit": 0,
+      "expect_exit": 0,
+      "tail": [
+        "OK: HANDOFF.md passes all checks (2349 bytes)"
+      ],
+      "sha256": "c36e706ce026b5e1492ef8800870e862475415873af069ca7dab26e70e533ea8"
+    },
+    {
+      "argv": [
+        "python",
+        "scripts/lwp_handoff.py",
+        "--check"
+      ],
+      "exit": 1,
+      "expect_exit": 1,
+      "tail": [
+        "FAIL: HANDOFF.md is 3790 bytes, over the 3000-byte cap"
+      ],
+      "sha256": "dd02385b9b5c932c4f8a68886a48b534e622e6eb010b14b48d174ca5e75071de"
+    },
+    {
+      "argv": [
+        "python",
+        "scripts/lwp_handoff.py",
+        "--check"
+      ],
+      "exit": 0,
+      "expect_exit": 0,
+      "tail": [
+        "OK: HANDOFF.md passes all checks (2349 bytes)"
+      ],
+      "sha256": "c36e706ce026b5e1492ef8800870e862475415873af069ca7dab26e70e533ea8"
+    },
+    {
+      "argv": [
+        "python",
+        "scripts/lwp_check_trace.py"
+      ],
+      "exit": 0,
+      "expect_exit": 0,
+      "tail": [
+        "lwp-trace check passed"
+      ],
+      "sha256": "95d6e3bc53d920a0669d32caa186ca618e75ef63e4576268f241f879577cb2a1"
+    },
+    {
+      "argv": [
+        "python",
+        "scripts/lwp_check_trace.py"
+      ],
+      "exit": 1,
+      "expect_exit": 1,
+      "tail": [
+        "lwp-trace check failed:",
+        "  - LWP-R99 has no row in traceability.md"
+      ],
+      "sha256": "ef12a409826824f8ef43a87d373b3cb562409e49f77ff74d66f4a10a290cb57c"
+    },
+    {
+      "argv": [
+        "python",
+        "scripts/lwp_check_trace.py"
+      ],
+      "exit": 0,
+      "expect_exit": 0,
+      "tail": [
+        "lwp-trace check passed"
+      ],
+      "sha256": "95d6e3bc53d920a0669d32caa186ca618e75ef63e4576268f241f879577cb2a1"
+    },
+    {
+      "argv": [
+        "python",
+        "scripts/lwp_check_runners.py"
+      ],
+      "exit": 0,
+      "expect_exit": 0,
+      "tail": [
+        "lwp-runners check passed"
+      ],
+      "sha256": "68fa784031e80356f5292adeb35037dfac749500d08bf624d900c1846178806a"
+    },
+    {
+      "argv": [
+        "python",
+        "scripts/lwp_check_runners.py"
+      ],
+      "exit": 1,
+      "expect_exit": 1,
+      "tail": [
+        "lwp-runners check failed:",
+        "  - .github\\workflows\\release.yml: job 'build-artifacts' uses self-hosted runner label 'self-hosted'"
+      ],
+      "sha256": "e55b6535e974f5476d0cc534546920b2dc4ef3436b514a33fe1f34cb0164e348"
+    },
+    {
+      "argv": [
+        "python",
+        "scripts/lwp_check_runners.py"
+      ],
+      "exit": 0,
+      "expect_exit": 0,
+      "tail": [
+        "lwp-runners check passed"
+      ],
+      "sha256": "68fa784031e80356f5292adeb35037dfac749500d08bf624d900c1846178806a"
+    },
+    {
+      "argv": [
+        "python",
+        "-m",
+        "pytest",
+        "-q"
+      ],
+      "exit": 0,
+      "expect_exit": 0,
+      "tail": [
+        "........................................................................ [ 43%]",
+        "..................................................................... [ 85%]",
+        "........................                                                 [100%]",
+        "165 passed, 3 subtests passed in 6.08s"
+      ],
+      "sha256": "f9990e928486f7dab665fb18b9ab59302c7f03509af693e8c09545f244c59720"
+    }
+  ],
+  "mutations": [
+    ".editorconfig",
+    ".github/CODEOWNERS",
+    ".github/ISSUE_TEMPLATE/bug.yml",
+    ".github/ISSUE_TEMPLATE/feature.yml",
+    ".github/PULL_REQUEST_TEMPLATE.md",
+    ".github/apps/lwp-claude.json",
+    ".github/apps/lwp-codex.json",
+    ".github/dependabot.yml",
+    ".github/rulesets/main.json",
+    ".github/workflows/ci.yml",
+    ".github/workflows/handoff.yml",
+    ".github/workflows/release.yml",
+    ".github/workflows/validate.yml",
+    "AGENTS.md",
+    "CHANGELOG.md",
+    "CLAUDE.md",
+    "CODE_OF_CONDUCT.md",
+    "CONTRIBUTING.md",
+    "HANDOFF.md",
+    "LICENSE",
+    "NOTICE",
+    "SECURITY.md",
+    "docs/handoff-protocol.md",
+    "docs/requirements/plan.md",
+    "docs/requirements/traceability.md",
+    "proof/README.md",
+    "proof/gate-schema.json",
+    "proof/schema.json",
+    "pyproject.toml",
+    "reviews/README.md",
+    "reviews/schema.json",
+    "scripts/lwp_apply_rulesets.py",
+    "scripts/lwp_check_commit_identity.py",
+    "scripts/lwp_check_env_leak.py",
+    "scripts/lwp_check_lane_write.py",
+    "scripts/lwp_check_no_instruction_dep.py",
+    "scripts/lwp_check_prefix.py",
+    "scripts/lwp_check_proof.py",
+    "scripts/lwp_check_runners.py",
+    "scripts/lwp_check_trace.py",
+    "scripts/lwp_check_worktrees.py",
+    "scripts/lwp_handoff.py",
+    "scripts/lwp_lanes.py",
+    "tests/conftest.py",
+    "tests/core/test_lwp_handoff.py",
+    "tests/fixtures/lane_write/claude_edit_in_lane.json",
+    "tests/fixtures/lane_write/claude_edit_out_of_lane.json",
+    "tests/fixtures/lane_write/claude_edit_shared.json",
+    "tests/fixtures/lane_write/codex_apply_patch_in_lane.json",
+    "tests/fixtures/lane_write/codex_apply_patch_out_of_lane.json",
+    "tests/fixtures/proof/exit_mismatch.json",
+    "tests/fixtures/proof/missing_field.json",
+    "tests/fixtures/proof/self_certified.json",
+    "tests/fixtures/proof/valid.json",
+    "tests/test_ci_env_leak_mode.py",
+    "tests/test_ci_matrix.py",
+    "tests/test_lwp_check_commit_identity.py",
+    "tests/test_lwp_check_env_leak.py",
+    "tests/test_lwp_check_lane_write.py",
+    "tests/test_lwp_check_prefix.py",
+    "tests/test_lwp_check_proof.py",
+    "tests/test_lwp_check_runners.py",
+    "tests/test_lwp_check_trace.py",
+    "tests/test_lwp_check_worktrees.py",
+    "tests/test_lwp_lanes.py",
+    "tests/test_no_instruction_file_dependency.py",
+    "tests/test_rulesets_shape.py"
+  ],
+  "unproven": [
+    "The six-job CI matrix has never run: every command here ran locally on one OS and one interpreter (Python 3.12.10), not on windows/macos/ubuntu x 3.10/3.12. CI green on the PR is still required for D0's exit.",
+    "Every check script's git output is now decoded as UTF-8 explicitly, after a cp1252 crash on Windows. That fix is proven by a fixture test and by re-running the scans over this branch's own non-ASCII commits on ONE platform; it has not been exercised on a real windows-latest, macos-latest or ubuntu-latest runner, which is the same gap as item 1.",
+    "The final `pytest -q` entry above was captured before this record existed on disk, so it does not prove the suite is green WITH this file present. The independent check re-ran the suite and lwp_check_proof.py with the record installed; the first CI run on the PR re-proves it.",
+    "The `checked_by` placeholder word list is a convenience net, not the guard. It cannot be made complete and no shape-based rule was kept, because one that caught `SET-BY-INDEPENDENT-CHECK` also rejected DEPENDABOT, CODEQL and the surnames MACDONALD and KIM-MINJI. The guard that holds is structural: a draft omits `checked_by`, so the record fails the required-field check until a real identity is written in. Nothing here can tell a real identity from a plausible invention; that rests on a different identity running the check.",
+    "Leak detection is line-based, extended to matches that straddle a pair of consecutive lines, scanned with both a tight and a spaced join. Three earlier approximations failed in sequence: 42 spurious duplicates, then a real suppression that dropped a distinct second leak, then a leak at its own separator reported nowhere. A path split across THREE or more lines is still undetected, as is one obfuscated by encoding (UTF-16, base64); neither was attempted beyond the two-line case.",
+    "The spaced join produces FALSE POSITIVES on innocent text: a line ending in the token `py` followed by a line starting with `-3` is reported as a hard-coded interpreter launch even when no invocation exists. It fails closed -- noise, never a missed leak -- and was accepted rather than narrowed, because narrowing it risks the suppression class this scanner must not have. Reproduced by the independent check; this same mechanism correctly flagged one of this branch's own commit messages.",
+    "Within a line pair, wrapped findings are deduplicated by description across both joins. Two genuinely distinct same-kind leaks straddling the identical boundary via different joins would report once. The independent check could not construct a realistic case and neither could the author; it is recorded as an unconfirmed theoretical gap, not a proven one.",
+    "LWP-R5 is proven as file shape only. The ruleset has never been applied: the repo is private and `gh api .../rulesets` returns HTTP 403 (needs Pro or public). Live application is gate G-PUB, owner action.",
+    "`scripts/lwp_apply_rulesets.py` is proven in --dry-run only; no live API call was made.",
+    "LWP-R8 lane enforcement was proven by fixture tests only. It is a no-op for PRs 1-5 by design, so this PR does not exercise it end to end; the first real enforcement is PR 6.",
+    "LWP-R1 is proven against fixture trees and against the pre-recast tree with the self-retiring legacy exemption ACTIVE. It is not yet proven against real `lwp`-named plugins -- that is D2 (Codex) and D4 (Claude).",
+    "The full-tree env-leak scan does not pass on this tree and is not in CI: docs/evidence/* carries absolute local paths until D2 drops it. Only --range-only mode gates D0/D1.",
+    "`lwp_check_runners.py` parses a narrow YAML subset, not general YAML. It reads `matrix.include:` legs and survived six attack routes, but anchors, multi-document files and other YAML outside that subset are unproven territory.",
+    "The cross-commit `prev_added` rejoin (round-three item 3) was closed by code inspection and covered by boundary resets, but was never reproduced as a failing case first.",
+    "No fresh-clone install of either plugin was exercised; D0 changes no runtime behaviour.",
+    "Entries 5 and 6 above were added to this record AFTER the independent check signed it, at that check's explicit request that the findings be written down. No command, exit code or mutation was changed; the check's verdict was PASS WITH FINDINGS on exactly these two items."
+  ],
+  "checked_by": "lw-verifier (sonnet), independent check of LWP-D0 at commit 78eba21, 2026-09-17"
+}

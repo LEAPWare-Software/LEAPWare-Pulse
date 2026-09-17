@@ -1,0 +1,422 @@
+#!/usr/bin/env python3
+"""CI check `lwp-env-leak`: no local-environment or private-project leak.
+
+SACRED (owner directive 6/7, LWP-R3): this repo's build/test/deploy must
+not depend on, or leak, anything about the machine or private projects it
+was built on. Scans every git-tracked, non-binary file for:
+
+  - a Windows drive letter (`C:\\...`)
+  - a POSIX home directory (`/Users/<name>` or `/home/<name>`)
+  - a hard-coded interpreter invocation: `py -3`, `py -3.NN`, or an
+    absolute path to a `python`/`python3`/`python.exe` binary
+  - a private-project name leak: a generic placeholder needle
+    (`example-private-project`) by default, case-insensitive, plus any
+    adopter-supplied needles listed one per line in a gitignored local
+    file (`.private-names` at the repo root); absent that file, the check
+    still runs with the generic default alone
+
+Allow-listed: this script's own pattern data (it necessarily names the
+patterns it looks for) and synthetic fixtures UNDER `tests/` whose path
+contains `fixture`. The exemption is scoped to `tests/` deliberately: a
+bare "contains fixture" rule let `leak_fixture.md` at the repo root carry
+a real drive-letter path straight past this check.
+
+A working-tree scan alone misses a leak that was committed and then
+removed again -- it is still sitting in the branch's history, and a
+`git clone` (or a marketplace pull) carries every commit, not just the
+final tree. `--range <base>..<head>` additionally scans the ADDED lines
+of every commit in that range (via `git log -p --unified=0`), so a leak
+that was committed then reverted within the same PR is still caught, not
+just the leaks visible in the final diff. `--range` also scans every
+COMMIT MESSAGE in the range: a clone carries messages in full, so a path
+pasted into a commit body leaks as hard as one in a file, and shows up in
+no diff at all.
+
+Usage:
+    python scripts/lwp_check_env_leak.py
+    python scripts/lwp_check_env_leak.py --range <base-sha>..<head-sha>
+
+Note (LWP-D0/D1): `docs/evidence/*.md` intentionally carries absolute
+local paths today (dropped from the tree in D2, see plan.md
+dispositions) -- a full-tree scan of THIS repo is therefore expected to
+fail until D2. CI runs this check in `--range` mode only for D0/D1 PRs;
+the full-tree scan joins CI in D2.
+
+Stdlib only. Exits 0 and prints "lwp-env-leak check passed" on success;
+otherwise prints every finding (file:line, or commit:file for a
+history-only finding) and exits 1.
+"""
+
+from __future__ import annotations
+
+import argparse
+import re
+import subprocess
+import sys
+from pathlib import Path, PurePosixPath
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+SELF_PATH = Path(__file__).resolve()
+
+DRIVE_LETTER = re.compile(r"\b[A-Za-z]:\\[\w][\w.\- ]")
+POSIX_HOME = re.compile(r"(?<!\w)/(?:Users|home)/[\w.\-]+")
+PY_DASH3 = re.compile(r"\bpy\s+-3(\.\d+)?\b")
+HARDCODED_INTERPRETER = re.compile(
+    r"(?:[A-Za-z]:\\|/)(?:[\w.\-]+[\\/])*python3?(?:\.exe)?(?=[\s\"'`]|$)"
+)
+
+# Generic default: nothing here names a real project or person. An adopter
+# who forks/installs this repo supplies their own needles via a local,
+# gitignored file (PRIVATE_NAMES_FILE) rather than committing them here --
+# committing them would recreate the exact leak this check exists to catch.
+DEFAULT_PRIVATE_NAME_SUBSTRINGS = ["example-private-project"]
+
+PRIVATE_NAMES_FILE = ".private-names"
+
+
+def _private_name_substrings() -> list[str]:
+    """DEFAULT_PRIVATE_NAME_SUBSTRINGS plus any needles from a local,
+    gitignored `.private-names` file at REPO_ROOT (one per line, blank
+    lines and `#`-comments ignored). Absent file: default only. Read
+    fresh on every call so a caller that reassigns REPO_ROOT (as the test
+    suite does, to point at a throwaway fixture repo) picks up that
+    repo's own file, not this one's.
+    """
+    names = list(DEFAULT_PRIVATE_NAME_SUBSTRINGS)
+    try:
+        text = (REPO_ROOT / PRIVATE_NAMES_FILE).read_text(encoding="utf-8")
+    except OSError:
+        return names
+    for line in text.splitlines():
+        stripped = line.strip()
+        if stripped and not stripped.startswith("#"):
+            names.append(stripped.lower())
+    return names
+
+
+_BINARY_SUFFIXES = {".png", ".jpg", ".jpeg", ".gif", ".ico", ".zip", ".pyc"}
+
+
+def _tracked_files() -> list[Path]:
+    result = subprocess.run(
+        ["git", "ls-files"],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        # Explicit: text=True alone decodes with the locale default, which is
+        # cp1252 on a Windows runner and raises UnicodeDecodeError on any
+        # non-ASCII byte in a diff, filename or commit message.
+        encoding="utf-8",
+        errors="replace",
+        check=True,
+    )
+    return [REPO_ROOT / line for line in result.stdout.splitlines() if line]
+
+
+# Files that necessarily carry this scanner's own pattern data (or, for a
+# test file, synthetic needles that exercise it) rather than a real leak.
+_PATTERN_DATA_EXEMPT = {
+    "scripts/lwp_check_env_leak.py",
+    "scripts/lwp_handoff.py",
+    "tests/core/test_lwp_handoff.py",
+    "tests/test_lwp_check_env_leak.py",
+}
+
+
+def _is_exempt_posix(posix: str) -> bool:
+    """Exempt this check's own pattern data, and synthetic test fixtures.
+
+    The fixture exemption is scoped to `tests/` on purpose. A bare
+    `"fixture" in path` test exempts the whole repo: `docs/fixture-notes.md`
+    or `leak_fixture.md` at the root would carry a real drive-letter path
+    straight past the check that exists to catch it. Synthetic data lives
+    under tests/; nothing outside tests/ gets to opt out by filename.
+    """
+    if posix in _PATTERN_DATA_EXEMPT:
+        return True
+    lowered = posix.lower()
+    if not lowered.startswith("tests/"):
+        return False
+    return "fixture" in lowered
+
+
+def _is_exempt(path: Path) -> bool:
+    if path == SELF_PATH:
+        return True
+    return _is_exempt_posix(path.relative_to(REPO_ROOT).as_posix())
+
+
+# (pattern, description) pairs, so the per-line scan and the wrapped-pair
+# scan share one definition of what a leak is and cannot drift apart.
+_LEAK_PATTERNS = (
+    (DRIVE_LETTER, "Windows drive letter"),
+    (POSIX_HOME, "POSIX home directory path"),
+    (PY_DASH3, "hard-coded 'py -3' interpreter launch"),
+    (HARDCODED_INTERPRETER, "absolute path to a python interpreter"),
+)
+
+
+def _matches_in(text: str) -> list[tuple[int, int, str]]:
+    """Every leak match in `text` as (start, end, description)."""
+    spans: list[tuple[int, int, str]] = []
+    for pattern, description in _LEAK_PATTERNS:
+        for m in pattern.finditer(text):
+            spans.append((m.start(), m.end(), description))
+    lowered = text.lower()
+    for needle in _private_name_substrings():
+        start = lowered.find(needle)
+        while start != -1:
+            spans.append((start, start + len(needle), f"private-project name leak ('{needle}')"))
+            start = lowered.find(needle, start + 1)
+    return spans
+
+
+def _findings_for_line(rel: str, lineno: int, line: str) -> list[str]:
+    seen: set[str] = set()
+    findings: list[str] = []
+    for _, _, description in _matches_in(line):
+        if description not in seen:
+            seen.add(description)
+            findings.append(f"{rel}:{lineno}: {description}")
+    return findings
+
+
+def _findings_for_wrapped(rel: str, lineno: int, first: str, second: str) -> list[str]:
+    """Findings visible only when two consecutive lines are rejoined.
+
+    Detection is per-line everywhere else, so a path that merely WRAPS --
+    `C:` ending one line and `\\Users\\someone\\project` starting the next --
+    is fully present and usable in the file, and invisible to every regex
+    here. Found by the independent D0 check against the commit-message
+    scanner, but the file and diff scanners had the same blind spot from
+    the start.
+
+    A match is reported here ONLY when it actually straddles the join: it
+    starts in the first line's text and ends in the second's. That is the
+    exact definition of "wrapped", so no deduplication against the per-line
+    scan is needed or done.
+
+    Two earlier attempts got this wrong, both found by the independent D0
+    check. Comparing whole finding strings failed because the joined text
+    is tagged with the pair's FIRST line number, so a second-line leak
+    never compared equal -- 42 spurious duplicates on this repo's own tree.
+    Comparing finding KIND instead fixed the noise but introduced a
+    SUPPRESSION: a genuinely distinct second leak sharing a kind with an
+    unrelated hit on the other line was silently dropped and never reported
+    at all. Position beats deduplication -- it answers the real question
+    instead of approximating it.
+    """
+    head = first.rstrip()
+    tail = second.lstrip()
+
+    # TWO joins, because the boundary whitespace matters in both directions.
+    #
+    #   tight  ("")  -- a path continues across the break: `C:` + `\Users\...`
+    #   spaced (" ") -- the break IS the separator the pattern needs
+    #
+    # Only scanning the tight join deletes the very character some patterns
+    # require: `py -3` wrapping at its single mandatory space produced NO
+    # finding on either line and none when rejoined, because `\s+` had
+    # nothing left to match. Reported nowhere -- the one outcome this
+    # scanner must not have. Found by the independent D0 check.
+    findings = []
+    seen: set[str] = set()
+    for separator in ("", " "):
+        joined = head + separator + tail
+        left_end = len(head)
+        right_start = left_end + len(separator)
+        for start, end, description in _matches_in(joined):
+            # Straddles: begins in the first line's text, ends in the second's.
+            if start < left_end and end > right_start and description not in seen:
+                seen.add(description)
+                findings.append(
+                    f"{rel}:{lineno}: {description} (wrapped across lines {lineno}-{lineno + 1})"
+                )
+    return findings
+
+
+def _findings_for_text(rel: str, lines: list[str]) -> list[str]:
+    """Per-line findings, plus findings that only a rejoined pair reveals."""
+    findings: list[str] = []
+    for lineno, line in enumerate(lines, start=1):
+        findings.extend(_findings_for_line(rel, lineno, line))
+    for lineno in range(1, len(lines)):
+        findings.extend(_findings_for_wrapped(rel, lineno, lines[lineno - 1], lines[lineno]))
+    return findings
+
+
+def check() -> list[str]:
+    findings: list[str] = []
+    for path in _tracked_files():
+        if not path.is_file() or path.suffix.lower() in _BINARY_SUFFIXES:
+            continue
+        if _is_exempt(path):
+            continue
+        try:
+            text = path.read_text(encoding="utf-8")
+        except (UnicodeDecodeError, OSError):
+            continue
+        rel = path.relative_to(REPO_ROOT).as_posix()
+        findings.extend(_findings_for_text(rel, text.splitlines()))
+    return findings
+
+
+# `git log -p` commit boundary; captures the full 40-hex sha.
+_COMMIT_RE = re.compile(r"^commit ([0-9a-f]{40})")
+# `+++ b/<path>` names the file a hunk's added lines belong to; `/dev/null`
+# means the file was deleted in this commit (nothing was added to it).
+_NEW_FILE_RE = re.compile(r"^\+\+\+ b/(.+)$")
+# `@@ -<old-start>[,<old-count>] +<new-start>[,<new-count>] @@`
+_HUNK_RE = re.compile(r"^@@ -\d+(?:,\d+)? \+(\d+)(?:,\d+)? @@")
+
+
+def check_range_messages(rev_range: str) -> list[str]:
+    """Scan the COMMIT MESSAGES of every commit in `rev_range`.
+
+    Beyond LWP-R3's literal wording, which speaks of tracked files and added
+    lines. A `git clone` carries commit messages in full, so a machine path
+    or a private project name pasted into a commit body leaks exactly as
+    hard as one in a file -- and is harder to spot, since no file diff shows
+    it. Found by the independent D0 check: an empty commit whose message
+    held a drive-letter path passed the range scan cleanly.
+    """
+    result = subprocess.run(
+        ["git", "log", "--no-color", "--format=%H%x1f%B%x1e", rev_range],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        # Explicit: text=True alone decodes with the locale default, which is
+        # cp1252 on a Windows runner and raises UnicodeDecodeError on any
+        # non-ASCII byte in a diff, filename or commit message.
+        encoding="utf-8",
+        errors="replace",
+        check=True,
+    )
+
+    findings: list[str] = []
+    for entry in result.stdout.split("\x1e"):
+        if "\x1f" not in entry:
+            continue
+        sha, _, message = entry.strip().partition("\x1f")
+        findings.extend(_findings_for_text(f"(commit message) {sha[:12]}", message.splitlines()))
+    return findings
+
+
+def check_range(rev_range: str) -> list[str]:
+    """Scan the ADDED lines of every commit in `rev_range` (base..head).
+
+    Uses `git log -p --unified=0` so each hunk contains only changed lines
+    (no surrounding context to mis-scan) and walks it by hand: a commit
+    that added a leak and a later commit in the same range that removed it
+    again is still caught, because every commit's own diff is scanned, not
+    just the net base..head diff.
+    """
+    result = subprocess.run(
+        ["git", "log", "-p", "--unified=0", "--no-color", "--no-textconv", rev_range],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        # Explicit: text=True alone decodes with the locale default, which is
+        # cp1252 on a Windows runner and raises UnicodeDecodeError on any
+        # non-ASCII byte in a diff, filename or commit message.
+        encoding="utf-8",
+        errors="replace",
+        check=True,
+    )
+
+    findings: list[str] = []
+    commit_sha = "?"
+    rel = None
+    next_new_line = None
+    prev_added: tuple[str, int, str] | None = None
+
+    for raw_line in result.stdout.splitlines():
+        # Every boundary below also clears prev_added. Without that, a
+        # coincidental same-path, consecutive-line-number pair spanning two
+        # commits (or two hunks) would be rejoined and reported as a wrap
+        # that never existed in any single file state. Raised as PLAUSIBLE
+        # by the independent D0 check; cheap to close, so closed rather
+        # than argued about.
+        commit_match = _COMMIT_RE.match(raw_line)
+        if commit_match:
+            commit_sha = commit_match.group(1)[:12]
+            rel = None
+            next_new_line = None
+            prev_added = None
+            continue
+
+        new_file_match = _NEW_FILE_RE.match(raw_line)
+        if new_file_match:
+            candidate = new_file_match.group(1)
+            rel = None if candidate == "dev/null" else PurePosixPath(candidate).as_posix()
+            next_new_line = None
+            prev_added = None
+            continue
+
+        hunk_match = _HUNK_RE.match(raw_line)
+        if hunk_match:
+            next_new_line = int(hunk_match.group(1))
+            prev_added = None
+            continue
+
+        if rel is None or next_new_line is None or _is_exempt_posix(rel):
+            continue
+
+        if raw_line.startswith("+") and not raw_line.startswith("+++"):
+            content = raw_line[1:]
+            for f in _findings_for_line(rel, next_new_line, content):
+                findings.append(f"{commit_sha} {f}")
+            # A wrapped path spans two ADDED lines contiguous in the new
+            # file; rejoin only that case, never across a hunk, a file
+            # boundary or a commit.
+            if prev_added is not None and prev_added[0] == rel and prev_added[1] == next_new_line - 1:
+                for f in _findings_for_wrapped(rel, prev_added[1], prev_added[2], content):
+                    findings.append(f"{commit_sha} {f}")
+            prev_added = (rel, next_new_line, content)
+            next_new_line += 1
+        # Removed ("-") lines don't advance the new-file line counter, and
+        # unified=0 emits no context lines, so nothing else to track here.
+
+    return findings
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--range",
+        dest="rev_range",
+        default=None,
+        help="also scan added lines of every commit in base..head (e.g. origin/main..HEAD)",
+    )
+    parser.add_argument(
+        "--range-only",
+        action="store_true",
+        help=(
+            "with --range, scan only the range's added lines and skip the "
+            "full-tree scan. LWP-D0/D1 CI uses this: docs/evidence/*.md "
+            "intentionally carries absolute local paths until dropped in "
+            "D2 (see plan.md dispositions), so the full-tree scan is not "
+            "yet clean and D0/D1 PRs are gated on range mode alone. The "
+            "full-tree scan joins CI (without this flag) in D2."
+        ),
+    )
+    args = parser.parse_args()
+
+    if args.range_only and not args.rev_range:
+        print("FAIL: --range-only requires --range", file=sys.stderr)
+        return 2
+
+    findings = [] if args.range_only else check()
+    if args.rev_range:
+        findings.extend(check_range(args.rev_range))
+        findings.extend(check_range_messages(args.rev_range))
+    if findings:
+        for f in findings:
+            print(f"FAIL: {f}")
+        return 1
+    print("lwp-env-leak check passed")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

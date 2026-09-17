@@ -1,0 +1,46 @@
+name: Bug report
+description: Something in Pulse behaves differently than documented.
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      options:
+        - core (lwp_core engine)
+        - adapters/claude
+        - adapters/codex
+        - adapters/common
+        - plugins/claude/lwp
+        - plugins/codex/lwp
+        - scripts (build/validate/release)
+        - docs
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What did Pulse report, and what did you expect instead?
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction steps
+      description: The task document used, the exact command or skill invocation, and the view requested (Panorama/Brief/Focus).
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Pulse version
+    validations:
+      required: true
+  - type: input
+    id: host
+    attributes:
+      label: Host and OS
+      description: e.g. "Claude Code on Windows 11" or "Codex CLI on macOS"
+    validations:
+      required: true
