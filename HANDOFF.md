@@ -15,15 +15,20 @@ against `docs/requirements/requirements.md` (LWP-R1-R39) and traced in
 `docs/requirements/traceability.md`. Never start phase *n+1* before phase
 *n* is merged with a proof record checked by a different identity.
 
-1. D0 (skeleton parity and governance) is in flight on
-   `d0/skeleton-parity`: root meta, `.github/`, the `lwp_check_*` suite,
-   `proof/` and `reviews/` schemas, traceability matrix.
-2. G-PUB is owner-only and runs after D0 merges: flip to public, apply
-   `.github/rulesets/main.json`, enable merge queue, create the
-   `lwp-claude` and `lwp-codex` Apps. It blocks D1 and later merges.
+1. D0 is MERGED (PR #2, squashed as `8071687`): root meta, `.github/`,
+   the `lwp_check_*` suite, `proof/` and `reviews/` schemas, the
+   traceability matrix. CI green on all six jobs. Proof record
+   `proof/LWP-D0.json`, checked by an identity that did not author it.
+2. NEXT, and owner-only: gate G-PUB. Flip visibility to public, apply
+   `.github/rulesets/main.json` with `scripts/lwp_apply_rulesets.py`,
+   enable merge queue and auto-merge, create the `lwp-claude` and
+   `lwp-codex` Apps from `.github/apps/`. G-PUB blocks D1 and every later
+   merge. The ruleset has never been applied: `gh api .../rulesets`
+   returns 403 while the repo is private.
 3. Pre-publication history scan passed: `proof/LWP-GPUB-scan.json`.
 4. Then D1 core extraction, D2 Codex plugin, D3 migration, D4 Claude
-   port, D5 rehearsal and release 1.0.0.
+   port, D5 rehearsal and release 1.0.0. D1 may be worked on a branch
+   before G-PUB, but not merged.
 
 ## Re-derive state
 
@@ -37,8 +42,8 @@ gh repo view LEAPWare-Software/LEAPWare-Pulse --json visibility
 
 <!-- lwp-handoff:begin -->
 
-Generated: 2026-09-17 23:34 UTC
-main SHA: 8bccb1c7c1be6bbbb652c5e88ee7a0138c78479a
+Generated: 2026-09-17 23:39 UTC
+main SHA: 8071687f07e38bbb98e07029f15b7c0aae3c354c
 CLI: claude
 Session: d0-skeleton-parity
 
