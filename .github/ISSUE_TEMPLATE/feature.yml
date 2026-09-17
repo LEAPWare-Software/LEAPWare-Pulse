@@ -1,0 +1,27 @@
+name: Feature request
+description: Propose a change to a view, an adapter capability, or tooling.
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve
+      description: What status question, today, has no clean answer from Panorama, Brief, or Focus?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: If proposing a change to a view or the verification gate, describe the exact behavior and which requirement (LWP-R#) it affects.
+    validations:
+      required: true
+  - type: checkboxes
+    id: constraints
+    attributes:
+      label: Constraints acknowledged
+      options:
+        - label: Stdlib-only at runtime (no new third-party dependency under core/ or adapters/).
+          required: true
+        - label: Checked is not verified — no proposal weakens the evidence gate (spec + evidence required).
+          required: true

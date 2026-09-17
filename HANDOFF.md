@@ -1,96 +1,65 @@
 # HANDOFF
 
-One page. Read this before any other file when starting a new session on
-this repo. The full handoff protocol (`docs/handoff-protocol.md`) lands in
-D0; until then this file follows the sibling repos' protocol by hand.
+Read this before any other file. Protocol: `docs/handoff-protocol.md`.
 
 ## Start of session
 
-- [ ] Read this whole file.
-- [ ] Run the commands in "Re-derive state" below — trust their output,
-      not this file's prose (except the "In flight" narrative, which is
-      the current plan of record).
-- [ ] Confirm which CLI you are (Claude Code or Codex). Lanes start in D0
-      (`AGENTS.md` / `CLAUDE.md`); until then touch only the phase's files.
-- [ ] If nothing below is in flight, ENTER PLAN MODE and pick up the next
-      unchecked step.
+- [ ] Read this file, run "Re-derive state", trust its output over prose.
+- [ ] Confirm your CLI lane (`AGENTS.md` / `CLAUDE.md`, LWP-R8).
+- [ ] Nothing in flight? Enter plan mode, take the next unchecked step.
 
 ## In flight
 
-The plan of record is `docs/requirements/plan.md` (phases D0–D5 and gate
-G-PUB), proven against `docs/requirements/requirements.md` (LWP-R1…R39)
-and traced to `docs/requirements/owner-directives.md`. Do not start phase
-*n+1* before phase *n* is merged and its proof record is checked.
+Plan of record: `docs/requirements/plan.md` (D0-D5, gate G-PUB), proven
+against `docs/requirements/requirements.md` (LWP-R1-R39) and traced in
+`docs/requirements/traceability.md`. Never start phase *n+1* before phase
+*n* is merged with a proof record checked by a different identity.
 
-1. Work from this repo only. Clone fresh on any machine; no dependence on
-   the local environment.
-2. The recast requirements and plan are merged. Decisions Q1, Q3–Q5 are
-   recorded in `plan.md` (CTO, 2026-09-17). Q2 DECIDED (owner, 2026-09-17):
-   the learning code migrated from the private [removed] is
-   stripped from ALL Pulse history before going public, and learning is
-   dropped from 1.0. G-PUB runs after the rewrite and after an independent
-   scan verifies it.
-3. [x] Pre-publication history scan DONE (independent verifier,
-   2026-09-17, verdict publishable): `proof/LWP-GPUB-scan.json`. The repo
-   stays private; owner order is D0 first, then G-PUB. Gate G-PUB (owner:
-   flip to public, apply rulesets and merge queue, create the `lwp-claude`
-   and `lwp-codex` Apps) must pass before D1 or later merges.
-4. D0 — skeleton parity and governance, including the worktree rule
-   (LWP-R9) and hosted-runners-only check (LWP-R39).
-5. D1 core extraction, D2 Codex plugin, D3 Codex migration, D4 Claude port,
-   D5 rehearsal and independent proof, release 1.0.0.
-6. Every phase: proof record `proof/LWP-Dn.json`, pushed, CI green, alert
-   line `LWP - Alert: LWP-Dn DONE ...`.
-7. `lw-acceptance.py` removed (private-origin); a clean-room acceptance
-   runner is rebuilt in D1.
-
-<!-- lwp-handoff:begin -->
-
-Generated: by hand (no generator yet; `scripts/lwp_handoff.py` lands in D0)
-Branch of record: main
-Open PRs: read `gh pr list`, not this line.
-
-Deliverable proof state (from proof/):
-(none yet; `proof/` lands in D0)
-
-<!-- lwp-handoff:end -->
+1. D0 (skeleton parity and governance) is in flight on
+   `d0/skeleton-parity`: root meta, `.github/`, the `lwp_check_*` suite,
+   `proof/` and `reviews/` schemas, traceability matrix.
+2. G-PUB is owner-only and runs after D0 merges: flip to public, apply
+   `.github/rulesets/main.json`, enable merge queue, create the
+   `lwp-claude` and `lwp-codex` Apps. It blocks D1 and later merges.
+3. Pre-publication history scan passed: `proof/LWP-GPUB-scan.json`.
+4. Then D1 core extraction, D2 Codex plugin, D3 migration, D4 Claude
+   port, D5 rehearsal and release 1.0.0.
 
 ## Re-derive state
 
 ```
-git fetch origin
-git status --short --branch
-git log --oneline -10
-git worktree list
-gh pr list --state open
+git fetch origin && git status --short --branch
+git log --oneline -10 && git worktree list
+gh pr list --state open --json number,title
 gh run list --limit 10
 gh repo view LEAPWare-Software/LEAPWare-Pulse --json visibility
-gh api repos/LEAPWare-Software/LEAPWare-Pulse/rulesets
 ```
 
-`gh` and `git` are the state of record. This file's "In flight" list is
-the plan; the commands above are the facts.
+<!-- lwp-handoff:begin -->
+
+Generated: 2026-09-17 22:36 UTC
+main SHA: 8bccb1c7c1be6bbbb652c5e88ee7a0138c78479a
+CLI: claude
+Session: d0-skeleton-parity
+
+Open PRs:
+(unavailable: no `gh` auth in this environment, or no open PRs)
+
+Deliverable proof state (from proof/):
+- G-PUB: PROVEN (gate record, verdict 'publishable')
+
+<!-- lwp-handoff:end -->
 
 ## Hard rules
 
-- Python 3.10+ standard library only in anything shipped.
-- The plugin never reads or depends on `CLAUDE.md` or `AGENTS.md` at
-  runtime.
-- Commit identity `LEAPWare <leapware@outlook.com>` from now on. Existing
-  history is never rewritten.
-- Worktrees only under `<repo>/.worktrees/<branch>` (gitignored). Never a
-  worktree or clone as a sibling folder next to the repo.
-- CI on GitHub-hosted runners only (`ubuntu-*`, `windows-*`, `macos-*`).
-- Nothing copied from any private project into this repo.
-- No visibility or settings change, no force-push, no history rewrite
-  without the owner.
+Full list in `CLAUDE.md` / `AGENTS.md`. Standard library only in shipped
+code; the plugin never reads `CLAUDE.md` or `AGENTS.md` at runtime;
+commit identity `LEAPWare <leapware@outlook.com>`; worktrees only under
+`.worktrees/`; GitHub-hosted runners only; no force-push, no history
+rewrite, no visibility change without the owner.
 
 ## Traps
 
-- `gh pr list --jq` without `--json` exits 1; use `--json` with `--jq`.
-- A linked worktree's `.git` is a file, not a directory.
-- `git diff` omits untracked files; check
-  `git ls-files --others --exclude-standard` too.
-- The existing `docs/evidence/*` files contain absolute local paths; they
-  are dropped from the tree in D2 and will fail the D0 env-leak check on a
-  full-tree scan until then — run that check in range mode for D0/D1 PRs.
+Listed in `docs/handoff-protocol.md`, "Traps". The one that bites first:
+`lwp_check_env_leak.py --range` still scans the full tree, which cannot
+pass until D2 drops `docs/evidence/*` -- CI passes `--range-only`.

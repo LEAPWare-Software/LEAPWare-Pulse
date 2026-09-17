@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "lwp Gate record",
+  "description": "A gate is an owner action with an entry condition, not a build deliverable, so it has no author/checked_by/commands triple to prove. It records what an independent verifier checked and the verdict. Phase records (proof/LWP-D*.json) use proof/schema.json instead; scripts/lwp_check_proof.py routes by filename. See proof/README.md.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["gate", "item", "date", "verifier", "checks", "verdict"],
+  "properties": {
+    "gate": {
+      "type": "string",
+      "pattern": "^G-[A-Z0-9-]+$",
+      "description": "The gate id from docs/requirements/plan.md, e.g. G-PUB."
+    },
+    "item": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Which entry condition of the gate this record covers."
+    },
+    "date": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+      "description": "ISO date the check was run."
+    },
+    "verifier": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Identity of the independent verifier. A gate record is worthless if the session that did the work also signed it off."
+    },
+    "checks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["id", "result", "detail"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Short slug for the individual check."
+          },
+          "result": {
+            "enum": ["pass", "fail"],
+            "description": "The check's outcome. A record carrying any 'fail' cannot have verdict 'publishable' — enforced in scripts/lwp_check_proof.py."
+          },
+          "detail": {
+            "type": "string",
+            "minLength": 1,
+            "description": "What was actually examined and what was found. Not a restatement of the id."
+          },
+          "files": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Optional: the specific paths this check covered."
+          }
+        }
+      }
+    },
+    "verdict": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The verifier's overall conclusion, e.g. 'publishable'."
+    }
+  }
+}

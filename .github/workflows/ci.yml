@@ -1,0 +1,89 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  merge_group:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+        python-version: ["3.10", "3.12"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dev dependencies
+        run: python -m pip install --upgrade pip pytest
+
+      - name: Unit tests (34 pre-recast tests, unchanged)
+        run: python -m pytest -q
+
+      - name: Validate the pre-recast Codex package (stays until D2)
+        run: python scripts/validate_pulse_plugin.py
+
+      - name: lwp-prefix (every user-facing entrypoint starts with lwp)
+        run: python scripts/lwp_check_prefix.py
+
+      - name: lwp-no-instruction-dep (no CLAUDE.md/AGENTS.md runtime dependency)
+        run: python scripts/lwp_check_no_instruction_dep.py
+
+      - name: lwp-proof (proof/*.json records validate against proof/schema.json)
+        run: python scripts/lwp_check_proof.py
+
+      - name: lwp-worktrees (worktrees only under <repo>/.worktrees/<branch>)
+        run: python scripts/lwp_check_worktrees.py
+
+      - name: lwp-runners (every workflow uses GitHub-hosted runners only)
+        run: python scripts/lwp_check_runners.py
+
+      - name: lwp-trace (every LWP-R id has a traceability row)
+        run: python scripts/lwp_check_trace.py
+
+      - name: HANDOFF.md shape check
+        run: python scripts/lwp_handoff.py --check
+
+      # RANGE MODE ONLY for D0 and D1: docs/evidence/*.md still contain
+      # absolute local paths (pre-recast, private-era evidence) and are
+      # only dropped from the tree in D2. A full-tree scan would fail on
+      # every PR until then. The full-tree scan joins CI in D2, once that
+      # directory is gone. See docs/requirements/plan.md, "Env-leak mode".
+      - name: lwp-env-leak (no local-environment or private-project leak in this PR's added lines)
+        if: github.event_name == 'pull_request'
+        # --range-only is what makes this D0/D1-safe: --range on its own
+        # ADDS a range scan to the full-tree scan, which still fails on
+        # docs/evidence/*. In D2, once that directory is dropped, remove
+        # --range-only here so the full-tree scan gates every PR again.
+        run: >-
+          python scripts/lwp_check_env_leak.py
+          --range ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}
+          --range-only
+
+      - name: lwp-commit-identity (LEAPWare or an allow-listed bot only)
+        if: github.event_name == 'pull_request'
+        # Same base/head reasoning as lwp-env-leak above: check the PR's
+        # own real commits, never the synthetic merge commit.
+        run: >-
+          python scripts/lwp_check_commit_identity.py
+          --base ${{ github.event.pull_request.base.sha }}
+          --head ${{ github.event.pull_request.head.sha }}
+
+      - name: lwp-lanes (per-commit lane discipline + shared-path review gate)
+        if: github.event_name == 'pull_request'
+        # Same base/head reasoning as lwp-commit-identity above: check the
+        # PR's own real commits, never the synthetic merge commit.
+        run: >-
+          python scripts/lwp_lanes.py
+          --base ${{ github.event.pull_request.base.sha }}
+          --head ${{ github.event.pull_request.head.sha }}
+          --pr-number ${{ github.event.pull_request.number }}
