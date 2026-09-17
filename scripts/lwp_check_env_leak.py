@@ -114,9 +114,20 @@ _PATTERN_DATA_EXEMPT = {
 
 
 def _is_exempt_posix(posix: str) -> bool:
+    """Exempt this check's own pattern data, and synthetic test fixtures.
+
+    The fixture exemption is scoped to `tests/` on purpose. A bare
+    `"fixture" in path` test exempts the whole repo: `docs/fixture-notes.md`
+    or `leak_fixture.md` at the root would carry a real drive-letter path
+    straight past the check that exists to catch it. Synthetic data lives
+    under tests/; nothing outside tests/ gets to opt out by filename.
+    """
     if posix in _PATTERN_DATA_EXEMPT:
         return True
-    return "fixture" in posix.lower()
+    lowered = posix.lower()
+    if not lowered.startswith("tests/"):
+        return False
+    return "fixture" in lowered
 
 
 def _is_exempt(path: Path) -> bool:

@@ -234,3 +234,20 @@ def test_full_tree_scan_of_fixture_tree_catches_absolute_path(tmp_path):
         check_mod.REPO_ROOT = original_root
 
     assert any("Windows drive letter" in f for f in findings)
+
+
+def test_fixture_exemption_is_scoped_to_the_tests_tree():
+    """A path outside tests/ cannot buy an exemption by having 'fixture'
+    in its name.
+
+    Caught by the D0 break/restore run: a planted leak in a root-level
+    `leak_fixture.md` was waved through, because the exemption was a bare
+    `"fixture" in path` over the whole repo while the docstring claimed it
+    was scoped to tests/**/fixtures/**.
+    """
+    assert check_mod._is_exempt_posix("tests/fixtures/proof/sample.json") is True
+    assert check_mod._is_exempt_posix("tests/test_lwp_check_prefix_fixture.py") is True
+
+    assert check_mod._is_exempt_posix("leak_fixture.md") is False
+    assert check_mod._is_exempt_posix("docs/fixture-notes.md") is False
+    assert check_mod._is_exempt_posix("plugins/LEAPWare-Pulse/fixtures/thing.json") is False
