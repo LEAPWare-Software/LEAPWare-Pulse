@@ -58,6 +58,29 @@ on both hosts. Duplicating it per host would break LWP-R32. Recorded in
   active with no bypass; a probe PR is merged through the queue.
 - **Blocks:** merging D1 and later. Work on D1+ branches may start before it.
 - **Size:** S (owner time, not a build phase).
+- **Status, 2026-09-18 (PARTIALLY MET, not complete).** Re-measured, not
+  carried forward from prior notes:
+  - Repository visibility flipped to public on 2026-09-18. Confirmed via
+    `gh repo view --json visibility,isPrivate`.
+  - Ruleset id `23672521` applied to `main` and confirmed active via
+    `gh api repos/LEAPWare-Software/LEAPWare-Pulse/rulesets/23672521`:
+    `enforcement` is `active`, `bypass_actors` is empty (`[]`), and the
+    `required_status_checks` list is exactly the six CI matrix jobs
+    (`test (windows-latest, 3.10)`, `test (windows-latest, 3.12)`,
+    `test (macos-latest, 3.10)`, `test (macos-latest, 3.12)`,
+    `test (ubuntu-latest, 3.10)`, `test (ubuntu-latest, 3.12)`), matching
+    `ci.yml`'s matrix exactly. A `merge_queue` rule and a `pull_request`
+    rule (squash-only merges) are also present.
+  - Merge queue and auto-merge are enabled at the repository level.
+  - **Outstanding, still not done:** the `lwp-claude` and `lwp-codex`
+    GitHub Apps have not been created — that step is manual and owner-only
+    (procedure: `docs/github-apps.md`). The exit condition "a probe PR is
+    merged through the queue" has never been exercised: the ruleset and
+    merge queue are configured and verified from the API, but no PR has
+    actually gone through the queue end to end, so whether merges work in
+    practice is unproven, not merely unverified-on-paper. Do not treat
+    G-PUB as met until both the Apps exist and a probe PR has cleared the
+    queue.
 
 ## D0 — Skeleton parity and governance (M)
 

@@ -19,16 +19,17 @@ against `docs/requirements/requirements.md` (LWP-R1-R39) and traced in
    the `lwp_check_*` suite, `proof/` and `reviews/` schemas, the
    traceability matrix. CI green on all six jobs. Proof record
    `proof/LWP-D0.json`, checked by an identity that did not author it.
-2. NEXT, and owner-only: gate G-PUB. Flip visibility to public, apply
-   `.github/rulesets/main.json` with `scripts/lwp_apply_rulesets.py`,
-   enable merge queue and auto-merge, create the `lwp-claude` and
-   `lwp-codex` Apps from `.github/apps/`. G-PUB blocks D1 and every later
-   merge. The ruleset has never been applied: `gh api .../rulesets`
-   returns 403 while the repo is private.
-3. Pre-publication history scan passed: `proof/LWP-GPUB-scan.json`.
-4. Then D1 core extraction, D2 Codex plugin, D3 migration, D4 Claude
-   port, D5 rehearsal and release 1.0.0. D1 may be worked on a branch
-   before G-PUB, but not merged.
+2. NEXT, owner-only: finish gate G-PUB. Public, ruleset `23672521`
+   applied/active (empty bypass_actors, six checks match CI), merge queue
+   and auto-merge on — all verified from the API. Two things remain: (a)
+   create the `lwp-claude`/`lwp-codex` Apps by hand, procedure in
+   `docs/github-apps.md`; (b) run a probe PR through the merge queue —
+   never done, so "merges work end to end" is UNPROVEN, not just
+   unverified on paper. G-PUB blocks D1+ merges until both are done.
+3. THEN: D1 core extraction, unblocked and mergeable now (may be branched
+   before G-PUB finishes, per plan, just not merged before it).
+4. After D1: D2 Codex plugin, D3 migration, D4 Claude port, D5 rehearsal
+   and release 1.0.0.
 
 ## Re-derive state
 
@@ -42,10 +43,10 @@ gh repo view LEAPWare-Software/LEAPWare-Pulse --json visibility
 
 <!-- lwp-handoff:begin -->
 
-Generated: 2026-09-17 23:39 UTC
-main SHA: 8071687f07e38bbb98e07029f15b7c0aae3c354c
+Generated: 2026-09-18 18:02 UTC
+main SHA: 5ba0947329fe83592c5472d034fccdff077a5740
 CLI: claude
-Session: d0-skeleton-parity
+Session: handoff-next-session
 
 Open PRs:
 (unavailable: no `gh` auth in this environment, or no open PRs)
