@@ -1,35 +1,42 @@
 # HANDOFF
 
 Read this before any other file. Protocol: `docs/handoff-protocol.md`.
+Longer detail that doesn't fit this cap: `docs/session-carryover.md`.
 
 ## Start of session
 
 - [ ] Read this file, run "Re-derive state", trust its output over prose.
 - [ ] Confirm your CLI lane (`AGENTS.md` / `CLAUDE.md`, LWP-R8).
-- [ ] Nothing in flight? Enter plan mode, take the next unchecked step.
+- [ ] Read "Blocker" below before touching any shared path.
+
+## Blocker — `lwp-lanes` blocks all shared-path merges
+
+PR #6 BLOCKED by CI job `lwp-lanes`. From PR #6 on, any `claude`/`codex`
+commit touching a shared path (`core/`, `scripts/`, `.github/`, `docs/`,
+`proof/`, `reviews/`, `HANDOFF.md`, `AGENTS.md`, `CLAUDE.md`,
+`README.md`) needs BOTH `reviews/<pr>/claude-cto.json` and
+`reviews/<pr>/codex-cto.json`, `"verdict": "AGREE"`, distinct
+`reviewer_id`/`commit_author_id` (`lwp_lanes.py::_review_ok`).
+`LWP-Agent: human` skips this — for real owner commits only, never a
+CLI self-declaring human. Blocks all shared-path work, D1 included, until
+resolved. Needs a genuine independent Codex session to write
+`reviews/6/codex-cto.json`; details/options: `docs/session-carryover.md`.
 
 ## In flight
 
 Plan of record: `docs/requirements/plan.md` (D0-D5, gate G-PUB), proven
 against `docs/requirements/requirements.md` (LWP-R1-R39) and traced in
-`docs/requirements/traceability.md`. Never start phase *n+1* before phase
-*n* is merged with a proof record checked by a different identity.
+`docs/requirements/traceability.md`.
 
-1. D0 is MERGED (PR #2, squashed as `8071687`): root meta, `.github/`,
-   the `lwp_check_*` suite, `proof/` and `reviews/` schemas, the
-   traceability matrix. CI green on all six jobs. Proof record
-   `proof/LWP-D0.json`, checked by an identity that did not author it.
-2. NEXT, owner-only: finish gate G-PUB. Public, ruleset `23672521`
-   applied/active (empty bypass_actors, six checks match CI), merge queue
-   and auto-merge on — all verified from the API. Two things remain: (a)
-   create the `lwp-claude`/`lwp-codex` Apps by hand, procedure in
-   `docs/github-apps.md`; (b) run a probe PR through the merge queue —
-   never done, so "merges work end to end" is UNPROVEN, not just
-   unverified on paper. G-PUB blocks D1+ merges until both are done.
-3. THEN: D1 core extraction, unblocked and mergeable now (may be branched
-   before G-PUB finishes, per plan, just not merged before it).
-4. After D1: D2 Codex plugin, D3 migration, D4 Claude port, D5 rehearsal
-   and release 1.0.0.
+1. D0 MERGED (PR #2, `8071687`). CI green, 6 jobs. `proof/LWP-D0.json`
+   sealed — never edit to match later reality.
+2. G-PUB PARTIALLY met. PUBLIC since 2026-09-18; ruleset `23672521`
+   active, empty bypass_actors, 6 checks match CI, auto-merge on.
+   Outstanding: (a) `lwp-claude`/`lwp-codex` Apps — `docs/github-apps.md`;
+   (b) merge-queue probe — never run, UNPROVEN.
+3. THEN: D1 core extraction. Mergeable now, but mostly shared-path
+   (`core/`) — the blocker above applies.
+4. After D1: D2 Codex plugin, D3 migration, D4 Claude port, D5 release.
 
 ## Re-derive state
 
@@ -43,13 +50,13 @@ gh repo view LEAPWare-Software/LEAPWare-Pulse --json visibility
 
 <!-- lwp-handoff:begin -->
 
-Generated: 2026-09-18 18:02 UTC
+Generated: 2026-09-18 18:36 UTC
 main SHA: 5ba0947329fe83592c5472d034fccdff077a5740
 CLI: claude
-Session: handoff-next-session
+Session: handoff-carryover
 
 Open PRs:
-(unavailable: no `gh` auth in this environment, or no open PRs)
+#6 docs(gpub): GitHub Apps procedure and partial gate record (docs/handoff-next-session)
 
 Deliverable proof state (from proof/):
 - LWP-D0: PROVEN (commit 78eba219e21e8f57c66b31378fbe9df37364070f)
@@ -67,7 +74,5 @@ rewrite, no visibility change without the owner.
 
 ## Traps
 
-Listed in `docs/handoff-protocol.md`, "Traps". `docs/evidence/*` is gone
-(brought forward from D2 ahead of publication); the full-tree
-`lwp_check_env_leak.py` scan now gates every push and PR, alongside the
-range-mode scan on PRs.
+`docs/handoff-protocol.md` "Traps"; D0 limitations in
+`docs/session-carryover.md`.
