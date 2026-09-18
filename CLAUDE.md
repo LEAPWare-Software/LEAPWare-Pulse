@@ -4,7 +4,8 @@ These are instructions for building this repo, not runtime config. The
 lwp plugin itself must never read or depend on this file at runtime.
 
 - Read HANDOFF.md first, every session.
-- The repo is PRIVATE until gate G-PUB in docs/requirements/plan.md.
+- The repo has been PUBLIC since 2026-09-18; gate G-PUB is otherwise
+  still partially open — see HANDOFF.md.
 - Learning is dropped from 1.0, so don't reintroduce it.
 - Worktrees live only under .worktrees/<branch>, never as sibling folders.
 - CI uses GitHub-hosted runners only.
