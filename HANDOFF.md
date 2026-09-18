@@ -66,6 +66,7 @@ rewrite, no visibility change without the owner.
 
 ## Traps
 
-Listed in `docs/handoff-protocol.md`, "Traps". The one that bites first:
-`lwp_check_env_leak.py --range` still scans the full tree, which cannot
-pass until D2 drops `docs/evidence/*` -- CI passes `--range-only`.
+Listed in `docs/handoff-protocol.md`, "Traps". `docs/evidence/*` is gone
+(brought forward from D2 ahead of publication); the full-tree
+`lwp_check_env_leak.py` scan now gates every push and PR, alongside the
+range-mode scan on PRs.

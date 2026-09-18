@@ -53,21 +53,20 @@ jobs:
       - name: HANDOFF.md shape check
         run: python scripts/lwp_handoff.py --check
 
-      # RANGE MODE ONLY for D0 and D1: docs/evidence/*.md still contain
-      # absolute local paths (pre-recast, private-era evidence) and are
-      # only dropped from the tree in D2. A full-tree scan would fail on
-      # every PR until then. The full-tree scan joins CI in D2, once that
-      # directory is gone. See docs/requirements/plan.md, "Env-leak mode".
+      # docs/evidence/* is gone from the tree, so the full-tree scan below
+      # gates every push and PR. This range-mode step stays alongside it
+      # for pull requests: --range additionally scans the ADDED lines of
+      # every commit in the range (including commit messages), which the
+      # full-tree scan of the final tree alone would miss for a leak that
+      # was committed then reverted within the same PR.
       - name: lwp-env-leak (no local-environment or private-project leak in this PR's added lines)
         if: github.event_name == 'pull_request'
-        # --range-only is what makes this D0/D1-safe: --range on its own
-        # ADDS a range scan to the full-tree scan, which still fails on
-        # docs/evidence/*. In D2, once that directory is dropped, remove
-        # --range-only here so the full-tree scan gates every PR again.
         run: >-
           python scripts/lwp_check_env_leak.py
           --range ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}
-          --range-only
+
+      - name: lwp-env-leak (full tree, no local-environment or private-project leak anywhere)
+        run: python scripts/lwp_check_env_leak.py
 
       - name: lwp-commit-identity (LEAPWare or an allow-listed bot only)
         if: github.event_name == 'pull_request'

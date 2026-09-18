@@ -34,7 +34,7 @@ Source: `plugins/LEAPWare-Pulse/skills/LEAPWare-Pulse/SKILL.md`.
 
 ## Deterministic validation
 
-Run the mutation suite with `py -3.12 -m unittest discover -s tests -v`. To inspect the package directly, run `py -3.12 scripts/validate_pulse_plugin.py plugins/LEAPWare-Pulse`; the command also accepts the repository root.
+Run the mutation suite with `python -m unittest discover -s tests -v`. To inspect the package directly, run `python scripts/validate_pulse_plugin.py plugins/LEAPWare-Pulse`; the command also accepts the repository root.
 
 These checks verify the source package's fixed identity, inventory, metadata, report rules and authority boundary. They do not replace behavioral QA or fresh installation tests in Codex.
 
