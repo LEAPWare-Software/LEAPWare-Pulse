@@ -87,11 +87,12 @@ archive, and it is capped at 3000 bytes (see "Size cap" above).
 - `git diff` omits untracked files; check
   `git ls-files --others --exclude-standard` too.
 - `scripts/lwp_check_env_leak.py --range A..B` *adds* a range scan to the
-  full-tree scan. Until D2 drops `docs/evidence/*` (which carries absolute
-  local paths on purpose), the full-tree scan cannot pass, so CI must pass
-  `--range-only`. `tests/test_ci_env_leak_mode.py` fails if that flag is
-  missing while `docs/evidence/` exists -- and fails the other way once it
-  is gone, so the full-tree scan cannot stay disabled by accident.
+  full-tree scan; it does not replace it. `docs/evidence/*` (which carried
+  absolute local paths on purpose) is gone from the tree, brought forward
+  from D2 ahead of publication, so the full-tree scan now gates CI without
+  `--range-only`. `tests/test_ci_env_leak_mode.py` is self-retiring: it
+  required `--range-only` while `docs/evidence/` existed, and now requires
+  its absence, so the full-tree scan cannot stay disabled by accident.
 - `scripts/lwp_check_prefix.py` exits 1 on the pre-recast tree: the Codex
   package is still `plugins/LEAPWare-Pulse/` until D2/D4 renames it to
   `lwp`. Expected, and recorded as such in `proof/LWP-D0.json`.

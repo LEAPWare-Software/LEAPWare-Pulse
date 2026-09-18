@@ -36,11 +36,11 @@ Usage:
     python scripts/lwp_check_env_leak.py
     python scripts/lwp_check_env_leak.py --range <base-sha>..<head-sha>
 
-Note (LWP-D0/D1): `docs/evidence/*.md` intentionally carries absolute
-local paths today (dropped from the tree in D2, see plan.md
-dispositions) -- a full-tree scan of THIS repo is therefore expected to
-fail until D2. CI runs this check in `--range` mode only for D0/D1 PRs;
-the full-tree scan joins CI in D2.
+Historical note: `docs/evidence/*.md` intentionally carried absolute
+local paths through D0/D1 (dropped from the tree ahead of publication,
+brought forward from the D2 disposition in plan.md); CI ran this check in
+`--range` mode only until then. The full-tree scan now gates CI on every
+push and PR.
 
 Stdlib only. Exits 0 and prints "lwp-env-leak check passed" on success;
 otherwise prints every finding (file:line, or commit:file for a
