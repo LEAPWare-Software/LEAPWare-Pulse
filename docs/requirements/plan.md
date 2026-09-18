@@ -42,8 +42,13 @@ on both hosts. Duplicating it per host would break LWP-R32. Recorded in
 ## Gate G-PUB — public, rulesets applied (owner action)
 
 - **Entry:** pre-publication history scan finished and accepted by the owner
-  (it covers the 24 legacy-identity commits and the absolute local paths in
-  `docs/evidence/*` history — no rewrite, per OD8); D0 merged.
+  (it covers the 24 legacy-identity commits and private-origin code
+  provenance — no rewrite, per OD8); D0 merged. The scan did NOT cover
+  absolute local paths in history: `proof/LWP-GPUB-scan.json` has seven
+  checks, none of them a path scan, and `scripts/lwp_check_env_leak.py` has
+  no full-history mode. The owner accepted publication with the Windows
+  username `leapw` and its directory structure remaining in git history;
+  OD8 forbids a rewrite to remove it.
 - **Action (owner):** flip visibility to public; apply
   `.github/rulesets/main.json` with `scripts/lwp_apply_rulesets.py`; enable
   merge queue and auto-merge; create GitHub Apps `lwp-claude`/`lwp-codex`
@@ -71,8 +76,10 @@ on both hosts. Duplicating it per host would break LWP-R32. Recorded in
   pre-recast test that cannot pass off Windows may be skipped on that OS
   only with a reason naming the D1 requirement that removes the skip. The
   existing Codex package stays where it is and keeps working.
-- **Env-leak mode:** range mode (`--range base..head`) gates D0 and D1 PRs;
-  the full-tree scan joins CI in D2, after `docs/evidence/*` is dropped.
+- **Env-leak mode:** range mode (`--range base..head`) gated D0 and D1 PRs
+  alone until `docs/evidence/*` was dropped from the tree ahead of
+  publication (brought forward from D2, see "Dispositions" below); the
+  full-tree scan now gates every push and PR alongside it.
 - **Commit identity:** from this phase on, `LEAPWare <leapware@outlook.com>`,
   enforced per PR range (LWP-R2).
 - **Requirements proven:** R2–R6, R8–R12, R39; R1 check exists (applies to real
@@ -158,9 +165,9 @@ on both hosts. Duplicating it per host would break LWP-R32. Recorded in
 
 | Item | Decision | Reason |
 |---|---|---|
-| `docs/evidence/*.md` | Drop from tree in D2 | Absolute local paths fail LWP-R3; describes a private pre-public release. History keeps it; the history scan owns history. |
-| `docs/validation.md` | Drop in D2; one-line 0.2.0 entry in CHANGELOG | Superseded by `proof/` and the traceability matrix; cites private CI runs. |
-| `docs/superpowers/{plans,specs}/*` | Drop in D2 | Completed private-release planning; the template's homes for plans are `docs/requirements/` and `HANDOFF.md`. |
+| `docs/evidence/*.md` | Dropped, brought forward from D2 (chore/drop-local-path-docs) | Absolute local paths fail LWP-R3; describes a private pre-public release. History keeps it; the history scan owns history. |
+| `docs/validation.md` | Dropped, brought forward from D2; one-line 0.2.0 CHANGELOG entry added (chore/drop-local-path-docs) | Superseded by `proof/` and the traceability matrix; cites private CI runs. |
+| `docs/superpowers/{plans,specs}/*` | Dropped, brought forward from D2 (chore/drop-local-path-docs) | Completed private-release planning; the template's homes for plans are `docs/requirements/` and `HANDOFF.md`. |
 | `scripts/learning-origin.json` | Drop in D1 | Provenance of code copied from a private repository; its hash test is replaced by the vendor drift check (LWP-R16). Provenance, if any, goes in NOTICE per Q2. |
 | `scripts/release-learning.json` | Move to `core/policy/release-learning.json`, vendored | Trusted release metadata; one source for both hosts. |
 | `scripts/learning/README.md` | Move to `docs/learning.md`, rewritten | Operator documentation; its references to upstream tests are wrong here. |

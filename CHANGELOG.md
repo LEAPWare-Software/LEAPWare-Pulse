@@ -26,3 +26,10 @@ follows [Semantic Versioning](https://semver.org/).
 - Pre-recast Codex plugin: checklist parsing, evidence-gated verification,
   and the `Panorama` / `Brief` / `Focus` status views, released as a
   private Codex CLI plugin.
+
+### Removed
+
+- `docs/validation.md`, `docs/evidence/*.md`, and `docs/superpowers/`
+  dropped from the tree ahead of publication: absolute local paths and
+  private-era planning notes. Superseded by `proof/` and the
+  traceability matrix; retained in git history.
